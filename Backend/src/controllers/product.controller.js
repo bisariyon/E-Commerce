@@ -44,6 +44,8 @@ const createProduct = asyncHandler(async (req, res, next) => {
   if (!subCategories || subCategories.length === 0)
     throw new ApiError(400, "SubCategories are required");
 
+  quantityInStock = parseInt(quantityInStock);
+
   const productImageLocalPath = req.file.path;
   if (!productImageLocalPath) {
     throw new ApiError(400, "Product Image is required");
@@ -146,7 +148,7 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
 const updateProduct = asyncHandler(async (req, res, next) => {
   const { productId } = req.params;
 
-  const {
+  let {
     title,
     description,
     price,
@@ -184,7 +186,10 @@ const updateProduct = asyncHandler(async (req, res, next) => {
   if (title) product.title = title;
   if (description) product.description = description;
   if (price) product.price = price;
-  if (quantityInStock) product.quantityInStock = quantityInStock;
+  if (quantityInStock) {
+    quantityInStock = parseInt(quantityInStock);
+    product.quantityInStock = quantityInStock;
+  }
 
   let brandExists, categoryExists;
   if (brand) {
