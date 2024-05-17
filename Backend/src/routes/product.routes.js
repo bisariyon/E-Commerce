@@ -14,13 +14,12 @@ import {
   getProductByCategoryId,
   getProductByBrand,
   getProductBySeller,
-  test,
 } from "../controllers/product.controller.js";
 
 const router = Router();
 
 router.route("/filter").get(getProducts);
-router.route("/:productId").get(getProductById);
+router.route("/p/:productId").get(getProductById);
 router.route("/category/:categoryId").get(getProductByCategoryId);
 router.route("/brand/:brandId").get(getProductByBrand);
 router.route("/seller/:sellerId").get(getProductBySeller);
@@ -38,8 +37,5 @@ router
     upload.single("productImage"),
     createProduct
   );
-
-
-router.route("/test").get(test);
 
 export default router;

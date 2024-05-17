@@ -733,10 +733,6 @@ const getProductBySeller = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, products, "Products found for seller"));
 });
 
-const test = asyncHandler(async (req, res, next) => {
-  return res.status(200).json(new ApiResponse(200, {}, "Test route working"));
-});
-
 export {
   createProduct,
   getProducts,
@@ -746,5 +742,4 @@ export {
   getProductByCategoryId,
   getProductByBrand,
   getProductBySeller,
-  test,
 };
