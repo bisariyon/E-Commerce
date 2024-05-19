@@ -29,6 +29,7 @@ import wishlistRouter from "./routes/wishlist.routes.js";
 import reviewRouter from "./routes/review.routes.js";
 import productOffersRouter from "./routes/productOffers.routes.js";
 import cartProductsRouter from "./routes/cartProducts.routes.js";
+import orderRouter from "./routes/order.routes.js";
 
 //routes declaration
 app.use("/v1/healthcheck", healthcheckRouter);
@@ -43,5 +44,6 @@ app.use("/v1/wishlist", wishlistRouter);
 app.use("/v1/reviews", reviewRouter);
 app.use("/v1/product-offers", productOffersRouter);
 app.use("/v1/cart-items", cartProductsRouter);
+app.use("/v1/orders", orderRouter);
 
 export { app };

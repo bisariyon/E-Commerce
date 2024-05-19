@@ -52,6 +52,12 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    userOrders: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -69,7 +75,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-//jwt token 
+//jwt token
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {

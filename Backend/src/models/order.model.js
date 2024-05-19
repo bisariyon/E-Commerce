@@ -14,11 +14,10 @@ const orderSchema = new Schema(
     },
     paymentID: {
       type: String,
-      required: true,
     },
     status: {
       type: String,
-      enum: ["pending", "cancelled", "delivered"],
+      enum: ["pending", "cancelled", "delivered", "processing"],
       default: "pending",
     },
     total: {
