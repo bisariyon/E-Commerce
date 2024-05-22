@@ -1,0 +1,14 @@
+.carousel .control-dots .dot {
+    width: 25px;
+    height: 10px;
+    background-color: gray;
+    border-radius: 5px;
+    margin: 0px 4px 10px 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .carousel .control-dots .dot.selected {
+    background-color: whitesmoke;
+    border-radius: 5px;
+  }
+  

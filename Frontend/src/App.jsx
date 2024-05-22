@@ -1,10 +1,12 @@
-import conf from "./conf/conf";
+import Banner from "./components/Carousal/Carousal";
+import { Header } from "./index.js";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <>
-      <h1>Hello</h1>
-      <h1>{conf.frontEnd}</h1>{" "}
+      <Header />
+      <Outlet />
     </>
   );
 }
