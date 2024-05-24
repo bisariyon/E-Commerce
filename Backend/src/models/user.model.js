@@ -11,7 +11,7 @@ const userSchema = new Schema(
     },
     username: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
       unique: true,
       lowercase: true,
@@ -39,6 +39,7 @@ const userSchema = new Schema(
     },
     avatar: {
       type: String,
+      required: true,
     },
     refreshToken: {
       type: String,

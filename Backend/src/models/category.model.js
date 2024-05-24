@@ -4,7 +4,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
 const categorySchema = new Schema(
   {
     category: {
-      type: String, 
+      type: String,
       required: true,
       trim: true,
       unique: true,
@@ -14,6 +14,10 @@ const categorySchema = new Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    imageUrl: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

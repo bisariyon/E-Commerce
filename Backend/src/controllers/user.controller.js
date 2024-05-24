@@ -114,7 +114,6 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
 const loginUser = asyncHandler(async (req, res, next) => {
   const { username, phone, email, password } = req.body;
-  // console.log(username, email, phone, password);
 
   if (!(username || phone || email)) {
     throw new ApiError(400, "Username or email or phone is required");
@@ -145,21 +144,13 @@ const loginUser = asyncHandler(async (req, res, next) => {
     "-password -refreshToken"
   );
 
+  const spreadedUser = { ...loggedInUser._doc, accessToken, refreshToken };
+
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
     .cookie("refreshToken", refreshToken, options)
-    .json(
-      new ApiResponse(
-        200,
-        {
-          user: loggedInUser,
-          refreshToken,
-          accessToken,
-        },
-        "User logged in successfully"
-      )
-    );
+    .json(new ApiResponse(200, spreadedUser, "User logged in successfully"));
 });
 
 const logoutUser = asyncHandler(async (req, res, next) => {
@@ -349,7 +340,9 @@ const selfVerify = asyncHandler(async (req, res, next) => {
 
     return res
       .status(200)
-      .json(new ApiResponse(200, {}, "User verified successfully and Cart created"));
+      .json(
+        new ApiResponse(200, {}, "User verified successfully and Cart created")
+      );
   } catch (error) {
     throw new ApiError(500, "Error in verifying user");
   }

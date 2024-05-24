@@ -1,5 +1,4 @@
-import Banner from "./components/Carousal/Carousal";
-import { Header } from "./index.js";
+import { Header, Footer, SubHeader } from "./index.js";
 import { Outlet } from "react-router-dom";
 
 function App() {
@@ -7,6 +6,7 @@ function App() {
     <>
       <Header />
       <Outlet />
+      <Footer />
     </>
   );
 }
