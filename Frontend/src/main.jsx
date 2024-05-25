@@ -20,6 +20,7 @@ import LoginUser from "./pages/LoginUser.jsx";
 import RegisterUser from "./pages/RegsiterUser.jsx";
 import Product from "./pages/Product.jsx";
 import CheckOut from "./pages/CheckOut.jsx";
+import { AfterSignUp } from "./index.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,9 +32,11 @@ const router = createBrowserRouter(
           <Route path="register" element={<RegisterUser />} />
         </Route>
         <Route path="products" element={<Product />} />
-        {/* <Route path="/products/:query" component={<Product />} /> */}
         <Route path="checkout" element={<CheckOut />} />
       </Route>
+
+      {/* Without Header Footer */}
+      <Route path="user/succes/registration" element={<AfterSignUp />} />
     </>
   )
 );

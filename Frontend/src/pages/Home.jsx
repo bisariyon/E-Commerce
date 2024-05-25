@@ -1,5 +1,12 @@
 import React from "react";
-import { Carousal, Categories, Brands, SubHeader } from "../index";
+import {
+  Carousal,
+  Categories,
+  Brands,
+  SubHeader,
+  HomePageLoading,
+  ErrorPage,
+} from "../index";
 import { useQuery } from "@tanstack/react-query";
 import { AllCategories } from "../assets/imports/importImages";
 
@@ -42,9 +49,15 @@ function Home() {
     staleTime: 1000 * 60,
   });
 
-  if (categoriesLoading || brandsLoading) return <div>Loading...</div>;
+  if (categoriesLoading || brandsLoading){
+    return(
+      <HomePageLoading />
+    )
+  }
   if (categoriesError || brandsError) {
-    return <div>Error: {categoriesErrorMessage || brandsErrorMessage}</div>;
+   return(
+      <ErrorPage />
+   )
   }
 
   return (

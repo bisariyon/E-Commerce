@@ -105,7 +105,7 @@ function CartProduct({
               Price:
             </span>
             <span className="text-md text-green-600 font-bold">
-              ₹ {parseInt(price)}
+              ₹ {parseFloat(price)}
             </span>
           </div>
         </div>

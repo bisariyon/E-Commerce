@@ -58,7 +58,7 @@ function RegisterUser() {
       onSuccess: (data) => {
         console.log("Registration successful :", data);
         dispatch(setUser(data.data));
-        navigate("/");
+        navigate("/user/succes/registration");
 
       },
       onError: (error) => {
