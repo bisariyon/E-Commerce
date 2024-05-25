@@ -33,12 +33,29 @@ function CartProduct({
     }
   };
 
-  const removeFromCartBackend = async () => {
+  const decreaseCartBackend = async () => {
     try {
       const response = await axios.patch(
         `http://localhost:8000/v1/cart-items/decrease/${productId}?quantity=1`,
         {},
         { withCredentials: true }
+      );
+      if (response.status === 201) {
+        console.log("Cart Updated cart:", response.data);
+      }
+    } catch (error) {
+      console.error("Failed to remove from cart:", error);
+    }
+  };
+
+  const removeFromCartBackend = async (productId) => {
+    console.log("Removing from cart:", productId);
+    try {
+      const response = await axios.delete(
+        `http://localhost:8000/v1/cart-items/remove/${productId}`,
+        {
+          withCredentials: true,
+        }
       );
       if (response.status === 201) {
         console.log("Removed from cart:", response.data);
@@ -50,7 +67,7 @@ function CartProduct({
 
   const decrease = async () => {
     // if (quantity > 0) {
-    await removeFromCartBackend();
+    await decreaseCartBackend();
     dispatch(decreaseQuantity({ productId }));
     // }
   };
@@ -64,7 +81,7 @@ function CartProduct({
 
   const remove = async () => {
     dispatch(removeFromBasket({ productId }));
-    await removeFromCartBackend();
+    await removeFromCartBackend(productId);
   };
 
   return (

@@ -55,7 +55,7 @@ function ProductSquare({
     }
   };
 
-  const removeFromCartBackend = async () => {
+  const decreaseCartBackend = async () => {
     try {
       const productId = _id;
       const response = await axios.patch(
@@ -75,7 +75,7 @@ function ProductSquare({
     if (quantity > 0) {
       setQuantity((prevQuantity) => prevQuantity - 1);
       dispatch(decreaseQuantity({ productId: _id}));
-      await removeFromCartBackend();
+      await decreaseCartBackend();
     }
   };
 
