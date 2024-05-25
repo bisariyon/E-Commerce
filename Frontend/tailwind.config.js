@@ -6,7 +6,18 @@ export default {
   ],
   darkMode:"class",
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        slideLeftToRight: {
+          '0%': { transform: 'translateX(-20%)' },
+          '50%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-20%)' },
+        },
+      },
+      animation: {
+        'slide-left-right': 'slideLeftToRight 10s ease-in-out infinite',
+      },
+    },
   },
   plugins: [],
 }

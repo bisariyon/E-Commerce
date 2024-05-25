@@ -5,5 +5,17 @@ import Carousal from "./components/Carousal/Carousal";
 import ProductSquare from "./components/Products/ProductSquare";
 import Categories from "./components/Category/Categories";
 import Brands from "./components/Brands/Brands";
+import SearchBar from "./components/Header/SearchBar";
+import CartProduct from "./components/Products/CartProduct";
 
-export { Header, Footer, Carousal, ProductSquare, Categories, SubHeader ,Brands};
+export {
+  Header,
+  Footer,
+  Carousal,
+  ProductSquare,
+  Categories,
+  SubHeader,
+  Brands,
+  SearchBar,
+  CartProduct,
+};

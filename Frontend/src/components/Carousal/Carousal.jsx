@@ -17,7 +17,7 @@ function Banner() {
         <div className="relative">
           <img
             loading="lazy"
-            className="w-full h-[500px] object-cover   transform transition-transform duration-500 hover:scale-105"
+            className="w-full h-[550px] object-cover   transform transition-transform duration-500 hover:scale-105"
             src="https://res.cloudinary.com/deepcloud1/image/upload/v1716371590/ygfcff7pprtqimscjd5c.jpg"
             alt="Bisariyon"
           />
@@ -30,7 +30,7 @@ function Banner() {
         <div className="relative">
           <img
             loading="lazy"
-            className="w-full h-[500px] object-cover   transform transition-transform duration-500 hover:scale-105"
+            className="w-full h-[550px] object-cover   transform transition-transform duration-500 hover:scale-105"
             src="https://res.cloudinary.com/deepcloud1/image/upload/v1716372793/h7kclnaneoxn6m4utn8p.png"
             alt="Sale"
           />
@@ -42,7 +42,7 @@ function Banner() {
         <div className="relative">
           <img
             loading="lazy"
-            className="w-full h-[500px] object-cover   transform transition-transform duration-500 hover:scale-105"
+            className="w-full h-[550px] object-cover   transform transition-transform duration-500 hover:scale-105"
             src="https://res.cloudinary.com/deepcloud1/image/upload/v1716371589/kibzgi05kvrryistjj9k.jpg"
             alt="Sale"
           />
@@ -54,7 +54,7 @@ function Banner() {
         <div className="relative">
           <img
             loading="lazy"
-            className="w-full h-[500px] object-cover   transform transition-transform duration-500 hover:scale-105"
+            className="w-full h-[550px] object-cover   transform transition-transform duration-500 hover:scale-105"
             src="https://res.cloudinary.com/deepcloud1/image/upload/v1716371588/txjbr0yop0bd6wxfwryf.png"
             alt="Amazon Prime"
             style={{
@@ -69,7 +69,7 @@ function Banner() {
         <div className="relative">
           <img
             loading="lazy"
-            className="w-full h-[500px] object-cover   transform transition-transform duration-500 hover:scale-105"
+            className="w-full h-[550px] object-cover   transform transition-transform duration-500 hover:scale-105"
             src="https://res.cloudinary.com/deepcloud1/image/upload/v1716371589/zkgej6uzzsolra0uyi2b.jpg"
             alt="Sale"
           />

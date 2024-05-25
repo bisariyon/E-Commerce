@@ -9,6 +9,7 @@ import AllCategories from "../images/AllCategories.png";
 import Logo2 from "../images/Logo2.png";
 import Login from "../images/Login.png";
 import Logout from "../images/Logout.png";
+import Cancel from "../images/Cancel.png";
 
 export {
   EmptyCart,
@@ -22,4 +23,5 @@ export {
   Logo2,
   Login,
   Logout,
+  Cancel,
 };

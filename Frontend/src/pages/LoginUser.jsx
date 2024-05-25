@@ -4,6 +4,7 @@ import { Logo2 } from "../assets/imports/importImages";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "../store/UserSlice";
+import { setBasket } from "../store/BasketSlice";
 
 const LoginUser = () => {
   const navigate = useNavigate();
@@ -13,6 +14,28 @@ const LoginUser = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const getCartBackend = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/v1/cart-items", {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        const cartData = response.data.data.map((item) => ({
+          productId: item.product._id,
+          title: item.product.title,
+          productImage: item.product.productImage,
+          quantity: item.quantity, 
+          price: item.product.price,
+          brand: item.product.brand,
+          category: item.product.category,
+        }));
+        dispatch(setBasket(cartData));
+      }
+    } catch (error) {
+      console.error("Get Cart failed: ", error);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -39,18 +62,19 @@ const LoginUser = () => {
       if (response.status === 200) {
         setError("");
         dispatch(setUser(response.data.data));
+        getCartBackend();
         navigate("/");
       }
     } catch (error) {
-      console.log(error.response);
-      setError(error.response);
+      console.log(error.response.data.message);
+      setError(error.response.data.message);
     }
   };
 
   return (
-    <div className="min-h-full flex items-center justify-center bg-slate-600 pb-8 pt-6">
+    <div className="min-h-full flex items-center justify-center bg-gray-600 pb-8 pt-4">
       <div className="flex flex-wrap w-full max-w-4xl bg-gray-200 rounded-xl shadow-lg overflow-hidden my-8">
-        <div className="w-full md:w-1/2 p-5 flex flex-col justify-center items-center bg-purple-300">
+        <div className="w-full md:w-1/2 p-5 flex flex-col justify-center items-center bg-blue-400">
           <img
             src={Logo2}
             alt="Bisariyon E-Com Logo"

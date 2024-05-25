@@ -18,7 +18,7 @@ import {
 
 const router = Router();
 
-router.route("/filter").get(getProducts);
+router.route("/").get(getProducts);
 router.route("/p/:productId").get(getProductById);
 router.route("/category/:categoryId").get(getProductByCategoryId);
 router.route("/brand/:brandId").get(getProductByBrand);

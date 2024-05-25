@@ -3,14 +3,18 @@ import { verifyJwtToken } from "../middlewares/auth.middleware.js";
 
 import {
   addToCart,
-  removeFromCart,
+  decreaseFromCart,
   emptyCart,
+  getCart,
+  removeItemFromCart,
 } from "../controllers/cartProducts.controller.js";
 
 const router = Router();
 
 router.route("/add/:productId").post(verifyJwtToken, addToCart); //working
-router.route("/remove/:productId").patch(verifyJwtToken, removeFromCart); //working
+router.route("/decrease/:productId").patch(verifyJwtToken, decreaseFromCart); //working
 router.route("/empty").delete(verifyJwtToken, emptyCart); //working
+router.route("/").get(verifyJwtToken, getCart); //working
+router.route("/remove/:productId").delete(verifyJwtToken, removeItemFromCart); //working
 
 export default router;

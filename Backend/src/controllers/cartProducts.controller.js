@@ -54,7 +54,7 @@ const addToCart = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(201, cartProduct, "Product added to cart"));
 });
 
-const removeFromCart = asyncHandler(async (req, res, next) => {
+const decreaseFromCart = asyncHandler(async (req, res, next) => {
   let { quantity } = req.query;
   const { productId } = req.params;
   const userId = req.user._id;
@@ -115,4 +115,58 @@ const emptyCart = asyncHandler(async (req, res, next) => {
   return res.status(201).json(new ApiResponse(201, {}, "Cart Updated"));
 });
 
-export { addToCart, removeFromCart, emptyCart };
+const getCart = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart) {
+    throw new ApiError(404, "Cart not found");
+  }
+
+  const cartProducts = await CartProduct.find({ cart: cart._id }).populate(
+    "product"
+  );
+  if (!cartProducts) {
+    throw new ApiError(404, "Cart is empty");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, cartProducts, "Cart Products"));
+});
+
+const removeItemFromCart = asyncHandler(async (req, res, next) => {
+  const { productId } = req.params;
+  const userId = req.user._id;
+
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart) {
+    throw new ApiError(404, "Cart not found");
+  }
+
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new ApiError(404, "Product not found");
+  }
+
+  const existedInCart = await CartProduct.findOne({
+    product: product._id,
+    cart: cart._id,
+  });
+
+  if (!existedInCart) {
+    throw new ApiError(404, "Product not found in cart");
+  }
+
+  const removedCartProduct = await CartProduct.findByIdAndDelete(
+    existedInCart._id
+  );
+
+  if (!removedCartProduct) {
+    throw new ApiError(400, "Failed to delete item from cart");
+  }
+
+  return res.status(201).json(new ApiResponse(201, {}, "Cart Updated"));
+});
+
+export { addToCart, decreaseFromCart, emptyCart, getCart, removeItemFromCart };

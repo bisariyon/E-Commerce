@@ -10,10 +10,13 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../store/UserSlice";
 import axios from "axios";
+import { setBasket } from "../../store/BasketSlice";
+import { SearchBar } from "../../index";
 
 function Header() {
   const basket = useSelector((state) => state.basket.basket);
   const user = useSelector((state) => state.user.user);
+  const isVerified = user?.verified || false;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ function Header() {
       if (response.status === 200) {
         console.log("Logout successful");
         dispatch(setUser(null));
+        dispatch(setBasket([]));
         navigate("/");
       }
     } catch (error) {
@@ -37,43 +41,30 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="header h-20 flex items-center px-2 pr-5 bg-gray-900 text-white">
+      <div className="header h-24 flex items-center px-2 pr-5 bg-gray-900 text-white">
         <Link to="/">
           <img
-            className="h-20 w-40 py-3 mr-3"
+            className="h-20 w-40 py-3 mr-3 transition duration-300 ease-in-out transform hover:scale-110"
             src={Logo}
             alt="Bisariyon Ecom"
           />
         </Link>
 
-        <div className="flex-1 hidden sm:flex items-center rounded-full bg-white bg-opacity-10 mr-2">
-          <div className="h-10 w-10 ml-3">
-            <img
-              src="https://res.cloudinary.com/deepcloud1/image/upload/v1716378719/k2nuienbsmq25bwihp5r.png"
-              alt="Search Icon"
-            />
-          </div>
-          <input
-            type="text"
-            className="flex-1 h-full p-2 bg-transparent outline-none text-white placeholder-gray-400 text-xl"
-            placeholder="Search"
-          />
-        </div>
+        <SearchBar />
 
         <div className="flex space-x-6 items-center">
           {user ? (
             <>
               <Link to="/#">
-                <div className="flex items-center ml-4 hover:cursor-pointer bg-gray-800 py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                <div className="flex items-center ml-4 hover:cursor-pointer bg-gray-800 py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-110">
                   <img
                     src={user.avatar}
-                    width="40"
-                    className="rounded-full hover:cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
+                    className="rounded-full hover:cursor-pointer transition duration-300 ease-in-out transform hover:scale-110 w-10 h-10"
                     alt="User Avatar"
                   />
                   <div className="text-lg ml-2 text-cyan-500  font-bold transition duration-300 ease-in-out transform hover:scale-110">
                     {user.username.charAt(0).toUpperCase() +
-                      user.username.slice(1).toLowerCase()}
+                      user.username.slice(1, 4).toLowerCase()}
                   </div>
                 </div>
               </Link>
@@ -99,7 +90,7 @@ function Header() {
           )}
 
           <div className="text-lg mx-3">
-            <Link to="">
+            <Link to={`${isVerified ? "/checkout" : "/"}`}>
               <div className="flex items-center transition duration-300 ease-in-out transform hover:scale-110">
                 <img
                   className="h-14 w-14"

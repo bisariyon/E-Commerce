@@ -26,15 +26,15 @@ function RegisterUser() {
         { withCredentials: true }
       );
       console.log("User registered:", response.data);
-
-      dispatch(setUser(response.data.data));
-      navigate("/");
+      return response.data;
+      // dispatch(setUser(response.data.data));
+      // navigate("/");
     } catch (error) {
-      console.error("Error registering user:", error);
-      setError(error.response?.data?.message || "Registration failed");
+      throw error;
+      // setError(error.response?.data?.message || "Registration failed");
     }
   };
-  const registerMutation = useMutation({
+  const { mutate, isPending, isError, isSuccess} = useMutation({
     mutationFn: registerUser,
   });
 
@@ -54,24 +54,36 @@ function RegisterUser() {
     //   console.log(`${key}: ${value}`);
     // }
 
-    registerMutation.mutate(formData);
+    mutate(formData, {
+      onSuccess: (data) => {
+        console.log("Registration successful :", data);
+        dispatch(setUser(data.data));
+        navigate("/");
+
+      },
+      onError: (error) => {
+        // console.error("Error registering user 2:", error.response.data.message);
+        setError(error.response.data.message || "Registration failed");
+      }
+
+    });
   };
 
   {
-    registerMutation.isPending && (
+    isPending && (
       <p className="text-blue-500 text-lg">Registering...</p>
     );
   }
   {
-    registerMutation.isSuccess && (
+    isSuccess && (
       <p className="text-green-500 text-lg">Registration successful</p>
     );
   }
 
   return (
-    <div className="min-h-full flex items-center justify-center bg-slate-600">
+    <div className="min-h-full flex items-center justify-center bg-slate-600 ">
       <div className="flex flex-wrap w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden my-8">
-        <div className="w-full md:w-1/2 p-5 flex flex-col justify-center items-center bg-gray-100">
+        <div className="w-full md:w-1/2 p-5 flex flex-col items-center bg-blue-400">
           <img
             src={Logo2}
             alt="Bisariyon E-Com Logo"

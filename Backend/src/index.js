@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
 import { app } from "./app.js";
 import connectDB from "./db/index.db.js";
+import errorHandler from "./middlewares/ErrorHandler.js";
+
+app.use(errorHandler);
 
 dotenv.config({
   path: "../.env",
