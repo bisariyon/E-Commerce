@@ -1,12 +1,47 @@
-import React from "react";
-import { CartProduct } from "../index";
-import axios from "axios";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { CartProduct, Modal } from "../index";
+import axios from "axios";
 import { emptyBasket } from "../store/BasketSlice";
 
 function CheckOut() {
   const basket = useSelector((state) => state.basket.basket);
+  const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState(false);
 
+  const emptyCartBackend = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8000/v1/cart-items/empty`,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 201) {
+        console.log("Cart Emptied", response.data);
+      }
+    } catch (error) {
+      console.error("Failed to empty the cart:", error);
+    }
+  };
+
+  const emptyCart = async () => {
+    dispatch(emptyBasket());
+    await emptyCartBackend();
+  };
+
+  const handleEmptyCartClick = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleConfirmEmptyCart = async () => {
+    await emptyCart();
+    setShowModal(false);
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 min-h-screen m-4">
@@ -34,15 +69,25 @@ function CheckOut() {
           Place Order
         </button>
 
-        <div className="bg-gray-100 rounded-md p-3 flex  items-center justify-center w-auto hover:bg-slate-400 active:bg-slate-500 active:scale-90 focus:outline-none focus:ring-2 focus:ring-slate-400 cursor-pointer">
+        <div
+          className="bg-gray-100 rounded-md p-3 flex items-center justify-center w-auto hover:bg-slate-400 active:bg-slate-500 active:scale-90 focus:outline-none focus:ring-2 focus:ring-slate-400 cursor-pointer"
+          onClick={handleEmptyCartClick}
+        >
           <img
             src="https://res.cloudinary.com/deepcloud1/image/upload/v1716645390/qukkwf5h4ymdb6owdcla.png"
             alt="Empty Cart"
             className="mr-2 w-16"
           />
-          <span className="text-lg font-bold text-purple-900 ">Empty Cart</span>
+          <span className="text-lg font-bold text-purple-900">Empty Cart</span>
         </div>
       </div>
+
+      <Modal
+        showModal={showModal}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmEmptyCart}
+        message="Are you sure you want to empty the cart?"
+      />
     </div>
   );
 }

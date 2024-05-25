@@ -7,6 +7,7 @@ import Categories from "./components/Category/Categories";
 import Brands from "./components/Brands/Brands";
 import SearchBar from "./components/Header/SearchBar";
 import CartProduct from "./components/Products/CartProduct";
+import Modal from "./components/Confirmation/Modal";
 
 export {
   Header,
@@ -18,4 +19,5 @@ export {
   Brands,
   SearchBar,
   CartProduct,
+  Modal
 };
