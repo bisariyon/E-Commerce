@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Logo2 } from "../assets/imports/importImages";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "../store/UserSlice";
-import { setBasket } from "../store/BasketSlice";
+import { emptyBasket, setBasket } from "../store/BasketSlice";
+
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
 
 const LoginUser = () => {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,7 +36,7 @@ const LoginUser = () => {
           productId: item.product._id,
           title: item.product.title,
           productImage: item.product.productImage,
-          quantity: item.quantity, 
+          quantity: item.quantity,
           price: item.product.price,
           brand: item.product.brand,
           category: item.product.category,
@@ -61,6 +72,7 @@ const LoginUser = () => {
 
       if (response.status === 200) {
         setError("");
+        dispatch(emptyBasket())
         dispatch(setUser(response.data.data));
         getCartBackend();
         navigate("/");
@@ -69,6 +81,10 @@ const LoginUser = () => {
       console.log(error.response.data.message);
       setError(error.response.data.message);
     }
+  };
+
+  const handleForgotPassword = async () => {
+    navigate("/user/forgot-password");
   };
 
   return (
@@ -143,6 +159,12 @@ const LoginUser = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <button
+                onClick={handleForgotPassword}
+                className="text-blue-600 hover:underline text-sm font-semibold px-1"
+              >
+                Forgot Password?
+              </button>
             </div>
             <button
               type="submit"

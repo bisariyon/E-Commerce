@@ -20,7 +20,10 @@ import LoginUser from "./pages/LoginUser.jsx";
 import RegisterUser from "./pages/RegsiterUser.jsx";
 import Product from "./pages/Product.jsx";
 import CheckOut from "./pages/CheckOut.jsx";
-import { AfterSignUp } from "./index.js";
+import { AfterSignUp, NotLoggedInUser } from "./index.js";
+import UserDashboard from "./pages/UserDashboard.jsx";
+import ForgetPassword from "./pages/ForgetPassword.jsx"
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,8 +31,11 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         <Route path="" element={<Home />} />
         <Route path="user">
+          <Route path="" element={<UserDashboard />} />
+          <Route path="profile" element={<UserDashboard />} />
           <Route path="login" element={<LoginUser />} />
           <Route path="register" element={<RegisterUser />} />
+          <Route path="forgot-password" element={<ForgetPassword />} />
         </Route>
         <Route path="products" element={<Product />} />
         <Route path="checkout" element={<CheckOut />} />
@@ -37,6 +43,7 @@ const router = createBrowserRouter(
 
       {/* Without Header Footer */}
       <Route path="user/succes/registration" element={<AfterSignUp />} />
+      <Route path="redirect/home" element={<NotLoggedInUser />} />
     </>
   )
 );

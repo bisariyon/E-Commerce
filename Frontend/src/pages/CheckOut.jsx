@@ -5,7 +5,19 @@ import axios from "axios";
 import { emptyBasket } from "../store/BasketSlice";
 import { Link, useNavigate } from "react-router-dom";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+
 function CheckOut() {
+
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  },[])
+
   const basket = useSelector((state) => state.basket.basket);
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);

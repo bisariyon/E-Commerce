@@ -21,19 +21,17 @@ import {
   deleteUser,
   selfVerificationLinkRequest,
   selfVerify,
-  
 } from "../controllers/user.controller.js";
 
 const router = Router();
 
-router.route("/register").post(upload.single("avatar"), registerUser);
+router.route("/register").post(upload.single("avatar"), registerUser); //done
 
 // router.route("/login").post(upload.none(),loginUser); //why none needed for forms?
-router.route("/login").post(loginUser);
-
+router.route("/login").post(loginUser); //done
 
 //Secured routes
-router.route("/logout").post(verifyJwtToken, logoutUser);
+router.route("/logout").post(verifyJwtToken, logoutUser); //done
 router.route("/refresh-token").post(refreshAccessToken);
 router.route("/current-user").get(verifyJwtToken, getCurrentUser);
 
@@ -41,15 +39,15 @@ router.route("/generate-email-otp").post(generateEmailOTP);
 router.route("/verifyotp").post(changePasswordWithOTP);
 
 router.route("/change-password-reset-link").post(forgotPasswordResetLink);
-router.route("/resetpassword/:token").post(resetpasswordByLink);
+router.route("/resetpassword/:token").get(resetpasswordByLink);
 
 router.route("/change-password").post(verifyJwtToken, changePassword);
-router.route("/update/profile").patch(verifyJwtToken, updateUserProfile);
-router.route("/update/email").patch(verifyJwtToken, updateEmail);
-router.route("/update/phone").patch(verifyJwtToken, updatePhone);
+router.route("/update/profile").patch(verifyJwtToken, updateUserProfile); //done
+router.route("/update/email").patch(verifyJwtToken, updateEmail); //done
+router.route("/update/phone").patch(verifyJwtToken, updatePhone); //done
 router
   .route("/update/avatar")
-  .patch(verifyJwtToken, upload.single("avatar"), updateAvatar);
+  .patch(verifyJwtToken, upload.single("avatar"), updateAvatar); //done
 router.route("/delete").delete(verifyJwtToken, deleteUser);
 
 //Self verification

@@ -1,8 +1,8 @@
 import React from "react";
 
-function Home() {
+function ErrorPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center max-h-screen justify-center ">
+    <div className="flex flex-col items-center max-h-screen justify-center my-16">
       <img
         src="https://res.cloudinary.com/deepcloud1/image/upload/v1716663893/u0ai3d9zbwijrlqmslyt.png"
         alt="Error"
@@ -16,4 +16,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default ErrorPage;

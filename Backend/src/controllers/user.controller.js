@@ -625,7 +625,6 @@ const updatePhone = asyncHandler(async (req, res, next) => {
   }
 
   user.phone = phone;
-
   const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid password entered");

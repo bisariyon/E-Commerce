@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
@@ -6,7 +6,18 @@ import { Logo2 } from "../assets/imports/importImages";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/UserSlice";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+
 function RegisterUser() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +45,7 @@ function RegisterUser() {
       // setError(error.response?.data?.message || "Registration failed");
     }
   };
-  const { mutate, isPending, isError, isSuccess} = useMutation({
+  const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: registerUser,
   });
 
@@ -59,20 +70,16 @@ function RegisterUser() {
         console.log("Registration successful :", data);
         dispatch(setUser(data.data));
         navigate("/user/succes/registration");
-
       },
       onError: (error) => {
         // console.error("Error registering user 2:", error.response.data.message);
         setError(error.response.data.message || "Registration failed");
-      }
-
+      },
     });
   };
 
   {
-    isPending && (
-      <p className="text-blue-500 text-lg">Registering...</p>
-    );
+    isPending && <p className="text-blue-500 text-lg">Registering...</p>;
   }
   {
     isSuccess && (

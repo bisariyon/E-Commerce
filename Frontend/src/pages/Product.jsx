@@ -1,12 +1,23 @@
-import React, { useState } from "react";
-import { ProductSquare } from "../index";
+import React, { useState,useEffect } from "react";
+import { ProductSquare, ErrorPage, ProductsLoading } from "../index";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../store/ProductSlice";
 import { useParams, useLocation } from "react-router-dom";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+
 function Product() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(8);
   const [sortBy, setSortBy] = useState("_id");
@@ -69,9 +80,16 @@ function Product() {
     setPage(newPage);
   };
 
-  if (productsLoading) return <div>Loading...</div>;
-  if (productsError) return <div>Error: {productsErrorMessage.message}</div>;
-
+  if (productsLoading) return <ProductsLoading />;
+  if (productsError) {
+    console.log("Error", productsErrorMessage);
+    return (
+      <div>
+        <ErrorPage />
+        {/* Error: {productsErrorMessage.message} */}
+      </div>
+    );
+  }
   // console.log(products.data);
 
   return (

@@ -55,7 +55,7 @@ function Header() {
         <div className="flex space-x-6 items-center">
           {user ? (
             <>
-              <Link to="/#">
+              <Link to="/user/profile">
                 <div className="flex items-center ml-4 hover:cursor-pointer bg-gray-800 py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-110">
                   <img
                     src={user.avatar}
@@ -63,8 +63,8 @@ function Header() {
                     alt="User Avatar"
                   />
                   <div className="text-lg ml-2 text-cyan-500  font-bold transition duration-300 ease-in-out transform hover:scale-110">
-                    {user.username.charAt(0).toUpperCase() +
-                      user.username.slice(1, 4).toLowerCase()}
+                    {user?.username?.charAt(0).toUpperCase() +
+                      user?.username?.slice(1, 4).toLowerCase()}
                   </div>
                 </div>
               </Link>

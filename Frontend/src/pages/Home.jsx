@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Carousal,
   Categories,
@@ -9,8 +9,20 @@ import {
 } from "../index";
 import { useQuery } from "@tanstack/react-query";
 import { AllCategories } from "../assets/imports/importImages";
+import { useDispatch } from "react-redux";
+
+import refreshUser from "../utility/refreshUser";
+import refreshCart from "../utility/refreshCart";
 
 function Home() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
   const fetchCategories = async () => {
     const response = await fetch(
       `http://localhost:8000/v1/categories?page=1&limit=11`
@@ -49,15 +61,11 @@ function Home() {
     staleTime: 1000 * 60,
   });
 
-  if (categoriesLoading || brandsLoading){
-    return(
-      <HomePageLoading />
-    )
+  if (categoriesLoading || brandsLoading) {
+    return <HomePageLoading />;
   }
   if (categoriesError || brandsError) {
-   return(
-      <ErrorPage />
-   )
+    return <ErrorPage />;
   }
 
   return (
