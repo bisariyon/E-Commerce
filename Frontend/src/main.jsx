@@ -23,6 +23,8 @@ import CheckOut from "./pages/CheckOut.jsx";
 import { AfterSignUp, NotLoggedInUser } from "./index.js";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import ForgetPassword from "./pages/ForgetPassword.jsx"
+import NewPassword from "./pages/NewPassword.jsx";
+import VerifyUser from "./pages/VerifyUser.jsx";
 
 
 const router = createBrowserRouter(
@@ -36,6 +38,8 @@ const router = createBrowserRouter(
           <Route path="login" element={<LoginUser />} />
           <Route path="register" element={<RegisterUser />} />
           <Route path="forgot-password" element={<ForgetPassword />} />
+          <Route path="new-password/:token" element={<NewPassword />} />
+          <Route path="verify/:token" element={<VerifyUser />} />
         </Route>
         <Route path="products" element={<Product />} />
         <Route path="checkout" element={<CheckOut />} />

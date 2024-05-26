@@ -262,6 +262,7 @@ const changePassword = asyncHandler(async (req, res, next) => {
 //Verification link
 const selfVerificationLinkRequest = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
+  const redirectURL = req.body.redirectURL;
 
   if (!userId) {
     throw new ApiError(404, "UserId missing in request");
@@ -286,7 +287,9 @@ const selfVerificationLinkRequest = asyncHandler(async (req, res, next) => {
     }
   );
 
-  const link = `http://localhost:8000/v1/user/verify/${token}`;
+  const link = `${redirectURL}/${token}`;
+  // console.log(link);
+  // const link = `http://localhost:8000/v1/user/verify/${token}`;
 
   const mailOptions = {
     from: `"Bisariyon E-com" ${PLATFORM_EMAIL}`,
@@ -351,6 +354,7 @@ const selfVerify = asyncHandler(async (req, res, next) => {
 //Generate OTP and send it to the email
 const generateEmailOTP = async (req, res, next) => {
   const { email } = req.body;
+  // console.log(email);
 
   if (!email) {
     throw new ApiError(400, "Email is required");
@@ -402,6 +406,7 @@ const generateEmailOTP = async (req, res, next) => {
 
 const changePasswordWithOTP = asyncHandler(async (req, res, next) => {
   const { newPassword, confirmPassword, otp } = req.body;
+  // console.log(newPassword, confirmPassword, otp)
 
   if (!otp) {
     throw new ApiError(400, "OTP is required");
@@ -453,7 +458,7 @@ const changePasswordWithOTP = asyncHandler(async (req, res, next) => {
 
 //Send reset password link to email
 const forgotPasswordResetLink = asyncHandler(async (req, res, next) => {
-  const { email } = req.body;
+  const { email, redirectURL } = req.body;
 
   if (!email) {
     throw new ApiError(400, "Email is required");
@@ -476,7 +481,8 @@ const forgotPasswordResetLink = asyncHandler(async (req, res, next) => {
     }
   );
 
-  const link = `http://localhost:8000/v1/user/resetpassword/${token}`;
+  const link = `${redirectURL}/${token}`;
+  // console.log(link);
 
   const mailOptions = {
     from: `"Bisariyon E-com" ${PLATFORM_EMAIL}`,
@@ -499,7 +505,7 @@ const resetpasswordByLink = asyncHandler(async (req, res, next) => {
   const { token } = req.params;
   const { newPassword, confirmPassword } = req.body;
 
-  console.log(token, newPassword, confirmPassword);
+  // console.log(newPassword, confirmPassword);
 
   if (!(newPassword && confirmPassword)) {
     throw new ApiError(

@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BsPencilSquare } from "react-icons/bs";
 import { patchUser } from "../../store/UserSlice";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 function AccountInfo() {
+  const fullPath = window.location.href;
+  const location = useLocation();
+  const initialPath = fullPath.replace(location.pathname, "") + "/";
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
 
@@ -13,6 +18,14 @@ function AccountInfo() {
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [error, setError] = useState(null);
+
+  // for changing password
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [otp, setOtp] = useState("");
+
+  const [message, setMessage] = useState("");
 
   {
     /*Backend functions*/
@@ -118,6 +131,54 @@ function AccountInfo() {
     }
   };
 
+  const sentOtpBackend = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/v1/users/generate-email-otp`,
+        {
+          email: user.email,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("sent successfully");
+        return response.data;
+      }
+    } catch (error) {
+      console.log("Error sending OTP:", error);
+      setError(error.response.data.message);
+      throw error;
+    }
+  };
+
+  const updatePasswordBackend = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/v1/users/verifyotp`,
+        {
+          newPassword: newPassword,
+          confirmPassword: confirmPassword,
+          otp: otp,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Password updated successfully");
+        return response.data;
+      }
+    } catch (error) {
+      console.log("Error updating password:", error);
+      setError(error.response.data.message);
+      throw error;
+    }
+  };
+
   //Function to save the edited field
   const handleSave = (field) => {
     if (field === "email") {
@@ -133,17 +194,34 @@ function AccountInfo() {
   };
 
   useEffect(() => {
-    if (error) {
+    if (error || message) {
       setTimeout(() => {
         setError(null);
-      }, 2000);
+        setMessage(null);
+      }, 2500);
     }
-  }, [error]);
+  }, [error,message]);
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     setAvatar(file);
     updateAvatarBackend();
+  };
+
+  const sendOtp = async () => {
+    await sentOtpBackend();
+    setShowPasswordChange(!showPasswordChange);
+  };
+
+  const handlePasswordChange = async () => {
+    if (!newPassword || !confirmPassword || !otp) {
+      setError("Please fill all the fields");
+      return;
+    }
+    console.log("Changing password");
+    await updatePasswordBackend();
+    setShowPasswordChange(false);
+    setErrorMessage("Password changed successfully");
   };
 
   {
@@ -152,6 +230,7 @@ function AccountInfo() {
   const renderEditButton = (field) => (
     <button
       onClick={() => {
+        setShowPasswordChange(false);
         if (editingField === field) {
           setEditingField(null);
           setEditedValue("");
@@ -190,8 +269,28 @@ function AccountInfo() {
     </>
   );
 
-  const handleVerify = () => {
-    console.log("Verifying account");
+  const handleVerify = async () => {
+    const redirectURL = initialPath + "user/verify";
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/v1/users/self-verification-link",
+        {
+          redirectURL,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log(response);
+      if (response.status === 200) {
+      //   console.log("Verification link sent");
+        setMessage("Verification link sent to your email");
+      }
+    } catch (error) {
+      setMessage(error.response.data.message);
+      throw error;
+    }
   };
 
   {
@@ -245,7 +344,7 @@ function AccountInfo() {
   };
 
   return (
-    <div className="container mx-auto p-4 h-full">
+    <div className="container mx-auto p-4 ">
       <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
         Account Information
       </h2>
@@ -282,21 +381,75 @@ function AccountInfo() {
           <div className="col-span-1">
             {renderField("Full Name", "fullName")}
           </div>
-          <div className="rounded-lg shadow-md p-6 bg-white m-2">
-            <h3 className="text-md font-semibold mb-2 text-slate-500">
-              Password
-            </h3>
-            <div className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 w-full">
-              <button
-                className="text-md text-gray-700 font-semibold hover:text-blue-500 active:text-black"
-                // onClick={handlePassword}
-              >
-                Click here to change your password
-              </button>
+
+          {!showPasswordChange ? (
+            <>
+              <div className="rounded-lg shadow-md p-6 bg-white m-2">
+                <h3 className="text-md font-semibold mb-2 text-slate-500">
+                  Password
+                </h3>
+                <div className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 w-full">
+                  <button
+                    className="text-md text-gray-700 font-semibold hover:text-blue-500 active:text-black"
+                    onClick={() => sendOtp()}
+                  >
+                    Click here to change your password
+                  </button>
+                </div>
+              </div>
+
+              <div className="col-span-1">{renderField("Email", "email")}</div>
+              <div className="col-span-1">{renderField("Phone", "phone")}</div>
+            </>
+          ) : (
+            <div className="rounded-lg shadow-md p-6 bg-white m-2 row-span-2">
+              <h3 className="text-md font-semibold mb-2 text-slate-500">
+                Change Password
+              </h3>
+              <div className="flex flex-col items-start space-y-4">
+                <input
+                  type="text"
+                  placeholder="New Password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 w-full"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 w-full"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Email OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 w-full"
+                  re
+                  quired
+                />
+                <div className="space-x-4">
+                  <button
+                    onClick={() => handlePasswordChange()}
+                    className="text-blue-500 hover:text-blue-700 focus:outline-none text-s bg-transparent "
+                  >
+                    Save
+                  </button>
+
+                  <button
+                    className="text-red-500 hover:text-red-700 focus:outline-none text-s bg-transparent "
+                    onClick={() => setShowPasswordChange(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="col-span-1">{renderField("Email", "email")}</div>
-          <div className="col-span-1">{renderField("Phone", "phone")}</div>
+          )}
         </div>
       </div>
 
@@ -323,6 +476,9 @@ function AccountInfo() {
                     >
                       Click here to verify your account
                     </button>
+                    <div className="text-sm text-blue-500 font-mono flex justify-center p-2">
+                      {message}
+                    </div>
                   </>
                 )}
               </p>

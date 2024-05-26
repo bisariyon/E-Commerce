@@ -39,7 +39,7 @@ router.route("/generate-email-otp").post(generateEmailOTP);
 router.route("/verifyotp").post(changePasswordWithOTP);
 
 router.route("/change-password-reset-link").post(forgotPasswordResetLink);
-router.route("/resetpassword/:token").get(resetpasswordByLink);
+router.route("/resetpassword/:token").post(resetpasswordByLink);
 
 router.route("/change-password").post(verifyJwtToken, changePassword);
 router.route("/update/profile").patch(verifyJwtToken, updateUserProfile); //done
