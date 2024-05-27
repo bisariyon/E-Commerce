@@ -365,16 +365,16 @@ function AccountInfo() {
         />
       </div>
       <div className="mb-10 bg-gray-200 px-2 pt-2 pb-4 rounded-lg">
-        <div className="-m-1 px-4 pt-4 flex flex-col ">
+        <div className=" px-4 pt-4 flex flex-col ">
           <span className="text-black text-2xl font-bold">
             Personal Information
           </span>
-          <span className="text-sm text-red-500 font-mono mt-2 flex justify-center p-2">
+          <span className="text-sm text-red-500 font-mono flex justify-center p-2">
             {error}
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6 px-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-2 gap-x-6 px-2">
           <div className="col-span-1">
             {renderField("Username", "username")}
           </div>

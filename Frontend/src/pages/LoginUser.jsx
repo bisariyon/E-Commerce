@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Logo2 } from "../assets/imports/importImages";
 import { useSelector, useDispatch } from "react-redux";
@@ -72,7 +72,7 @@ const LoginUser = () => {
 
       if (response.status === 200) {
         setError("");
-        dispatch(emptyBasket())
+        dispatch(emptyBasket());
         dispatch(setUser(response.data.data));
         getCartBackend();
         navigate("/");
@@ -160,7 +160,7 @@ const LoginUser = () => {
                 required
               />
               <button
-                onClick={handleForgotPassword}
+                onClick={() => handleForgotPassword()}
                 className="text-blue-600 hover:underline text-sm font-semibold px-1"
               >
                 Forgot Password?

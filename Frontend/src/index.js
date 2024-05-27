@@ -20,7 +20,7 @@ import AccountInfo from "./components/User/AccountInfo";
 import Orders from "./components/User/Orders";
 import Wishlist from "./components/User/Wishlist";
 import Addresses from "./components/User/Addresses";
-import Settings from "./components/User/Settings";
+import Reviews from "./components/User/Reviews";
 import Help from "./components/User/Help";
 import Logout from "./components/User/Logout";
 
@@ -44,7 +44,7 @@ export {
   Orders,
   Wishlist,
   Addresses,
-  Settings,
+  Reviews,
   Help,
   Logout,
 };

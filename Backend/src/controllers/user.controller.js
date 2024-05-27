@@ -11,6 +11,7 @@ import otpGenerator from "otp-generator";
 import { sendMailNotification } from "../utils/sendMail.js";
 import { PLATFORM_EMAIL } from "../constants.js";
 import { Cart } from "../models/cart.model.js";
+import mongoose from "mongoose";
 
 //helper functions
 const generateAccessAndRefreshToken = async (userId) => {
@@ -311,6 +312,7 @@ const selfVerificationLinkRequest = asyncHandler(async (req, res, next) => {
 
 const selfVerify = asyncHandler(async (req, res, next) => {
   const { token } = req.params;
+  // console.log(token);
 
   if (!token) {
     throw new ApiError(400, "No token found");
@@ -320,6 +322,7 @@ const selfVerify = asyncHandler(async (req, res, next) => {
   if (!decodedToken) {
     throw new ApiError(401, "Invalid token");
   }
+  // console.log(decodedToken);
 
   const user = await User.findById(decodedToken.id);
   if (!user) {
@@ -329,14 +332,20 @@ const selfVerify = asyncHandler(async (req, res, next) => {
   if (user.verified) {
     throw new ApiError(400, "User is already verified");
   }
-  try {
+  // try {
     user.verified = true;
     const verifiedUser = await user.save({ validateBeforeSave: false });
     if (!verifiedUser) {
       throw new ApiError(500, "Error in verifying user");
     }
 
-    const cart = await Cart.create({ user: user._id });
+    const cartAlreadyexist = await Cart.findOne({ user: user._id });
+    if (cartAlreadyexist) {
+      throw new ApiError(400, "Cart already exists for this user");
+    }
+
+    const id = new mongoose.Types.ObjectId();
+    const cart = await Cart.create({ _id: id, user: user._id });
     if (!cart) {
       throw new ApiError(500, "Error in creating cart");
     }
@@ -346,9 +355,11 @@ const selfVerify = asyncHandler(async (req, res, next) => {
       .json(
         new ApiResponse(200, {}, "User verified successfully and Cart created")
       );
-  } catch (error) {
-    throw new ApiError(500, "Error in verifying user");
-  }
+  // } catch (error) {
+  //   user.verified = false;
+  //   await user.save({ validateBeforeSave: false });
+  //   throw new ApiError(500, "Error in verifying user");
+  // }
 });
 
 //Generate OTP and send it to the email

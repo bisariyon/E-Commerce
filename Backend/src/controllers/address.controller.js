@@ -42,6 +42,8 @@ const userAddresses = asyncHandler(async (req, res, next) => {
     return next(new ApiError(401, "Unauthorized"));
   }
 
+  // console.log("User",user);
+
   const addresses = await UserAddress.find({ user: user._id });
   if (!addresses) {
     return next(new ApiError(404, "Addresses not found"));

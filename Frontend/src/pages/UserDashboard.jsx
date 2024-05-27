@@ -4,7 +4,7 @@ import {
   Orders,
   Wishlist,
   Addresses,
-  Settings,
+  Reviews,
   Help,
   Logout,
 } from "../index";
@@ -43,8 +43,8 @@ const UserDashboard = () => {
         return <Wishlist />;
       case "addresses":
         return <Addresses />;
-      case "settings":
-        return <Settings />;
+      case "reviews":
+        return <Reviews />;
       case "help":
         return <Help />;
       case "logout":
@@ -71,7 +71,7 @@ const UserDashboard = () => {
             { label: "Addresses", option: "addresses" },
             { label: "Orders", option: "orders" },
             { label: "Wishlist", option: "wishlist" },
-            { label: "Settings", option: "settings" },
+            { label: "Reviews", option: "reviews" },
             { label: "Help", option: "help" },
             { label: "Logout", option: "logout" },
           ].map((item) => (

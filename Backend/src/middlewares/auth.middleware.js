@@ -11,7 +11,7 @@ export const verifyJwtToken = asyncHandler(async (req, res, next) => {
       req.cookies?.accessToken ||
       req.headers.authorization?.replace("Bearer ", "");
 
-    // console.log(token);
+    // console.log("token ",token);
 
     if (!token) {
       return next(new ApiError(401, "Unauthorized request"));
@@ -28,6 +28,7 @@ export const verifyJwtToken = asyncHandler(async (req, res, next) => {
     }
 
     req.user = user;
+    // console.log("User : ",req.user);
     next();
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid Access Token");
