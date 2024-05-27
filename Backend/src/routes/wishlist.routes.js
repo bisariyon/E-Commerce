@@ -10,13 +10,12 @@ import {
 
 const router = Router();
 
-router.post("/add/:productId", verifyJwtToken, addProductToWishlist);
+router.route("/add/:productId").post(verifyJwtToken, addProductToWishlist); //done
 router
   .route("/remove/:productId")
-  .delete(verifyJwtToken, removeProductFromWishlist);
+  .delete(verifyJwtToken, removeProductFromWishlist); //done
 
-router.get("/", verifyJwtToken, getWishlist);
-
-router.delete("/empty", verifyJwtToken, emptyWishlist);
+router.route("/").get(verifyJwtToken, getWishlist); //done
+router.route("/empty").delete(verifyJwtToken, emptyWishlist); //done
 
 export default router;

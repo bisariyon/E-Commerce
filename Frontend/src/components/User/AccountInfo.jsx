@@ -200,7 +200,7 @@ function AccountInfo() {
         setMessage(null);
       }, 2500);
     }
-  }, [error,message]);
+  }, [error, message]);
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -284,7 +284,7 @@ function AccountInfo() {
 
       console.log(response);
       if (response.status === 200) {
-      //   console.log("Verification link sent");
+        //   console.log("Verification link sent");
         setMessage("Verification link sent to your email");
       }
     } catch (error) {
@@ -314,9 +314,9 @@ function AccountInfo() {
             </div>
           ) : (
             <div className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 w-full">
-              <p className="text-md text-gray-700 font-semibold">
+              <div className="text-md text-gray-700 font-semibold">
                 {user?.[field]}
-              </p>
+              </div>
             </div>
           )}
           <div className="ml-4 p-0">
@@ -464,7 +464,7 @@ function AccountInfo() {
               Verfified
             </h3>
             <div className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 w-full">
-              <p className="text-md text-gray-700 font-semibold">
+              <div className="text-md text-gray-700 font-semibold">
                 {user?.verified ? (
                   "Verified"
                 ) : (
@@ -481,7 +481,7 @@ function AccountInfo() {
                     </div>
                   </>
                 )}
-              </p>
+              </div>
             </div>
           </div>
 

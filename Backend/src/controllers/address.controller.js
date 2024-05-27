@@ -6,14 +6,16 @@ import { UserAddress } from "../models/userAddress.model.js";
 const addAddress = asyncHandler(async (req, res, next) => {
   const user = req.user;
   if (!user) {
-    return next(new ApiError(401, "Unauthorized"));
+    throw new ApiError(401, "Unauthorized");
   }
 
   const { addressLine1, addressLine2, city, state, pincode, country, contact } =
     req.body;
 
+  console.log("Address", addressLine1);
+
   if (!addressLine1 || !city || !pincode || !country || !contact) {
-    return next(new ApiError(400, "All marked fields are required"));
+    throw new ApiError(400, "All marked fields are required");
   }
 
   const newAddress = await UserAddress.create({
@@ -28,7 +30,7 @@ const addAddress = asyncHandler(async (req, res, next) => {
   });
 
   if (!newAddress) {
-    return next(new ApiError(500, "Address not created"));
+    throw new ApiError(500, "Address not created");
   }
 
   return res
@@ -39,14 +41,14 @@ const addAddress = asyncHandler(async (req, res, next) => {
 const userAddresses = asyncHandler(async (req, res, next) => {
   const user = req.user;
   if (!user) {
-    return next(new ApiError(401, "Unauthorized"));
+    throw new ApiError(401, "Unauthorized");
   }
 
   // console.log("User",user);
 
   const addresses = await UserAddress.find({ user: user._id });
   if (!addresses) {
-    return next(new ApiError(404, "Addresses not found"));
+    throw new ApiError(404, "Addresses not found");
   }
 
   if (addresses.length === 0) {
@@ -63,19 +65,19 @@ const userAddresses = asyncHandler(async (req, res, next) => {
 const removeAddress = asyncHandler(async (req, res, next) => {
   const user = req.user;
   if (!user) {
-    return next(new ApiError(401, "Unauthorized"));
+    throw new ApiError(401, "Unauthorized");
   }
 
   const { addressId } = req.params;
   if (!addressId) {
-    return next(new ApiError(400, "Address id is required"));
+    throw new ApiError(400, "Address id is required");
   }
 
   const address = await UserAddress.findOneAndDelete({
     $and: [{ _id: addressId }, { user: user._id }],
   });
   if (!address) {
-    return next(new ApiError(404, "Address not found for current user"));
+    throw new ApiError(404, "Address not found for current user");
   }
 
   return res.status(200).json(new ApiResponse(200, address, "Address removed"));
@@ -84,12 +86,12 @@ const removeAddress = asyncHandler(async (req, res, next) => {
 const removeMultipleAddresses = asyncHandler(async (req, res, next) => {
   const user = req.user;
   if (!user) {
-    return next(new ApiError(401, "Unauthorized"));
+    throw new ApiError(401, "Unauthorized");
   }
 
   let { addressIds } = req.body;
   if (!addressIds) {
-    return next(new ApiError(400, "No address selected"));
+    throw new ApiError(400, "No address selected");
   }
 
   addressIds = addressIds.split(",");
@@ -101,7 +103,7 @@ const removeMultipleAddresses = asyncHandler(async (req, res, next) => {
       $and: [{ _id: addressIds[i] }, { user: user._id }],
     });
     if (!address) {
-      return next(new ApiError(404, `Address ${addressIds[i]} not found`));
+      throw new ApiError(404, `Address ${addressIds[i]} not found`);
     }
     deletedAddresses.push(address);
   }
@@ -116,7 +118,7 @@ const updateAddress = asyncHandler(async (req, res, next) => {
 
   const user = req.user;
   if (!user) {
-    return next(new ApiError(401, "Unauthorized user"));
+    throw new ApiError(401, "Unauthorized user");
   }
 
   const { addressLine1, addressLine2, city, state, pincode, country, contact } =
@@ -131,12 +133,12 @@ const updateAddress = asyncHandler(async (req, res, next) => {
     !country &&
     !contact
   ) {
-    return next(new ApiError(400, "All fields are empty"));
+    throw new ApiError(400, "All fields are empty");
   }
 
   const currentAddress = await UserAddress.findById(addressId);
   if (!currentAddress) {
-    return next(new ApiError(404, "Address not found"));
+    throw new ApiError(404, "Address not found");
   }
 
   if (addressLine1) currentAddress.addressLine1 = addressLine1;
@@ -151,7 +153,7 @@ const updateAddress = asyncHandler(async (req, res, next) => {
     validateBeforeSave: false,
   });
   if (!updatedAddress) {
-    return next(new ApiError(500, "Address not updated"));
+    throw new ApiError(500, "Address not updated");
   }
 
   return res

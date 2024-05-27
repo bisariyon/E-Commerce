@@ -36,7 +36,7 @@ function ProductSquare({
     productImage,
     price,
     brand: brandId,
-    category : categoryId,
+    category: categoryId,
   };
 
   const addToCartBackend = async () => {
@@ -74,7 +74,7 @@ function ProductSquare({
   const decrease = async () => {
     if (quantity > 0) {
       setQuantity((prevQuantity) => prevQuantity - 1);
-      dispatch(decreaseQuantity({ productId: _id}));
+      dispatch(decreaseQuantity({ productId: _id }));
       await decreaseCartBackend();
     }
   };
@@ -90,6 +90,33 @@ function ProductSquare({
   useEffect(() => {
     setQuantity(initialQuantity);
   }, [basket]);
+
+  //Wishlist
+  const addToWishlistBackend = async (_id) => {
+    const productId = _id;
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/v1/wishlist/add/${productId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 201) {
+        console.log("Added to wishlist:", response.data);
+        return response.data;
+      }
+    } catch (error) {
+      console.error("Failed to add to wishlist:", error);
+      throw error;
+    }
+  };
+
+  const addToWishlist = async (_id) => {
+    console.log("Adding to wishlist", _id);
+    addToWishlistBackend(_id);
+  };
 
   return (
     <div
@@ -126,8 +153,8 @@ function ProductSquare({
           </div>
         </div>
       </div>
-      <div className="text-sm text-gray-600 mb-4">
-        <span className="font-bold">Rating:</span> {rating}
+      <div className="text-sm text-gray-600 mb-4 ">
+        <span className="font-bold">Rating: {rating}</span>
       </div>
 
       <div className="flex items-center mb-4">
@@ -147,6 +174,12 @@ function ProductSquare({
           disabled={!isVerified}
         >
           +
+        </button>
+        <button
+          className="bg-green-500 text-white text-xs lg:text-md p-2 ml-4 lg:ml-6 rounded hover:bg-green-700 active:scale-95"
+          onClick={() => addToWishlist(_id)}
+        >
+          Wishlist
         </button>
       </div>
 

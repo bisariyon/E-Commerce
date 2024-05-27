@@ -7,12 +7,13 @@ import { Product } from "../models/product.model.js";
 const addProductToWishlist = asyncHandler(async (req, res, next) => {
   const { productId } = req.params;
   if (!productId) {
-    return next(new ApiError(400, "Product id is required"));
+    throw new ApiError(400, "Product id is required");
   }
 
+  // console.log("Product id is", productId);
   const product = await Product.findById(productId);
   if (!product) {
-    return next(new ApiError(404, "Product not found"));
+    throw new ApiError(404, "Product not found");
   }
 
   const existingWishlist = await Wishlist.findOne({
@@ -20,7 +21,7 @@ const addProductToWishlist = asyncHandler(async (req, res, next) => {
     product: productId,
   });
   if (existingWishlist) {
-    return next(new ApiError(400, "Product already in wishlist"));
+    throw new ApiError(400, "Product already in wishlist");
   }
 
   const wishlist = await Wishlist.create({
@@ -28,30 +29,35 @@ const addProductToWishlist = asyncHandler(async (req, res, next) => {
     product: productId,
   });
   if (!wishlist) {
-    return next(new ApiError(400, "Failed to add product to wishlist"));
+    throw new ApiError(400, "Failed to add product to wishlist");
   }
 
-  res
+  return res
     .status(201)
-    .json(new ApiResponse(201, "Product added to wishlist", wishlist));
+    .json(new ApiResponse(201, wishlist,"Product added to wishlist" ));
 });
 
 const removeProductFromWishlist = asyncHandler(async (req, res, next) => {
   const { productId } = req.params;
+  // console.log("Product id is", productId);
+
   if (!productId) {
-    return next(new ApiError(400, "Product id is required"));
+    throw new ApiError(400, "Product id is required");
   }
 
+  console.log("Product id is", productId);
   const wishlist = await Wishlist.findOneAndDelete({
     user: req.user._id,
     product: productId,
   });
 
   if (!wishlist) {
-    return next(new ApiError(404, "Product not found in wishlist"));
+    throw new ApiError(404, "Product not found in wishlist")``;
   }
 
-  res.json(new ApiResponse(200, "Product removed from wishlist", wishlist));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Product removed from wishlist", wishlist));
 });
 
 const getWishlist = asyncHandler(async (req, res, next) => {
@@ -59,18 +65,20 @@ const getWishlist = asyncHandler(async (req, res, next) => {
     "product"
   );
   if (!wishlist) {
-    return next(new ApiError(404, "Wishlist not found"));
+    throw new ApiError(404, "Wishlist not found");
   }
-  res.json(new ApiResponse(200, "Wishlist fetched", wishlist));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, wishlist, "Wishlist fetched"));
 });
 
 const emptyWishlist = asyncHandler(async (req, res, next) => {
   const emptyList = await Wishlist.deleteMany({ user: req.user._id });
   if (!emptyList) {
-    return next(new ApiError(400, "Failed to empty wishlist"));
+    throw new ApiError(400, "Failed to empty wishlist");
   }
 
-  res.json(new ApiResponse(200, {}, "Wishlist emptied"));
+  return res.status(200).json(new ApiResponse(200, {}, "Wishlist emptied"));
 });
 
 export {

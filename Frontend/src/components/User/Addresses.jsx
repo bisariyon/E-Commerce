@@ -114,7 +114,7 @@ function Addresses() {
     setAddressToRemove(null);
   };
 
-  //Add address to the backend
+  // Add address to the backend
   const [addingNewAddress, setAddingNewAddress] = useState(false);
   const [newAddress, setNewAddress] = useState({
     addressLine1: "",
@@ -130,9 +130,7 @@ function Addresses() {
     try {
       const response = await axios.post(
         "http://localhost:8000/v1/addresses/add",
-        {
-          ...newAddress,
-        },
+        newAddress,
         { withCredentials: true }
       );
 
@@ -151,6 +149,15 @@ function Addresses() {
     onSuccess: () => {
       queryClient.invalidateQueries(["addresses"]);
       setAddingNewAddress(false);
+      setNewAddress({
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        state: "",
+        pincode: "",
+        country: "",
+        contact: "",
+      });
     },
   });
 
@@ -173,12 +180,10 @@ function Addresses() {
     }
 
     addAddress(newAddress);
-    setAddingNewAddress(false);
-    setNewAddress({});
   };
 
   useEffect(() => {
-    if (error ) {
+    if (error) {
       setTimeout(() => {
         setError(null);
       }, 2500);
