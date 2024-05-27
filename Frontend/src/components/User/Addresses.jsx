@@ -1,36 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { Modal } from "../../index";
 
 function Addresses() {
   const queryClient = useQueryClient();
+  const [showModal, setShowModal] = useState(false);
+  const [addressToRemove, setAddressToRemove] = useState(null);
+  const [error, setError] = useState(null);
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setAddressToRemove(null);
+  };
+
+  // Fetch addresses from the backend
   const fetchAddresses = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/v1/addresses", {
-        withCredentials: true,
-      });
-      return response.data.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await axios.get("http://localhost:8000/v1/addresses", {
+      withCredentials: true,
+    });
+    return response.data.data;
   };
 
   const {
     data: addressData,
     isLoading: addressLoading,
     isError: isAddressError,
-    error: AddressErrors,
+    error: addressErrors,
   } = useQuery({
     queryKey: ["addresses"],
     queryFn: fetchAddresses,
     retry: 1,
   });
 
+  // if (addressLoading) return <div>Loading...</div>;
+  // if (isAddressError) return <div>Error: {addressErrors.message}</div>;
+
+  // Update address in the backend
   const [editMode, setEditMode] = useState(null);
   const [editedValues, setEditedValues] = useState({});
 
-  // http://localhost:8000/v1/addresses/update/:addressId
   const updateBackendAddress = async (addressId, editedValues) => {
     const body = {
       addressLine1: editedValues.addressLine1,
@@ -42,22 +51,20 @@ function Addresses() {
       contact: editedValues.contact,
     };
 
-    try {
-      const response = await axios.patch(
-        `http://localhost:8000/v1/addresses/update/${addressId}`,
-        body,
-        { withCredentials: true }
-      );
-
-      console.log("Updated Address", response.data.data);
-      return response.data.data;
-    } catch (error) {
-      throw error; 
-    }
+    const response = await axios.patch(
+      `http://localhost:8000/v1/addresses/update/${addressId}`,
+      body,
+      { withCredentials: true }
+    );
+    return response.data.data;
   };
 
-  const { mutate, isPending, isError, isSuccess } = useMutation({
-    mutationFn: updateBackendAddress,
+  const { mutate: updateAddress } = useMutation({
+    mutationFn: ({ addressId, editedValues }) =>
+      updateBackendAddress(addressId, editedValues),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["addresses"]);
+    },
   });
 
   const handleUpdate = (addressId) => {
@@ -69,34 +76,219 @@ function Addresses() {
   };
 
   const handleSave = () => {
-    // const updatedAddresses = addressData.map((address) =>
-    //   address._id === editMode ? editedValues : address
-    // );
-    // queryClient.setQueryData(["addresses"], updatedAddresses);
-
-
-    mutate(editedValues,{
-      onSuccess: () => {
-        queryClient.invalidateQueries("addresses");
-        setEditMode(null);
-        setEditedValues({});
+    updateAddress(
+      { addressId: editMode, editedValues },
+      {
+        onSuccess: () => {
+          setEditMode(null);
+          setEditedValues({});
+        },
       }
-    })
-    
+    );
   };
+
+  // Remove address from the backend
+  const removeBackendAddress = async (addressId) => {
+    const response = await axios.delete(
+      `http://localhost:8000/v1/addresses/remove/${addressId}`,
+      { withCredentials: true }
+    );
+    return response.data.data;
+  };
+
+  const { mutate: deleteAddress } = useMutation({
+    mutationFn: removeBackendAddress,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["addresses"]);
+    },
+  });
 
   const handleRemove = (addressId) => {
-    // Implement remove logic here, e.g., delete the address with addressId
+    setAddressToRemove(addressId);
+    setShowModal(true);
   };
 
-  if (addressLoading) return <div>Loading...</div>;
-  if (isAddressError) return <div>Error: {AddressErrors.message}</div>;
+  const handleConfirmDeletion = () => {
+    deleteAddress(addressToRemove);
+    setShowModal(false);
+    setAddressToRemove(null);
+  };
+
+  //Add address to the backend
+  const [addingNewAddress, setAddingNewAddress] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    pincode: "",
+    country: "",
+    contact: "",
+  });
+
+  const addingNewAddressBackend = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/v1/addresses/add",
+        {
+          ...newAddress,
+        },
+        { withCredentials: true }
+      );
+
+      if (response.status === 201) {
+        console.log("Address added", response.data.data);
+        return response.data.data;
+      }
+    } catch (error) {
+      console.error("Failed to add address", error);
+      throw error;
+    }
+  };
+
+  const { mutate: addAddress } = useMutation({
+    mutationFn: addingNewAddressBackend,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["addresses"]);
+      setAddingNewAddress(false);
+    },
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewAddress({ ...newAddress, [name]: value });
+  };
+
+  const handleAdd = () => {
+    console.log("Add new address", newAddress);
+    if (
+      !newAddress.addressLine1 ||
+      !newAddress.city ||
+      !newAddress.pincode ||
+      !newAddress.country ||
+      !newAddress.contact
+    ) {
+      setError("Please fill all the required fields");
+      return;
+    }
+
+    addAddress(newAddress);
+    setAddingNewAddress(false);
+    setNewAddress({});
+  };
+
+  useEffect(() => {
+    if (error ) {
+      setTimeout(() => {
+        setError(null);
+      }, 2500);
+    }
+  }, [error]);
 
   return (
     <div className="container mx-auto p-4">
       <div className="text-3xl font-bold mb-6 text-center text-gray-800">
         Addresses
       </div>
+
+      <div className="grid justify-center">
+        <button
+          className="bg-blue-600 px-4 py-3 rounded-lg"
+          onClick={() => setAddingNewAddress(true)}
+        >
+          Add new Address
+        </button>
+      </div>
+
+      {error && <div className="text-red-500 text-center mt-4">{error}</div>}
+
+      {addingNewAddress && (
+        <div className="rounded-lg shadow-md p-4 mx-4 my-6 bg-white flex flex-col justify-between ">
+          <h3 className="text-lg font-semibold mb-3 text-black">
+            Provide New Address Details
+          </h3>
+          <div className="flex flex-col space-y-2 mb-4">
+            <input
+              type="text"
+              name="addressLine1"
+              value={newAddress.addressLine1}
+              onChange={handleInputChange}
+              className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 text-slate-400"
+              placeholder="Address Line 1 (Required)"
+              required
+            />
+            <input
+              type="text"
+              name="addressLine2"
+              value={newAddress.addressLine2}
+              onChange={handleInputChange}
+              className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 text-slate-400"
+              placeholder="Address Line 2"
+            />
+            <input
+              type="text"
+              name="city"
+              value={newAddress.city}
+              onChange={handleInputChange}
+              className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 text-slate-400"
+              placeholder="City (Required)"
+              required
+            />
+            <input
+              type="text"
+              name="state"
+              value={newAddress.state}
+              onChange={handleInputChange}
+              className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 text-slate-400"
+              placeholder="State"
+            />
+            <input
+              type="text"
+              name="pincode"
+              value={newAddress.pincode}
+              onChange={handleInputChange}
+              className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 text-slate-400"
+              placeholder="Pincode (Required)"
+              required
+            />
+            <input
+              type="text"
+              name="country"
+              value={newAddress.country}
+              onChange={handleInputChange}
+              className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 text-slate-400"
+              placeholder="Country (Required)"
+              required
+            />
+            <input
+              type="text"
+              name="contact"
+              value={newAddress.contact}
+              onChange={handleInputChange}
+              className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 text-slate-400"
+              placeholder="Contact (Required)"
+              required
+            />
+          </div>
+          <div className="flex space-x-4">
+            <button
+              onClick={handleAdd}
+              className="text-blue-500 hover:text-blue-700 focus:outline-none text-s bg-transparent"
+            >
+              Save Address
+            </button>
+            <button
+              onClick={() => {
+                setAddingNewAddress(false);
+                setNewAddress({});
+              }}
+              className="text-red-500 hover:text-red-700 focus:outline-none text-s bg-transparent"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mx-4">
         {addressData &&
@@ -215,7 +407,7 @@ function Addresses() {
                 </>
               ) : (
                 <>
-                  <h3 className="text-lg font-semibold mb-2 text-black">
+                  <h3 className="text-lg font-semibold mt-2 mb-4 text-black">
                     Address {index + 1}
                   </h3>
                   <div className="flex flex-col mb-2 text-md text-purple-600 space-y-2">
@@ -275,6 +467,12 @@ function Addresses() {
             </div>
           ))}
       </div>
+      <Modal
+        showModal={showModal}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmDeletion}
+        message="Are you sure you want to delete the address"
+      />
     </div>
   );
 }

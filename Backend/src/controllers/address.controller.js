@@ -33,7 +33,7 @@ const addAddress = asyncHandler(async (req, res, next) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(201, "Address added", newAddress));
+    .json(new ApiResponse(201, newAddress, "Address added"));
 });
 
 const userAddresses = asyncHandler(async (req, res, next) => {
