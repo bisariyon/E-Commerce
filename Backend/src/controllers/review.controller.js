@@ -34,16 +34,16 @@ const addReview = asyncHandler(async (req, res, next) => {
     return next(new ApiError(400, "You have already reviewed this product"));
   }
 
-  const ifEligible = await OrderItems.findOne({
-    productID: productId,
-    user: req.user._id,
-  });
+  // const ifEligible = await OrderItems.findOne({
+  //   productID: productId,
+  //   user: req.user._id,
+  // });
 
-  if (!ifEligible) {
-    return next(
-      new ApiError(400, "You can only review products you have purchased")
-    );
-  }
+  // if (!ifEligible) {
+  //   return next(
+  //     new ApiError(400, "You can only review products you have purchased")
+  //   );
+  // }
 
   if (!req.files || req.files.length === 0) {
     return next(new ApiError(400, "At least one image is required"));
@@ -105,33 +105,72 @@ const deleteReview = asyncHandler(async (req, res, next) => {
 
 const updateReview = asyncHandler(async (req, res, next) => {
   const { reviewId } = req.params;
-  const { comment, rating } = req.body;
+  let { comment, rating, deleteImages } = req.body;
 
+  if (deleteImages)
+    //convert to array
+    deleteImages = deleteImages.split(",");
+
+  console.log(comment, rating, deleteImages);
+
+  // Validation
   if (!comment && !rating) {
     return next(new ApiError(400, "Comment and rating are required"));
   }
 
-  if (![1, 2, 3, 4, 5].includes(Number(rating))) {
+  if (rating && ![1, 2, 3, 4, 5].includes(Number(rating))) {
     return next(new ApiError(400, "Rating must be between 1 and 5"));
   }
 
-  const review = await Review.findOneAndUpdate(
-    {
-      user: req.user._id,
-      _id: reviewId,
-    },
-    {
-      comment,
-      rating,
-    },
-    { new: true }
-  );
+  // Find the review
+  const review = await Review.findOne({
+    user: req.user._id,
+    _id: reviewId,
+  });
 
   if (!review) {
     return next(new ApiError(404, "Review not found"));
   }
 
-  res.json(new ApiResponse(200, review, "Review updated successfully"));
+  // Update comment and rating
+  if (comment) review.comment = comment;
+  if (rating) review.rating = rating;
+
+  // Handle image deletions
+  if (deleteImages && deleteImages.length > 0) {
+    await Promise.all(
+      deleteImages.map(async (image) => {
+        const parts = image.split("/");
+        const publicId = parts[parts.length - 1].split(".")[0];
+        await deleteFromCloudinary(publicId);
+        review.images = review.images.filter((img) => img !== image);
+      })
+    );
+  }
+
+  // Handle new image uploads
+  if (req.files && req.files.length > 0) {
+    const localImages = req.files.map((file) => file.path);
+    const uploadPromises = localImages.map((localImage) =>
+      uploadOnCloudinary(localImage)
+    );
+    const uploadResults = await Promise.all(uploadPromises);
+    uploadResults.forEach((uploadImage) => {
+      if (uploadImage && uploadImage.url) {
+        review.images.push(uploadImage.url);
+      } else {
+        throw new ApiError(500, "Error uploading image");
+      }
+    });
+  }
+
+  // Save the updated review
+  const updatedReview = await review.save();
+  if (!updatedReview) {
+    throw new ApiError(500, "Error updating review");
+  }
+
+  res.json(new ApiResponse(200, updatedReview, "Review updated successfully"));
 });
 
 const getReviews = asyncHandler(async (req, res, next) => {

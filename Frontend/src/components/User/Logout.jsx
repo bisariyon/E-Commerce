@@ -1,16 +1,38 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Logout as LogoutLogo } from "../../assets/imports/importImages";
+import { setUser } from "../../store/UserSlice";
+import { setBasket } from "../../store/BasketSlice";
+import axios from "axios";
+import { useDispatch } from "react-redux";
 
 function Logout() {
   const [logoutSuccess, setLogoutSuccess] = useState(false);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Your logout logic here
-    // For demonstration purposes, setLogoutSuccess is called after 2 seconds
-    setTimeout(() => {
-      setLogoutSuccess(true);
-    }, 2000);
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/v1/users/logout",
+        {},
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        console.log("Logout successful");
+        dispatch(setUser(null));
+        dispatch(setBasket([]));
+        setLogoutSuccess(true);
+
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Logout failed: ", error);
+      setError(error.response.data.message);
+    }
   };
 
   return (

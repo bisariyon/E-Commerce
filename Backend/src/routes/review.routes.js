@@ -18,7 +18,7 @@ router
 
 router.route("/deleteReview/:reviewId").delete(verifyJwtToken, deleteReview);
 
-router.route("/updateReview/:reviewId").put(verifyJwtToken, updateReview);
+router.route("/updateReview/:reviewId").put(verifyJwtToken,upload.array("newImages"), updateReview);
 
 router.route("/get/:productId").get(getReviews);
 
