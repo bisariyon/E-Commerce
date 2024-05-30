@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import { CartProduct } from "../models/cartProducts.js";
 import { Cart } from "../models/cart.model.js";
 import { Product } from "../models/product.model.js";
+import mongoose from "mongoose";
 
 const addToCart = asyncHandler(async (req, res, next) => {
   let { quantity } = req.query;
@@ -169,4 +170,53 @@ const removeItemFromCart = asyncHandler(async (req, res, next) => {
   return res.status(201).json(new ApiResponse(201, {}, "Cart Updated"));
 });
 
-export { addToCart, decreaseFromCart, emptyCart, getCart, removeItemFromCart };
+const checkCartForOrder = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart) {
+    throw new ApiError(404, "Cart not found");
+  }
+
+  const cartProducts = await CartProduct.find({ cart: cart._id });
+  if (!cartProducts || cartProducts.length === 0) {
+    throw new ApiError(404, "Cart is empty");
+  }
+
+  for (const cartProduct of cartProducts) {
+    const quantity = cartProduct.quantity;
+    const product = await Product.findById(cartProduct.product);
+    if (!product) {
+      throw new ApiError(
+        404,
+        `Product with id ${cartProduct.product} not found`
+      );
+    }
+
+    const quantityAvailable = product.quantityInStock;
+    // console.log(quantity, quantityAvailable);
+
+    if (quantity > quantityAvailable) {
+      throw new ApiError(
+        400,
+        `Quantity of ${product.title} is not available in stock. Max available quantity is ${quantityAvailable}`
+      );
+    }
+  }
+
+  const orderId = new mongoose.Types.ObjectId();
+  // console.log(orderId);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { orderId }, "Cart is ready for order"));
+});
+
+export {
+  addToCart,
+  decreaseFromCart,
+  emptyCart,
+  getCart,
+  removeItemFromCart,
+  checkCartForOrder,
+};

@@ -14,7 +14,7 @@ const paymentSchema = new Schema(
     },
     modeOfPayment: {
       type: String,
-      enum: ["COD", "Card", "NetBanking", "UPI"],
+      enum: ["Card", "NetBanking", "Wallets"],
       required: true,
     },
     total: {

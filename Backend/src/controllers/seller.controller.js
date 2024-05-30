@@ -39,6 +39,8 @@ const options = {
 const registerSeller = asyncHandler(async (req, res, next) => {
   let { fullName, email, phone, password, GSTnumber, niche } = req.body;
 
+  // console.log(fullName, email, phone, password, GSTnumber);
+
   if (
     [fullName, email, password, phone, GSTnumber].some(
       (field) => field?.trim() === "" || field === undefined
@@ -48,7 +50,8 @@ const registerSeller = asyncHandler(async (req, res, next) => {
   }
 
   //convery niche to array
-  niche = niche.split(",").map((category) => category.trim());
+  // niche = niche.split(",").map((category) => category.trim());
+  // console.log("split",niche);
 
   if (!niche || niche.length === 0) {
     throw new ApiError(400, "Atleast one niche is required");

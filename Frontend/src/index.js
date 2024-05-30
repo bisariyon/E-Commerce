@@ -15,6 +15,7 @@ import HomePageLoading from "./components/Transition/HomePageLoading";
 import ProductsLoading from "./components/Transition/ProductsLoading";
 import ErrorPage from "./components/Transition/ErrorPage";
 import NotLoggedInUser from "./components/Transition/NotLoggedInUser"
+import SellerSignUp from "./components/Transition/SellerSignUp";
 
 import AccountInfo from "./components/User/AccountInfo";
 import Orders from "./components/User/Orders";
@@ -23,6 +24,9 @@ import Addresses from "./components/User/Addresses";
 import Reviews from "./components/User/Reviews";
 import Help from "./components/User/Help";
 import Logout from "./components/User/Logout";
+
+import SellerHeader from "./components/Header/SellerHeader";
+import SellerSearchBar from "./components/Header/SellerSearchBar";
 
 export {
   Header,
@@ -47,4 +51,7 @@ export {
   Reviews,
   Help,
   Logout,
+  SellerHeader,
+  SellerSearchBar,
+  SellerSignUp
 };

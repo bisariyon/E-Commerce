@@ -7,6 +7,7 @@ import {
   emptyCart,
   getCart,
   removeItemFromCart,
+  checkCartForOrder
 } from "../controllers/cartProducts.controller.js";
 
 const router = Router();
@@ -16,5 +17,7 @@ router.route("/decrease/:productId").patch(verifyJwtToken, decreaseFromCart); //
 router.route("/empty").delete(verifyJwtToken, emptyCart); //working
 router.route("/").get(verifyJwtToken, getCart); //working
 router.route("/remove/:productId").delete(verifyJwtToken, removeItemFromCart); //working
+
+router.route("/check").get(verifyJwtToken, checkCartForOrder); //working
 
 export default router;

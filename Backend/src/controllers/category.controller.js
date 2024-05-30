@@ -63,7 +63,7 @@ const getCategorybyID = asyncHandler(async (req, res, next) => {
 const getCategories = asyncHandler(async (req, res, next) => {
   const {
     page = 1,
-    limit = 20,
+    limit = 1000,
     sortBy = "_id",
     sortType = "1",
     query,

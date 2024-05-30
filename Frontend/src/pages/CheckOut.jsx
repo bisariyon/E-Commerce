@@ -9,14 +9,13 @@ import refreshCart from "../utility/refreshCart";
 import refreshUser from "../utility/refreshUser";
 
 function CheckOut() {
-
   const { refreshUserData } = refreshUser();
   const { refreshCartData } = refreshCart();
 
   useEffect(() => {
     refreshUserData();
     refreshCartData();
-  },[])
+  }, []);
 
   const basket = useSelector((state) => state.basket.basket);
   const dispatch = useDispatch();
@@ -109,6 +108,7 @@ function CheckOut() {
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-lg mb-4 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50"
           disabled={basket.length === 0}
+          onClick={() => navigate("/user/order-confirmation")}
         >
           Place Order
         </button>

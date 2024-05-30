@@ -25,7 +25,7 @@ function Home() {
 
   const fetchCategories = async () => {
     const response = await fetch(
-      `http://localhost:8000/v1/categories?page=1&limit=11`
+      `http://localhost:8000/v1/categories?page=1&limit=7`
     );
     const data = await response.json();
     return data;

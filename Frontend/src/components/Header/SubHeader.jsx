@@ -18,13 +18,13 @@ function SubHeader() {
           <Link to="/#" className="nav-link hidden md:inline hover:text-cyan-500 hover:scale-105">
             Order History
           </Link>
-          <Link to="/user/register" className="nav-link hover:text-cyan-500 hover:scale-105">
+          <Link to="/user/register" className="nav-link hidden hover:text-cyan-500 hover:scale-105">
             Wishlist
           </Link>
           <Link to="/user/register" className="nav-link hover:text-cyan-500 hover:scale-105">
             Create New Account
           </Link>
-          <Link to="/#" className="nav-link hidden lg:inline hover:text-cyan-500 hover:scale-105">
+          <Link to="/seller" className="nav-link lg:inline hover:text-cyan-500 hover:scale-105">
             Become a Seller
           </Link>
           <Link to="/#" className="nav-link hidden lg:inline hover:text-cyan-500 hover:scale-105">

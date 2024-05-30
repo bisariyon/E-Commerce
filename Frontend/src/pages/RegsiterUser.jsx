@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
@@ -90,7 +90,7 @@ function RegisterUser() {
   return (
     <div className="min-h-full flex items-center justify-center bg-slate-600 ">
       <div className="flex flex-wrap w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden my-8">
-        <div className="w-full md:w-1/2 p-5 flex flex-col items-center bg-blue-400">
+        <div className="w-full md:w-1/2 p-5 py-16 flex flex-col items-center bg-blue-400">
           <img
             src={Logo2}
             alt="Bisariyon E-Com Logo"
