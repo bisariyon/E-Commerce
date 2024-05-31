@@ -29,9 +29,10 @@ import VerifyUser from "./pages/VerifyUser.jsx";
 import OrderConfirmation from "./pages/OrderConfirmation.jsx";
 
 import AppSeller from "./AppSeller.jsx";
-import Seller from "./pages/Seller.jsx";
-import LoginSeller from "./pages/LoginSeller.jsx";
-import RegisterSeller from "./pages/RegisterSeller.jsx";
+import Seller from "./sellerPages/Seller.jsx";
+import LoginSeller from "./sellerPages/LoginSeller.jsx";
+import RegisterSeller from "./sellerPages/RegisterSeller.jsx";
+import NewProduct from "./sellerPages/NewProduct.jsx";
 
 import PaymentSuccess from "./pages/Payments/PaymentSuccess.jsx";
 import PaymentFailure from "./pages/Payments/PaymentFailure.jsx";
@@ -63,6 +64,7 @@ const router = createBrowserRouter(
         <Route path="" element={<Seller />} />
         <Route path="login" element={<LoginSeller />} />
         <Route path="register" element={<RegisterSeller />} />
+        <Route path="new-product" element={<NewProduct />} />
       </Route>
 
       {/* Without Header Footer */}

@@ -11,7 +11,6 @@ function VerifyUser() {
   const [isVerified, setIsVerified] = useState(false);
   const [show, setShow] = useState(false);
 
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -49,17 +48,31 @@ function VerifyUser() {
   }, [isVerified, error, navigate]);
 
   return (
-    <div className={`container mx-auto p-4 text-center min-h-screen flex flex-col items-center justify-center ${show ? 'opacity-100' : 'opacity-0 transition-opacity duration-1000'}`}>
+    <div
+      className={`container mx-auto p-4 text-center min-h-screen flex flex-col items-center justify-center ${
+        show ? "opacity-100" : "opacity-0 transition-opacity duration-1000"
+      }`}
+    >
       {error && (
         <div>
           <h1 className="text-red-500 text-5xl font-bold">{error}</h1>
-          <img src="https://res.cloudinary.com/deepcloud1/image/upload/v1716663893/u0ai3d9zbwijrlqmslyt.png" alt="Error" className="mx-auto mt-4" />
+          <img
+            src="https://res.cloudinary.com/deepcloud1/image/upload/v1716663893/u0ai3d9zbwijrlqmslyt.png"
+            alt="Error"
+            className="mx-auto mt-4"
+          />
         </div>
       )}
       {isVerified && (
         <div>
-          <h1 className="text-green-500 text-5xl font-bold">User Verified Successfully!</h1>
-          <img src="https://res.cloudinary.com/deepcloud1/image/upload/v1716662086/y7ihf1nqfb38dyqoqpqw.png" alt="Success" className="mx-auto mt-4" />
+          <h1 className="text-green-500 text-5xl font-bold">
+            User Verified Successfully!
+          </h1>
+          <img
+            src="https://res.cloudinary.com/deepcloud1/image/upload/v1716662086/y7ihf1nqfb38dyqoqpqw.png"
+            alt="Success"
+            className="mx-auto mt-4"
+          />
         </div>
       )}
       {!error && !isVerified && <h1>Verifying User...</h1>}

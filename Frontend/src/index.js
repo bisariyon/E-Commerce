@@ -28,6 +28,8 @@ import Logout from "./components/User/Logout";
 import SellerHeader from "./components/Header/SellerHeader";
 import SellerSearchBar from "./components/Header/SellerSearchBar";
 
+import BenefitCard from "./components/Seller Benefits/BenefitCard";
+
 export {
   Header,
   Footer,
@@ -53,5 +55,6 @@ export {
   Logout,
   SellerHeader,
   SellerSearchBar,
-  SellerSignUp
+  SellerSignUp,
+  BenefitCard
 };
