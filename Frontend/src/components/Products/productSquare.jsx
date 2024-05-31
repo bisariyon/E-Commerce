@@ -5,6 +5,7 @@ import {
   increaseQuantityOrAddToBasket,
 } from "../../store/BasketSlice";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function ProductSquare({
   _id,
@@ -21,6 +22,7 @@ function ProductSquare({
   sellerID,
   rating = 2,
 }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.basket.basket);
   const user = useSelector((state) => state.user.user);
@@ -177,21 +179,25 @@ function ProductSquare({
         >
           +
         </button>
-        <button
-          className="bg-green-500 text-white text-xs lg:text-md p-2 ml-4 lg:ml-6 rounded hover:bg-green-700 active:scale-95"
-          onClick={() => addToWishlist(_id)}
-        >
-          Wishlist
-        </button>
+        
       </div>
 
       <div className="mt-auto flex space-x-3">
         <button className="bg-cyan-500 text-white px-2 py-2 rounded hover:bg-cyan-700 transition duration-300 ease-in-out">
           Add to Cart
         </button>
-        <button className="bg-blue-900 text-white px-2 py-2 rounded hover:bg-gray-700 transition duration-300 ease-in-out">
-          Buy Now
+        <button
+          className="bg-blue-600 text-white text-sm lg:text-md p-2 ml-4 lg:ml-6 rounded hover:bg-blue-700 active:scale-95"
+          onClick={() => addToWishlist(_id)}
+        >
+          Wishlist
         </button>
+        {/* <button
+          onClick={() => navigate("/user/order-confirmation")}
+          className="bg-blue-900 text-white px-2 py-2 rounded hover:bg-gray-700 transition duration-300 ease-in-out"
+        >
+          Buy Now
+        </button> */}
       </div>
     </div>
   );

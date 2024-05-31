@@ -146,7 +146,7 @@ const Wishlist = () => {
                     {wishlistItem.product.description}
                   </p>
                 </div>
-                <div className="flex justify-end py-2">
+                <div className="flex justify-start py-2">
                   <button
                     className="px-4 py-2 text-white bg-purple-500 hover:bg-purple-700 rounded-md active:scale-95"
                     onClick={() => handleRemove(wishlistItem.product._id)}
