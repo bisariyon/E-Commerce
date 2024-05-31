@@ -26,7 +26,7 @@ const createBrandByAdmin = asyncHandler(async (req, res, next) => {
 
   // Check if categoryIDs are provided
   if (!categoryIDs) {
-    return next(new ApiError(400, "Categories are required"));
+    throw new ApiError(400, "Categories are required");
   }
 
   // Split categoryIDs string and trim each category ID
@@ -36,9 +36,7 @@ const createBrandByAdmin = asyncHandler(async (req, res, next) => {
   for (const categoryID of categoryIDs) {
     const category = await Category.findById(categoryID);
     if (!category) {
-      return next(
-        new ApiError(400, `Category with ID: ${categoryID} not found`)
-      );
+      throw new ApiError(400, `Category with ID: ${categoryID} not found`);
     }
   }
 
@@ -51,13 +49,13 @@ const createBrandByAdmin = asyncHandler(async (req, res, next) => {
   // Check if logo is uploaded
   const logoLocalePath = req.file.path;
   if (!logoLocalePath) {
-    return next(new ApiError(400, "Logo is required"));
+    throw new ApiError(400, "Logo is required");
   }
 
   // Upload logo to Cloudinary
   const logo = await uploadOnCloudinary(logoLocalePath, "brand");
   if (!logo) {
-    return next(new ApiError(500, "Failed to upload logo"));
+    throw new ApiError(500, "Failed to upload logo");
   }
 
   try {
@@ -84,7 +82,7 @@ const createBrandByAdmin = asyncHandler(async (req, res, next) => {
     if (logo && logo.public_id) {
       await deleteFromCloudinary(logo.public_id);
     }
-    return next(new ApiError(500, "Failed to create new brand"));
+    throw new ApiError(500, "Failed to create new brand");
   }
 });
 
@@ -93,11 +91,11 @@ const verifyBrand = asyncHandler(async (req, res, next) => {
 
   const brand = await Brand.findById(brandID);
   if (!brand) {
-    return next(new ApiError(404, "Brand not found"));
+    throw new ApiError(404, "Brand not found");
   }
 
   if (brand.verified) {
-    return next(new ApiError(400, "Brand is already verified"));
+    throw new ApiError(400, "Brand is already verified");
   }
 
   brand.verified = true;
@@ -176,7 +174,7 @@ const getVerifiedOrUnverifiedBrands = asyncHandler(async (req, res, next) => {
   const brandsPaginated = await Brand.aggregatePaginate(aggregate, options);
 
   if (!brandsPaginated.docs.length) {
-    return next(new ApiError(404, "No brands found"));
+    throw new ApiError(404, "No brands found");
   }
 
   return res
@@ -191,11 +189,11 @@ const updateBrandByName = asyncHandler(async (req, res, next) => {
 
   const brand = await Brand.findById(brandID);
   if (!brand) {
-    return next(new ApiError(404, "Brand not found"));
+    throw new ApiError(404, "Brand not found");
   }
 
   if (!newName && !newDescription && !categoriesToRemove && !categoriesToAdd) {
-    return next(new ApiError(400, "No changes detected"));
+    throw new ApiError(400, "No changes detected");
   }
 
   newName = newName?.trim() || brand.name;
@@ -223,7 +221,7 @@ const updateBrandByName = asyncHandler(async (req, res, next) => {
     for (const categ of categoriesToAdd) {
       const category = await Category.findOne({ category: categ });
       if (!category) {
-        return next(new ApiError(404, `Category ${categ} not found`));
+        throw new ApiError(404, `Category ${categ} not found`);
       }
       if (!updatedCategories.some((catId) => catId.equals(category._id))) {
         updatedCategories.push(category._id);
@@ -242,7 +240,7 @@ const updateBrandByName = asyncHandler(async (req, res, next) => {
   );
 
   if (!updatedBrand) {
-    return next(new ApiError(500, "Failed to update brand"));
+    throw new ApiError(500, "Failed to update brand");
   }
 
   return res
@@ -256,12 +254,12 @@ const updateBrandByID = asyncHandler(async (req, res, next) => {
     req.body;
 
   if (!newName && !newDescription && !categoriesToRemove && !categoriesToAdd) {
-    return next(new ApiError(400, "No changes detected"));
+    throw new ApiError(400, "No changes detected");
   }
 
   const brand = await Brand.findById(brandID);
   if (!brand) {
-    return next(new ApiError(404, "Brand not found"));
+    throw new ApiError(404, "Brand not found");
   }
 
   newName = newName?.trim() || brand.name;
@@ -290,7 +288,7 @@ const updateBrandByID = asyncHandler(async (req, res, next) => {
     for (const categ of categoriesToAdd) {
       const category = await Category.findById(categ);
       if (!category) {
-        return next(new ApiError(404, `Category ${categ} not found`));
+        throw new ApiError(404, `Category ${categ} not found`);
       }
       if (!updatedCategories.some((catId) => catId.equals(category._id))) {
         updatedCategories.push(category._id);
@@ -310,7 +308,7 @@ const updateBrandByID = asyncHandler(async (req, res, next) => {
   );
 
   if (!updatedBrand) {
-    return next(new ApiError(500, "Failed to update brand"));
+    throw new ApiError(500, "Failed to update brand");
   }
 
   return res
@@ -323,7 +321,7 @@ const deleteBrand = asyncHandler(async (req, res, next) => {
 
   const deletedBrand = await Brand.findByIdAndDelete(brandID);
   if (!deletedBrand) {
-    return next(new ApiError(404, "Brand not found"));
+    throw new ApiError(404, "Brand not found")
   }
 
   return res
@@ -398,7 +396,7 @@ const listAllBrands = asyncHandler(async (req, res, next) => {
   const brandsPaginated = await Brand.aggregatePaginate(aggregate, options);
 
   if (!brandsPaginated.docs.length) {
-    return next(new ApiError(404, "No brands found"));
+    throw new ApiError(404, "No brands found")
   }
 
   return res
@@ -415,7 +413,7 @@ const getBrandByID = asyncHandler(async (req, res, next) => {
   });
 
   if (!brand) {
-    return next(new ApiError(404, "Brand not found"));
+    throw new ApiError(404, "Brand not found")
   }
 
   return res

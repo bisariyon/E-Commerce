@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { emptyBasket } from "../store/BasketSlice";
+
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+
+import { Logo } from "../assets/imports/importImages";
 
 import refreshCart from "../utility/refreshCart";
 import refreshUser from "../utility/refreshUser";
@@ -11,11 +15,15 @@ function OrderConfirmation() {
   const { refreshUserData } = refreshUser();
   const { refreshCartData } = refreshCart();
 
+  const user = useSelector((state) => state.user.user);
+  // console.log("User", user);
+
   useEffect(() => {
     refreshUserData();
     refreshCartData();
   }, []);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const basket = useSelector((state) => state.basket.basket);
 
@@ -95,12 +103,185 @@ function OrderConfirmation() {
   }, [isCheckCartError, checkCartErrors, navigate]);
 
   // Confirm Order
-  const handleConfirmOrder = () => {
+
+  const emptyCartBackend = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8000/v1/cart-items/empty`,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 201) {
+        console.log("Cart Emptied", response.data);
+      }
+    } catch (error) {
+      console.error("Failed to empty the cart:", error);
+    }
+  };
+
+  const createOrderBackend = async (transactionID) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/v1/orders/create",
+        {
+          orderId: checkCartData.orderId,
+          address: selectedAddress._id,
+          transactionID,
+          total: resultant,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const createOrderItemsBackend = async (orderId) => {
+    try {
+      basket.forEach(async (item) => {
+        const response = await axios.post(
+          "http://localhost:8000/v1/order-items/create",
+          {
+            orderID: orderId, //
+            productID: item.productId,
+            sellerInfo: item.seller,
+            quantity: item.quantity,
+            amount: item.price * item.quantity,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("Order Items", response.data.data);
+        return response.data.data;
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const checkoutHandler = async (key, orderIdMongoose) => {
+    const response = await axios.post(
+      "http://localhost:8000/v1/payments/createOrder",
+      {
+        amount: resultant,
+        orderId: orderIdMongoose,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    const orders = response.data.data;
+    // console.log("Orders", response.data.data);
+    // console.log("Key", key);
+    // console.log("Order ID", orderIdMongoose);
+
+    var options = {
+      key,
+      amount: resultant,
+      currency: "INR",
+      name: "BISARIYON ECOM",
+      description: "Purchase from Bisariyon E-Com",
+      image: Logo,
+      order_id: orders.id,
+      handler: async function (response) {
+        const body = {
+          ...response,
+        };
+
+        try {
+          const validateRes = await axios.post(
+            "http://localhost:8000/v1/payments/verifyPayment",
+            body,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              withCredentials: true,
+            }
+          );
+          const jsonRes = validateRes.data;
+          console.log("JsonRes", jsonRes);
+
+          // Logic to create Order
+          createOrderBackend(jsonRes.data.transactionID);
+          createOrderItemsBackend(orderIdMongoose);
+
+          emptyCartBackend();
+          dispatch(emptyBasket());
+          navigate("/user/payment-success", { state: { transactionID : jsonRes.data.transactionID} });
+
+        } catch (error) {
+          navigate("/user/payment-failure", { state: { error: response } });
+        }
+      },
+      prefill: {
+        name: user.fullName,
+        email: user.email,
+        contact: user.phone,
+      },
+      notes: {
+        address: "Bisariyon E-com Meerut",
+      },
+      theme: {
+        color: "#012652",
+      },
+      retry: {
+        enabled: false,
+      },
+    };
+
+    const razor = new window.Razorpay(options);
+
+    razor.on("payment.failed", async function (error) {
+      // console.log("Error : ", error.error);
+
+      try {
+        const res = await axios.post(
+          "http://localhost:8000/v1/payments/paymentfailure",
+          {
+            response: error.error,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        navigate("/user/payment-failure", { state: { error: res.data } });
+
+      } catch (error) {
+        console.error("Error while sending payment failure data:", error);
+      }
+    });
+
+    razor.open();
+  };
+
+  const handleConfirmOrder = async () => {
     if (!selectedAddress._id) {
       setAddressError("Please select an address to proceed!");
       return;
     }
-    console.log("Order confirmed!");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/v1/payments/getKeys",
+        {},
+        { withCredentials: true }
+      );
+      const key = response.data.data;
+      const orderIdMongoose = checkCartData.orderId;
+
+      checkoutHandler(key, orderIdMongoose);
+    } catch (error) {
+      console.error("Error fetching payment keys: ", error);
+    }
   };
 
   if (checkCartLoading) {
@@ -132,6 +313,8 @@ function OrderConfirmation() {
       </div>
     );
   }
+
+  // console.log("Order ID", checkCartData);
 
   return (
     <div className="-mb-8 bg-purple-300 pb-16">

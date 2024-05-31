@@ -14,12 +14,16 @@ const paymentSchema = new Schema(
     },
     modeOfPayment: {
       type: String,
-      enum: ["Card", "NetBanking", "Wallets"],
+      // enum: ["Card", "NetBanking", "Wallets"],
       required: true,
     },
     total: {
       type: Number,
       default: 0,
+    },
+    transactionID: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

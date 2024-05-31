@@ -1,41 +1,49 @@
-// import { ApiResponse } from "../utils/apiResponse.js";
-// import { ApiError } from "../utils/apiError.js";
-// import { asyncHandler } from "../utils/asyncHandler.js";
-// import { Order } from "../models/order.model.js";
-// import { CartProduct } from "../models/cartProducts.js";
-// import { OrderItems } from "../models/orderItems.model.js";
-// import { Product } from "../models/product.model.js";
-// import mongoose from "mongoose";
+import { ApiResponse } from "../utils/apiResponse.js";
+import { ApiError } from "../utils/apiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { Order } from "../models/order.model.js";
+import mongoose from "mongoose";
 
-/*
 const createOrder = asyncHandler(async (req, res, next) => {
-  const { cartId } = req.params;
-  const user = req.user;
-  const { address, amount } = req.body;
+  const { orderId, address, transactionID, total } = req.body;
+  // console.log(req.body);
 
-  //Get CartProducts to Order
-  const cartProducts = await CartProduct.find({ cart: cartId });
-  if (cartProducts.length === 0) {
-    throw new ApiError(400, "No products in cart");
+  if (!orderId || !address || !transactionID || !total) {
+    throw new ApiError(400, "Please provide all the required fields");
   }
 
-  const orderId = new mongoose.Types.ObjectId();
+  const user = req.user._id;
 
-  //search each product and check if quantity is available and add to orderItems
-  for (const CartProduct of cartProducts) {
-    const product = await Product.findById(CartProduct._id);
-    if (!product) {
-      throw new ApiError(400, "Product not found");
-    }
+  const newOrder = await Order.create({
+    _id: orderId,
+    user,
+    address,
+    transactionID,
+    total,
+  });
 
-    if (product.quantityInStock < CartProduct.quantity) {
-      throw new ApiError(400, "Product quantity not available");
-    }
+  // console.log(newOrder);
 
-    
-    
+  if (!newOrder) {
+    throw new ApiError(500, "Order not created");
   }
+
+  return res.status(201).json(new ApiResponse(201, newOrder, "Order created"));
 });
-*/
 
-// export { createOrder };
+const getUserOrders = asyncHandler(async (req, res, next) => {
+  const user = req.user._id;
+
+  const orders = await Order.find({ user }).populate({
+    path: "address",
+    select: "-user -__v ",
+  });
+
+  if (!orders) {
+    throw new ApiError(404, "No orders found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, orders, "Orders found"));
+});
+
+export { createOrder, getUserOrders };

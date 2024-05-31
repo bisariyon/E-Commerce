@@ -20,6 +20,7 @@ function refreshCart() {
           price: item.product.price,
           brand: item.product.brand,
           category: item.product.category,
+          seller : item.product.sellerInfo,
         }));
         dispatch(setBasket(cartData));
       }

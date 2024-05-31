@@ -205,7 +205,6 @@ const checkCartForOrder = asyncHandler(async (req, res, next) => {
   }
 
   const orderId = new mongoose.Types.ObjectId();
-  // console.log(orderId);
 
   return res
     .status(200)

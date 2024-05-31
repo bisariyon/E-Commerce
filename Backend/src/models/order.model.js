@@ -12,7 +12,7 @@ const orderSchema = new Schema(
       ref: "UserAddress",
       required: true,
     },
-    paymentID: {
+    transactionID: {
       type: String,
     },
     status: {

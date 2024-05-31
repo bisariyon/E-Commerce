@@ -55,7 +55,10 @@ export const basketSlice = createSlice({
         brand,
         category,
         quantity = 1,
+        sellerID,
       } = action.payload;
+
+      console.log("increaseQuantityOrAddToBasket", action.payload);
 
       const index = state.basket.findIndex(
         (item) => item.productId === productId
@@ -71,6 +74,7 @@ export const basketSlice = createSlice({
           brand,
           category,
           quantity,
+          sellerID,
         });
         state.basket.sort((a, b) => a.price - b.price);
       }

@@ -20,7 +20,7 @@ import LoginUser from "./pages/LoginUser.jsx";
 import RegisterUser from "./pages/RegsiterUser.jsx";
 import Product from "./pages/Product.jsx";
 import CheckOut from "./pages/CheckOut.jsx";
-import { AfterSignUp, NotLoggedInUser ,SellerSignUp } from "./index.js";
+import { AfterSignUp, NotLoggedInUser, SellerSignUp } from "./index.js";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import ForgetPassword from "./pages/ForgetPassword.jsx";
 import NewPassword from "./pages/NewPassword.jsx";
@@ -32,6 +32,9 @@ import AppSeller from "./AppSeller.jsx";
 import Seller from "./pages/Seller.jsx";
 import LoginSeller from "./pages/LoginSeller.jsx";
 import RegisterSeller from "./pages/RegisterSeller.jsx";
+
+import PaymentSuccess from "./pages/Payments/PaymentSuccess.jsx";
+import PaymentFailure from "./pages/Payments/PaymentFailure.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,6 +51,8 @@ const router = createBrowserRouter(
           <Route path="new-password/:token" element={<NewPassword />} />
           <Route path="verify/:token" element={<VerifyUser />} />
           <Route path="order-confirmation" element={<OrderConfirmation />} />
+          <Route path="payment-success" element={<PaymentSuccess />} />
+          <Route path="payment-failure" element={<PaymentFailure />} />
         </Route>
 
         <Route path="products" element={<Product />} />

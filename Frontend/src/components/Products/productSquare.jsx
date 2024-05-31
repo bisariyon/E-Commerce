@@ -37,6 +37,7 @@ function ProductSquare({
     price,
     brand: brandId,
     category: categoryId,
+    sellerID,
   };
 
   const addToCartBackend = async () => {
@@ -82,6 +83,7 @@ function ProductSquare({
   const increase = async () => {
     if (quantity < quantityInStock) {
       setQuantity((prevQuantity) => prevQuantity + 1);
+      console.log("Adding to cart", productData);
       dispatch(increaseQuantityOrAddToBasket(productData));
       await addToCartBackend();
     }
