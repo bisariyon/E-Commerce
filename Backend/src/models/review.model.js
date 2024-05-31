@@ -23,12 +23,10 @@ const reviewSchema = new Schema(
       ref: "Product",
       required: true,
     },
-    images: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    images: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

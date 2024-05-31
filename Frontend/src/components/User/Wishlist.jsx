@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { Modal } from "../../index";
 
 const Wishlist = () => {
   const queryClient = useQueryClient();
+
+  const [showModal, setShowModal] = useState(false);
 
   // Fetch wishlist
   const fetchWishlist = async () => {
@@ -25,7 +28,7 @@ const Wishlist = () => {
   } = useQuery({
     queryKey: ["wishlist"],
     queryFn: fetchWishlist,
-    staleTime: 1000 * 60
+    staleTime: 1000 * 60,
   });
 
   // Remove item from wishlist
@@ -57,9 +60,12 @@ const Wishlist = () => {
   // Empty wishlist
   const emptyWishlistFromBackend = async () => {
     try {
-      const response = await axios.delete("http://localhost:8000/v1/wishlist/empty", {
-        withCredentials: true,
-      });
+      const response = await axios.delete(
+        "http://localhost:8000/v1/wishlist/empty",
+        {
+          withCredentials: true,
+        }
+      );
       return response.data.data;
     } catch (error) {
       console.error(error);
@@ -82,16 +88,25 @@ const Wishlist = () => {
     console.log(`Removing item with id ${productId}`);
   };
 
-  const handleEmptyWishlist = () => {
+  const handleEmptyWishlistClick = () => {
+    setShowModal(true);
+  };
+
+  const handleConfirmEmptyWishlist = () => {
     emptyWishlist();
+    setShowModal(false);
     console.log("Emptying wishlist");
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   if (wishlistLoading) return <div>Loading...</div>;
   if (wishlistError) return <div>Error fetching data</div>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto py-4 px-8">
       <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
         Wishlist
       </h2>
@@ -99,7 +114,7 @@ const Wishlist = () => {
       <div className="flex justify-end mb-4">
         <button
           className="px-4 py-2 text-white bg-red-500 hover:bg-red-700 rounded-md active:scale-95"
-          onClick={handleEmptyWishlist}
+          onClick={handleEmptyWishlistClick}
         >
           Empty Wishlist
         </button>
@@ -116,7 +131,7 @@ const Wishlist = () => {
                 <img
                   src={wishlistItem.product.productImage}
                   alt={wishlistItem.product.title}
-                  className="max-h-full p-2"
+                  className="max-h-full p-4"
                 />
               </div>
               <div className="p-4 flex flex-col justify-between flex-grow">
@@ -144,6 +159,13 @@ const Wishlist = () => {
           ))}
         </div>
       </div>
+
+      <Modal
+        showModal={showModal}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmEmptyWishlist}
+        message="Are you sure you want to empty the wishlist?"
+      />
     </div>
   );
 };

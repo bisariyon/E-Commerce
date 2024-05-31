@@ -14,11 +14,15 @@ const router = Router();
 
 router
   .route("/addReview/:productId")
-  .post(verifyJwtToken, verifyUser, upload.array("images"), addReview);
+  .post(verifyJwtToken, upload.single('images'), addReview);
 
-router.route("/deleteReview/:reviewId").delete(verifyJwtToken, deleteReview);
+router
+  .route("/deleteReview/:reviewId")
+  .delete(verifyJwtToken, upload.array("images"), deleteReview);
 
-router.route("/updateReview/:reviewId").put(verifyJwtToken,upload.array("newImages"), updateReview);
+router
+  .route("/updateReview/:reviewId")
+  .put(verifyJwtToken, upload.array("newImages"), updateReview);
 
 router.route("/get/:productId").get(getReviews);
 

@@ -34,29 +34,32 @@ const addReview = asyncHandler(async (req, res, next) => {
     return next(new ApiError(400, "You have already reviewed this product"));
   }
 
-  // const ifEligible = await OrderItems.findOne({
-  //   productID: productId,
-  //   user: req.user._id,
-  // });
+  const ifEligible = await OrderItems.findOne({
+    productID: productId,
+    user: req.user._id,
+  });
 
-  // if (!ifEligible) {
-  //   return next(
-  //     new ApiError(400, "You can only review products you have purchased")
-  //   );
-  // }
+  if (!ifEligible) {
+    return next(
+      new ApiError(400, "You can only review products you have purchased")
+    );
+  }
 
-  if (!req.files || req.files.length === 0) {
+  console.log("Files", req.file);
+  if (!req.file || req.file.length === 0) {
     return next(new ApiError(400, "At least one image is required"));
   }
 
+  let images;
   try {
-    const images = [];
-    for (let i = 0; i < req.files.length; i++) {
-      const uploadImage = await uploadOnCloudinary(req.files[i].path);
-      if (!uploadImage) {
-        return next(new ApiError(500, "Error uploading image"));
-      }
-      images.push(uploadImage.url);
+    const imageLocalPath = req.file?.path;
+    if (!imageLocalPath) {
+      throw new ApiError(400, "Image is required");
+    }
+
+    images = await uploadOnCloudinary(imageLocalPath);
+    if (!images) {
+      throw new ApiError(500, "Error in uploading images");
     }
 
     const review = await Review.create({
@@ -64,17 +67,15 @@ const addReview = asyncHandler(async (req, res, next) => {
       rating,
       user: req.user._id,
       product: productId,
-      images,
+      images: images.url,
     });
 
     res
       .status(201)
       .json(new ApiResponse(201, review, "Review added successfully"));
   } catch (error) {
-    if (images.length > 0) {
-      images.forEach(async (image) => {
-        await deleteFromCloudinary(image);
-      });
+    if (images.public_id) {
+      await deleteFromCloudinary(images.public_id);
     }
     throw new ApiError(500, "Error adding review");
   }

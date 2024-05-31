@@ -114,19 +114,27 @@ function CheckOut() {
         </button>
 
         {basket.length > 0 && (
-          <div
-            className="bg-gray-100 rounded-md p-3 flex items-center justify-center w-auto hover:bg-slate-400 active:bg-slate-500 active:scale-90 focus:outline-none focus:ring-2 focus:ring-slate-400 cursor-pointer"
-            onClick={handleEmptyCartClick}
-          >
-            <img
-              src="https://res.cloudinary.com/deepcloud1/image/upload/v1716645390/qukkwf5h4ymdb6owdcla.png"
-              alt="Empty Cart"
-              className="mr-2 w-16"
-            />
-            <span className="text-lg font-bold text-purple-900">
-              Empty Cart
-            </span>
-          </div>
+          <>
+            <div
+              className="bg-gray-100 rounded-md p-3 flex items-center justify-center w-auto hover:bg-slate-400 active:bg-slate-500 active:scale-90 focus:outline-none focus:ring-2 focus:ring-slate-400 cursor-pointer mb-4"
+              onClick={handleEmptyCartClick}
+            >
+              <img
+                src="https://res.cloudinary.com/deepcloud1/image/upload/v1716645390/qukkwf5h4ymdb6owdcla.png"
+                alt="Empty Cart"
+                className="mr-2 w-16"
+              />
+              <span className="text-lg font-bold text-purple-900">
+                Empty Cart
+              </span>
+            </div>
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-lg"
+              onClick={() => navigate("/products")}
+            >
+              Continue Shopping
+            </button>
+          </>
         )}
       </div>
 
