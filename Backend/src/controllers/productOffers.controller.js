@@ -189,7 +189,7 @@ const updateProductOffer = asyncHandler(async (req, res, next) => {
 });
 
 const getSellerOffers = asyncHandler(async (req, res, next) => {
-  const sellerOffers = await ProductOffers.find({ seller: req.seller._id });
+  const sellerOffers = await ProductOffers.find({ seller: req.seller._id }).populate("product");
 
   if (!sellerOffers) {
     throw new ApiError(404, "No offers found");

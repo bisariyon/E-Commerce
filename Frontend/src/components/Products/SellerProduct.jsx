@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Modal } from "../../index";
+import { useNavigate } from "react-router-dom";
 
 const SellerProduct = ({ product }) => {
   const [showModal, setShowModal] = useState(false);
+
+  const navigate = useNavigate();
 
   const deleteProduct = async () => {
     const productId = product._id;
@@ -27,6 +30,11 @@ const SellerProduct = ({ product }) => {
       window.location.reload();
     }
   };
+
+  const handleAddOffer = () => {
+    const productId = product._id;
+    navigate(`/seller/add-offer/${productId}`);
+  }
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -88,10 +96,16 @@ const SellerProduct = ({ product }) => {
         </div>
         <div className="my-2">
           <button
-            className="bg-red-500 text-white px-4 py-2 rounded-md mb-2 mr-4"
+            className="bg-red-500 text-white px-4 py-2 rounded-md mb-2 mr-4 active:scale-95"
             onClick={handleOpenModal}
           >
             Remove
+          </button>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-md mb-2 mr-4 active:scale-95"
+            onClick={handleAddOffer}
+          >
+            Add Offer
           </button>
         </div>
       </div>

@@ -436,7 +436,7 @@ const getBrandByCategory = asyncHandler(async (req, res, next) => {
     logo: brand.logo,
     description: brand.description,
     verified: brand.verified,
-    categoryId: brand.categories[0]
+    categoryId: brand.categories[0],
   }));
 
   return res
@@ -446,9 +446,28 @@ const getBrandByCategory = asyncHandler(async (req, res, next) => {
 
 //Verified Seller
 const requestNewBrand = asyncHandler(async (req, res, next) => {
-  const { brandName } = req.body;
+  const { brandName, description, category } = req.body;
+
   if (!brandName) {
     throw new ApiError(400, "Brand name is required");
+  }
+
+  if (!description) {
+    throw new ApiError(400, "Brand description is required");
+  }
+
+  if (!category) {
+    throw new ApiError(400, "Category is required");
+  }
+
+  const logoLocalePath = req.file?.path;
+  if (!logoLocalePath) {
+    throw new ApiError(400, "Logo is required");
+  }
+
+  const logo = await uploadOnCloudinary(logoLocalePath, "brand");
+  if (!logo) {
+    throw new ApiError(500, "Failed to upload logo");
   }
 
   const mailOptions = {
@@ -482,6 +501,10 @@ const requestNewBrand = asyncHandler(async (req, res, next) => {
             <p>Phone: ${req.seller.phone}</p>
             <p><strong>Brand details</strong></p>
             <p>Brand Name: ${brandName}</p>
+            <p>Description: ${description}</p>
+            <p>Category: ${category}</p>
+            <p>Logo: <img src="${logo.url}" alt="Brand Logo" width="100px" height="100px"></p>
+            <p>Logo url: ${logo.url}</p>
             `,
   };
 

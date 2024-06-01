@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import refreshSeller from "../utility/refreshSeller";
 import { BenefitCard } from "../index";
 import { useNavigate, useLocation } from "react-router-dom";
+
+import refreshSeller from "../utility/refreshSeller";
 
 function Seller() {
   const { refreshSellerData } = refreshSeller();
@@ -32,10 +33,10 @@ function Seller() {
         <div className="mx-auto">
           <div className="text-center mb-8 flex flex-col items-center">
             <div className="mx-auto mb-4">
-              <h1 className="text-3xl font-bold text-gray-800">
+              <h1 className="text-3xl font-bold text-black">
                 Become a Seller
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-gray-800 mt-2">
                 Join us and start selling your products!
               </p>
             </div>
@@ -53,7 +54,7 @@ function Seller() {
           {/* Seller Benefits Section */}
           <div className="bg-gray-100 py-12">
             <div className="max-w-6xl mx-auto px-4">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              <h2 className="text-3xl font-bold text-black mb-6">
                 Benefits of Becoming a Seller
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -112,11 +113,11 @@ function Seller() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
+    <div className="min-h-screen bg-blue-200 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Welcome, Seller!</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-black">Welcome, Seller!</h1>
+          <p className="text-gray-800 mt-2">
             Manage your products and orders here.
           </p>
           {message && (
@@ -131,11 +132,11 @@ function Seller() {
         </div>
         {/* Options to Manage Products and Orders */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          <div className="bg-orange-200 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-black mb-2">
               Add New Product
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-800 mb-4">
               Add a new product to your store.
             </p>
             <button
@@ -145,11 +146,11 @@ function Seller() {
               Add New Product
             </button>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          <div className="bg-orange-200 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-black mb-2">
               Manage Your Products
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-800 mb-4">
               Edit or remove products from your store.
             </p>
             <button
@@ -159,11 +160,11 @@ function Seller() {
               Manage Your Products
             </button>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          <div className="bg-orange-200 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-black mb-2">
               Your Orders
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-800 mb-4">
               View and fulfill orders from your customers.
             </p>
             <button
@@ -173,11 +174,11 @@ function Seller() {
               All Orders
             </button>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          <div className="bg-orange-200 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-black mb-2">
               Request for New Brand
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-800 mb-4">
               Submit a request to add a new brand to your store.
             </p>
             <button
@@ -187,14 +188,17 @@ function Seller() {
               Request for New Brand
             </button>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          <div className="bg-orange-200 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-black mb-2">
               View Product Offers
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-800 mb-4">
               Check out special offers on products.
             </p>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95">
+            <button
+              onClick={() => navigate("offers")}
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
+            >
               View Product Offers
             </button>
           </div>

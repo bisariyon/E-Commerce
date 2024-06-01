@@ -28,7 +28,12 @@ router.route("/").get(listAllBrands); //working
 //Verified Seller Routes
 router
   .route("/request-brand")
-  .post(verifyJwtTokenSeller, verifySeller, requestNewBrand); //working
+  .post(
+    verifyJwtTokenSeller,
+    verifySeller,
+    upload.single("logo"),
+    requestNewBrand
+  ); //working
 
 //Admin routes
 router //working
@@ -60,6 +65,6 @@ router
   .route("/delete/:brandID")
   .delete(verifyJwtToken, verifyIsAdmin, deleteBrand); //working
 
-router.route("/getByCategory/:categoryID").get(getBrandByCategory); 
+router.route("/getByCategory/:categoryID").get(getBrandByCategory); //working
 
 export default router;

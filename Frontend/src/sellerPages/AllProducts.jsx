@@ -1,10 +1,18 @@
-import React from "react";
+import React, {useEffect} from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { SellerProduct } from "../index";
 import { useNavigate } from "react-router-dom";
 
+import refreshSeller from "../utility/refreshSeller";
+
 function AllProducts() {
+  const { refreshSellerData } = refreshSeller();
+
+  useEffect(() => {
+    refreshSellerData();
+  }, []);
+
   const navigate = useNavigate();
   const fetchSellerProducts = async () => {
     try {
@@ -67,9 +75,11 @@ function AllProducts() {
           src="https://res.cloudinary.com/deepcloud1/image/upload/v1717234572/ieyrmbjacvaguwcttske.png"
           alt="No Products"
           className="w-64 h-auto hover:scale-110 transition duration-300 ease-in-out"
-          onClick={()=>navigate("/seller/new-product")}
+          onClick={() => navigate("/seller/new-product")}
         />
-        <div className="text-3xl text-gray-700">No products found. Click to add new products.</div>
+        <div className="text-3xl text-gray-700">
+          No products found. Click to add new products.
+        </div>
       </div>
     );
   }
