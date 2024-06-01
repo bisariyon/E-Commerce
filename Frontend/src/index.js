@@ -14,7 +14,7 @@ import AfterSignUp from "./components/Transition/AfterSignUp";
 import HomePageLoading from "./components/Transition/HomePageLoading";
 import ProductsLoading from "./components/Transition/ProductsLoading";
 import ErrorPage from "./components/Transition/ErrorPage";
-import NotLoggedInUser from "./components/Transition/NotLoggedInUser"
+import NotLoggedInUser from "./components/Transition/NotLoggedInUser";
 import SellerSignUp from "./components/Transition/SellerSignUp";
 
 import AccountInfo from "./components/User/AccountInfo";
@@ -29,6 +29,7 @@ import SellerHeader from "./components/Header/SellerHeader";
 import SellerSearchBar from "./components/Header/SellerSearchBar";
 
 import BenefitCard from "./components/Seller Benefits/BenefitCard";
+import SellerProduct from "./components/Products/SellerProduct";
 
 export {
   Header,
@@ -56,5 +57,6 @@ export {
   SellerHeader,
   SellerSearchBar,
   SellerSignUp,
-  BenefitCard
+  BenefitCard,
+  SellerProduct,
 };

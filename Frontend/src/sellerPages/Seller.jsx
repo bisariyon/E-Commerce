@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import refreshSeller from "../utility/refreshSeller";
 import { BenefitCard } from "../index";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Seller() {
   const { refreshSellerData } = refreshSeller();
@@ -12,6 +12,16 @@ function Seller() {
   }, []);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const { message } = location.state || {};
+
+  useEffect(() => {
+    if (message) {
+      setTimeout(() => {
+        navigate("/seller", { replace: true });
+      }, 3000);
+    }
+  }, [message, navigate]);
 
   const seller = useSelector((state) => state.seller.seller);
   console.log(seller);
@@ -109,6 +119,15 @@ function Seller() {
           <p className="text-gray-600 mt-2">
             Manage your products and orders here.
           </p>
+          {message && (
+            <div
+              className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4"
+              role="alert"
+            >
+              <strong className="font-bold">Success! </strong>
+              <span className="block sm:inline">{message}</span>
+            </div>
+          )}
         </div>
         {/* Options to Manage Products and Orders */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
@@ -119,7 +138,10 @@ function Seller() {
             <p className="text-gray-600 mb-4">
               Add a new product to your store.
             </p>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+            <button
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
+              onClick={() => navigate("new-product")}
+            >
               Add New Product
             </button>
           </div>
@@ -130,7 +152,10 @@ function Seller() {
             <p className="text-gray-600 mb-4">
               Edit or remove products from your store.
             </p>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+            <button
+              onClick={() => navigate("all-products")}
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
+            >
               Manage Your Products
             </button>
           </div>
@@ -141,7 +166,10 @@ function Seller() {
             <p className="text-gray-600 mb-4">
               View and fulfill orders from your customers.
             </p>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+            <button
+              onClick={() => navigate("orders")}
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
+            >
               All Orders
             </button>
           </div>
@@ -152,7 +180,10 @@ function Seller() {
             <p className="text-gray-600 mb-4">
               Submit a request to add a new brand to your store.
             </p>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+            <button
+              onClick={() => navigate("brand-request")}
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
+            >
               Request for New Brand
             </button>
           </div>
@@ -163,7 +194,7 @@ function Seller() {
             <p className="text-gray-600 mb-4">
               Check out special offers on products.
             </p>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95">
               View Product Offers
             </button>
           </div>

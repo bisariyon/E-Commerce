@@ -45,7 +45,7 @@ const removeProductFromWishlist = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Product id is required");
   }
 
-  console.log("Product id is", productId);
+  // console.log("Product id is", productId);
   const wishlist = await Wishlist.findOneAndDelete({
     user: req.user._id,
     product: productId,

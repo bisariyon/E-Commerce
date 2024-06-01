@@ -55,7 +55,7 @@ const getCategorybyID = asyncHandler(async (req, res, next) => {
   if (!category) {
     return next(new ApiError(404, "Category not found"));
   }
-  console.log(category._id);
+  // console.log(category._id);
 
   return res.status(200).json(new ApiResponse(200, category, "Category found"));
 });

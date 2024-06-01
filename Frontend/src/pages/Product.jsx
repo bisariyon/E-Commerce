@@ -45,6 +45,7 @@ function Product() {
     const url = `http://localhost:8000/v1/products?page=${page}&limit=${limit}&sortBy=${filters.sortBy}&brand=${filters.brand}&category=${filters.category}&subCategory=${filters.subCategory}&query=${query}`;
     const response = await axios.get(url);
     dispatch(setProducts(response.data.data.docs));
+    // console.log("Products", response.data);
     return response.data;
   };
 
@@ -197,6 +198,7 @@ function Product() {
                   subCategory={product.subCategory}
                   productImage={product.productImage}
                   sellerID={product.sellerInfo.sellerID}
+                  sellerName={product.sellerInfo.sellerName}
                   rating={product.rating}
                 />
               ))}

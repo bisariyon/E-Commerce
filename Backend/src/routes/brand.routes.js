@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
-import { verifyJwtToken, verifyJwtTokenSeller, verifySeller } from "../middlewares/auth.middleware.js";
+import {
+  verifyJwtToken,
+  verifyJwtTokenSeller,
+  verifySeller,
+} from "../middlewares/auth.middleware.js";
 import { verifyIsAdmin } from "../middlewares/admin.middleware.js";
 
 import {
@@ -13,6 +17,7 @@ import {
   listAllBrands,
   getBrandByID,
   requestNewBrand,
+  getBrandByCategory,
 } from "../controllers/brand.controller.js";
 
 const router = Router();
@@ -23,7 +28,7 @@ router.route("/").get(listAllBrands); //working
 //Verified Seller Routes
 router
   .route("/request-brand")
-  .post(verifyJwtTokenSeller,verifySeller, requestNewBrand); //working
+  .post(verifyJwtTokenSeller, verifySeller, requestNewBrand); //working
 
 //Admin routes
 router //working
@@ -54,5 +59,7 @@ router
 router
   .route("/delete/:brandID")
   .delete(verifyJwtToken, verifyIsAdmin, deleteBrand); //working
+
+router.route("/getByCategory/:categoryID").get(getBrandByCategory); 
 
 export default router;

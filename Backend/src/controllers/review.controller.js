@@ -45,7 +45,7 @@ const addReview = asyncHandler(async (req, res, next) => {
     );
   }
 
-  console.log("Files", req.file);
+  // console.log("Files", req.file);
   if (!req.file || req.file.length === 0) {
     return next(new ApiError(400, "At least one image is required"));
   }
@@ -112,7 +112,7 @@ const updateReview = asyncHandler(async (req, res, next) => {
     //convert to array
     deleteImages = deleteImages.split(",");
 
-  console.log(comment, rating, deleteImages);
+  // console.log(comment, rating, deleteImages);
 
   // Validation
   if (!comment && !rating) {

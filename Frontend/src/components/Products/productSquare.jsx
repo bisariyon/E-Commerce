@@ -20,6 +20,7 @@ function ProductSquare({
   subCategory,
   productImage,
   sellerID,
+  sellerName,
   rating = 2,
 }) {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ function ProductSquare({
     brand: brandId,
     category: categoryId,
     sellerID,
+    // sellerName,
   };
 
   const addToCartBackend = async () => {
@@ -139,6 +141,8 @@ function ProductSquare({
       <div className="text-sm text-gray-600 mb-2">
         <span className="font-bold">In Stock:</span> {quantityInStock}
         <br />
+        <span className="font-bold">Seller :</span> {sellerName}
+        <br />
         <span className="font-bold">Brand:</span> {brandname}
         <br />
         <span className="font-bold">Category:</span> {category}
@@ -179,7 +183,6 @@ function ProductSquare({
         >
           +
         </button>
-        
       </div>
 
       <div className="mt-auto flex space-x-3">

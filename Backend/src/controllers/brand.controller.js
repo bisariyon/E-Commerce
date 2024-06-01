@@ -321,7 +321,7 @@ const deleteBrand = asyncHandler(async (req, res, next) => {
 
   const deletedBrand = await Brand.findByIdAndDelete(brandID);
   if (!deletedBrand) {
-    throw new ApiError(404, "Brand not found")
+    throw new ApiError(404, "Brand not found");
   }
 
   return res
@@ -396,7 +396,7 @@ const listAllBrands = asyncHandler(async (req, res, next) => {
   const brandsPaginated = await Brand.aggregatePaginate(aggregate, options);
 
   if (!brandsPaginated.docs.length) {
-    throw new ApiError(404, "No brands found")
+    throw new ApiError(404, "No brands found");
   }
 
   return res
@@ -413,12 +413,35 @@ const getBrandByID = asyncHandler(async (req, res, next) => {
   });
 
   if (!brand) {
-    throw new ApiError(404, "Brand not found")
+    throw new ApiError(404, "Brand not found");
   }
 
   return res
     .status(200)
     .json(new ApiResponse(200, brand, "Brand retrieved successfully"));
+});
+
+const getBrandByCategory = asyncHandler(async (req, res, next) => {
+  const { categoryID } = req.params;
+
+  const brands = await Brand.find({ categories: categoryID });
+
+  if (!brands) {
+    throw new ApiError(404, "No brands found for this category");
+  }
+
+  const mappedBrands = brands.map((brand) => ({
+    _id: brand._id,
+    name: brand.name,
+    logo: brand.logo,
+    description: brand.description,
+    verified: brand.verified,
+    categoryId: brand.categories[0]
+  }));
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, mappedBrands, "Brand by category"));
 });
 
 //Verified Seller
@@ -482,4 +505,5 @@ export {
   listAllBrands,
   getBrandByID,
   requestNewBrand,
+  getBrandByCategory,
 };

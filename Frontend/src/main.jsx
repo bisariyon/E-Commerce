@@ -33,6 +33,9 @@ import Seller from "./sellerPages/Seller.jsx";
 import LoginSeller from "./sellerPages/LoginSeller.jsx";
 import RegisterSeller from "./sellerPages/RegisterSeller.jsx";
 import NewProduct from "./sellerPages/NewProduct.jsx";
+import AllProducts from "./sellerPages/AllProducts.jsx";
+import Orders from "./sellerPages/Orders.jsx";
+import BrandRequest from "./sellerPages/BrandRequest.jsx";
 
 import PaymentSuccess from "./pages/Payments/PaymentSuccess.jsx";
 import PaymentFailure from "./pages/Payments/PaymentFailure.jsx";
@@ -65,6 +68,9 @@ const router = createBrowserRouter(
         <Route path="login" element={<LoginSeller />} />
         <Route path="register" element={<RegisterSeller />} />
         <Route path="new-product" element={<NewProduct />} />
+        <Route path="all-products" element={<AllProducts />} />
+        <Route path="orders" element={<Orders />} />
+        <Route path="brand-request" element={<BrandRequest />} />
       </Route>
 
       {/* Without Header Footer */}

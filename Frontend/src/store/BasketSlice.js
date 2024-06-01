@@ -56,6 +56,7 @@ export const basketSlice = createSlice({
         category,
         quantity = 1,
         sellerID,
+        // sellerName,
       } = action.payload;
 
       console.log("increaseQuantityOrAddToBasket", action.payload);
@@ -75,6 +76,7 @@ export const basketSlice = createSlice({
           category,
           quantity,
           sellerID,
+          // sellerName,
         });
         state.basket.sort((a, b) => a.price - b.price);
       }

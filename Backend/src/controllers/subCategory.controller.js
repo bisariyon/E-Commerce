@@ -64,7 +64,7 @@ const getSubCategoriesByCategory = asyncHandler(async (req, res, next) => {
 
   const {
     page = 1,
-    limit = 10,
+    limit = 50,
     sortBy = "_id",
     sortType = "1",
     query,

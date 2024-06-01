@@ -45,6 +45,7 @@ const createProduct = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "SubCategories are required");
 
   quantityInStock = parseInt(quantityInStock);
+  price = parseInt(price);
 
   const productImageLocalPath = req.file.path;
   if (!productImageLocalPath) {
@@ -134,12 +135,12 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
     throw new ApiError(500, "Error deleting product");
   }
 
-  if (deleteProduct.productImage) {
-    const parts = deleteProduct.productImage.split("/");
-    const deletedImagePublicId = parts[parts.length - 1].split(".")[0];
+  const parts = deletedProduct.productImage.split("/");
+  const deletedImagePublicId = parts[parts.length - 1].split(".")[0];
+  console.log("deletedImagePublicId", deletedImagePublicId);
 
-    await deleteFromCloudinary(deletedImagePublicId);
-  }
+  await deleteFromCloudinary(deletedImagePublicId);
+
   res
     .status(200)
     .json(new ApiResponse(200, deletedProduct, "Product deleted successfully"));
@@ -410,7 +411,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
 
   const products = await Product.aggregatePaginate(aggregate, options);
   if (products.length === 0) {
-    return next(new ApiError(404, "No products found"));
+    throw new ApiError(404, "No products found");
   }
 
   return res.status(200).json(new ApiResponse(200, products, "Products found"));
@@ -568,9 +569,7 @@ const getProductByCategoryId = asyncHandler(async (req, res, next) => {
     const products = await Product.aggregatePaginate(aggregate, options);
 
     if (products.docs.length === 0) {
-      return next(
-        new ApiError(404, "No products found with given category ID")
-      );
+      throw new ApiError(404, "No products found with given category ID");
     }
 
     res
@@ -580,7 +579,7 @@ const getProductByCategoryId = asyncHandler(async (req, res, next) => {
       );
   } catch (error) {
     console.error("Error during aggregation:", error);
-    return next(new ApiError(500, "Internal Server Error"));
+    throw new ApiError(500, "Internal Server Error");
   }
 });
 
@@ -693,9 +692,7 @@ const getProductByBrand = asyncHandler(async (req, res, next) => {
     const products = await Product.aggregatePaginate(aggregate, options);
 
     if (products.docs.length === 0) {
-      return next(
-        new ApiError(404, "No products found with given category ID")
-      );
+      throw new ApiError(404, "No products found with given category ID");
     }
 
     res
@@ -705,12 +702,12 @@ const getProductByBrand = asyncHandler(async (req, res, next) => {
       );
   } catch (error) {
     console.error("Error during aggregation:", error);
-    return next(new ApiError(500, "Internal Server Error"));
+    throw new ApiError(500, "Internal Server Error");
   }
 });
 
 const getProductBySeller = asyncHandler(async (req, res, next) => {
-  const { sellerId } = req.params;
+  const sellerId = req.seller._id;
   if (!sellerId) {
     throw new ApiError(400, "Seller ID is required");
   }
@@ -729,8 +726,9 @@ const getProductBySeller = asyncHandler(async (req, res, next) => {
       select: "subCategory",
     })
     .select("-sellerInfo");
+
   if (products.length === 0) {
-    return next(new ApiError(404, "No products found for seller"));
+    return res.status(200).json(new ApiResponse(200, [], "No products found"));
   }
 
   return res
