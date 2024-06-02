@@ -262,6 +262,21 @@ const getCurrentSeller = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, req.seller, "Seller retrieved successfully"));
 });
 
+const getSellerNiche = asyncHandler(async (req, res, next) => {
+  const seller = await Seller.findById(req.seller._id).select("niche").populate({
+    path: "niche",
+    select: "category -_id",
+  });
+
+  if (!seller) {
+    throw new ApiError(404, "Seller not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, seller, "Seller niches retrieved successfully"));
+});
+
 const changePassword = asyncHandler(async (req, res, next) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
   console.log(oldPassword, newPassword, confirmPassword);
@@ -691,6 +706,29 @@ const deleteSeller = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, {}, "Seller deleted successfully"));
 });
 
+//Ask for verification
+const askForVerification = asyncHandler(async (req, res, next) => {
+  let mailToAdmin = "";
+
+  const data = {
+    sellerId: req.seller._id,
+    email: req.seller.email,
+    GSTnumber: req.seller.GSTnumber,
+    subject: "Request for Verification",
+    message:
+      "Request for seller verification on demand.\nPlease verify the seller details.",
+  };
+
+  mailToAdmin = await verifySellerMail(data);
+  if (!mailToAdmin) {
+    throw new ApiError(500, "Error in sending mail");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, `Verification request sent ${mailToAdmin}`));
+});
+
 //Admin routes
 const getAllSellers = asyncHandler(async (req, res, next) => {
   const sellers = await Seller.find().select("-password -refreshToken");
@@ -786,4 +824,6 @@ export {
   getAllSellers,
   getSellerByID,
   verifySeller,
+  askForVerification,
+  getSellerNiche,
 };

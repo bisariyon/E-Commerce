@@ -26,6 +26,8 @@ import {
   getAllSellers,
   getSellerByID,
   verifySeller,
+  askForVerification,
+  getSellerNiche,
 } from "../controllers/seller.controller.js";
 
 const router = Router();
@@ -49,6 +51,12 @@ router.route("/update/niche").patch(verifyJwtTokenSeller, updateNiche);
 router.route("/update/profile").patch(verifyJwtTokenSeller, updateUserProfile);
 router.route("/update/email").patch(verifyJwtTokenSeller, updateEmail);
 router.route("/update/phone").patch(verifyJwtTokenSeller, updatePhone);
+router
+  .route("/ask-for-verification")
+  .get(verifyJwtTokenSeller, askForVerification);
+
+router.route("/get-niche").get(verifyJwtTokenSeller, getSellerNiche);
+
 router
   .route("/update/avatar")
   .patch(verifyJwtTokenSeller, upload.single("avatar"), updateAvatar);

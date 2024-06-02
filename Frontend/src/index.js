@@ -31,6 +31,9 @@ import SellerSearchBar from "./components/Header/SellerSearchBar";
 import BenefitCard from "./components/Seller Benefits/BenefitCard";
 import SellerProduct from "./components/Products/SellerProduct";
 
+import Profile from "./components/Seller/Profile";
+import SellerLogOut from "./components/Seller/SellerLogOut";
+
 export {
   Header,
   Footer,
@@ -59,4 +62,6 @@ export {
   SellerSignUp,
   BenefitCard,
   SellerProduct,
+  Profile,
+  SellerLogOut,
 };

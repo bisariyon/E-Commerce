@@ -81,7 +81,7 @@ function Orders() {
               <div className="flex justify-between mb-4">
                 <div>
                   <p className="text-gray-700">
-                    <strong>Amount:</strong> ${item.amount}
+                    <strong>Amount:</strong> ₹{item.amount}
                   </p>
                   <p className="text-gray-700">
                     <strong>Order Date:</strong>{" "}

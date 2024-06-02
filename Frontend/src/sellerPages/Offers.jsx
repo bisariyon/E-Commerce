@@ -164,6 +164,7 @@ function Offers() {
 
   return (
     <div className="pt-12 px-4 min-h-screen ">
+      <div className="text-center mb-6 text-5xl font-semibold">Offers & Discounts</div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 rounded-md px-8 py-8 bg-gray-200">
         {data &&
           data.map((offer) => (

@@ -209,8 +209,8 @@ function NewProduct() {
     : brandData.flat();
 
   return (
-    <div className="min-h-screen bg-gray-300 p-8 flex justify-center">
-      <div className="bg-white rounded-md p-8 w-3/4">
+    <div className="min-h-screen bg-blue-200 p-8 flex justify-center">
+      <div className="bg-white rounded-md p-8 w-2/3">
         <h1 className="text-3xl font-bold text-center mb-6 ">
           Register New Product
         </h1>
@@ -221,7 +221,7 @@ function NewProduct() {
           </div>
         )}
         <form onSubmit={handleRegister} encType="multipart/form-data">
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center  w-full">
             <div className="flex flex-col w-1/2 mb-4">
               <label
                 htmlFor="title"

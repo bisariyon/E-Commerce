@@ -68,7 +68,7 @@ const SellerHeader = () => {
         <div className="flex space-x-6 items-center">
           {seller ? (
             <>
-              <Link to="#">
+              <Link to="dashboard">
                 <div className="ml-4 mr-2 hover:cursor-pointer py-2 transition duration-300 ease-in-out transform hover:scale-110">
                   <img
                     src={seller.avatar || "https://res.cloudinary.com/deepcloud1/image/upload/v1715772761/wzkwecfnwvoeozs2tezw.jpg"}
