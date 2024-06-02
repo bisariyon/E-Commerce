@@ -86,12 +86,8 @@ function AllProducts() {
 
   return (
     <>
-      <div className="text-3xl text-gray-700 text-center py-4">
+      <div className="text-3xl text-slate-700 text-center py-4">
         Your Products
-      </div>
-      <div className="text-md text-blue-500 text-center">
-        For now you can only Delete products. Update feature coming soon!
-        <br /> To update a product, please delete and create a new one.
       </div>
       <div className="grid grid-cold-1 lg:grid-cols-2 gap-x-8 gap-y-8 px-8 pt-10 pb-24 bg-gray-200 m-4 rounded-md">
         {products.map((product) => (

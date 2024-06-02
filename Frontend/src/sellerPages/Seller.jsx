@@ -33,9 +33,7 @@ function Seller() {
         <div className="mx-auto">
           <div className="text-center mb-8 flex flex-col items-center">
             <div className="mx-auto mb-4">
-              <h1 className="text-3xl font-bold text-black">
-                Become a Seller
-              </h1>
+              <h1 className="text-3xl font-bold text-black">Become a Seller</h1>
               <p className="text-gray-800 mt-2">
                 Join us and start selling your products!
               </p>
@@ -174,20 +172,7 @@ function Seller() {
               All Orders
             </button>
           </div>
-          <div className="bg-orange-200 p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-black mb-2">
-              Request for New Brand
-            </h2>
-            <p className="text-gray-800 mb-4">
-              Submit a request to add a new brand to your store.
-            </p>
-            <button
-              onClick={() => navigate("brand-request")}
-              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
-            >
-              Request for New Brand
-            </button>
-          </div>
+
           <div className="bg-orange-200 p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-black mb-2">
               View Product Offers
@@ -200,6 +185,34 @@ function Seller() {
               className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
             >
               View Product Offers
+            </button>
+          </div>
+          <div className="bg-orange-200 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-black mb-2">
+              View Reviews
+            </h2>
+            <p className="text-gray-800 mb-4">
+              View customer reviews on your products.
+            </p>
+            <button
+              onClick={() => navigate("all-reviews")}
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
+            >
+              View Reviews
+            </button>
+          </div>
+          <div className="bg-orange-200 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-black mb-2">
+              Request for New Brand
+            </h2>
+            <p className="text-gray-800 mb-4">
+              Submit a request to add a new brand to your store.
+            </p>
+            <button
+              onClick={() => navigate("brand-request")}
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
+            >
+              Request for New Brand
             </button>
           </div>
         </div>

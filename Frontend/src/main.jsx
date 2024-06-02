@@ -39,6 +39,8 @@ import BrandRequest from "./sellerPages/BrandRequest.jsx";
 import Offers from "./sellerPages/Offers.jsx";
 import AddOffer from "./sellerPages/AddOffer.jsx";
 import SellerDashBoard from "./sellerPages/SellerDashBoard.jsx";
+import AllReviews from "./sellerPages/AllReviews.jsx";
+import UpdateProduct from "./sellerPages/UpdateProduct.jsx";
 
 import PaymentSuccess from "./pages/Payments/PaymentSuccess.jsx";
 import PaymentFailure from "./pages/Payments/PaymentFailure.jsx";
@@ -77,6 +79,8 @@ const router = createBrowserRouter(
         <Route path="offers" element={<Offers />} />
         <Route path="add-offer/:productId" element={<AddOffer />} />
         <Route path="dashboard" element={<SellerDashBoard />} />
+        <Route path="all-reviews" element={<AllReviews />} />
+        <Route path="update-product/:productId" element={<UpdateProduct />} />
       </Route>
 
       {/* Without Header Footer */}

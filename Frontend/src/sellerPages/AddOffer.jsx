@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -15,18 +15,17 @@ function AddOffer() {
         `http://localhost:8000/v1/products/p/${id}`,
         { withCredentials: true }
       );
-      console.log(response.data.data);
       return response.data.data;
     } catch (error) {
-      console.log("E1", error.response.data);
-      throw new Error(error.response.data); // Added to throw error for better handling
+      console.error("Error fetching product:", error.response.data);
+      throw new Error(error.response.data);
     }
   };
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["product", productId],
     queryFn: fetchProduct,
-  }); // Modified useQuery parameters
+  });
 
   const [discountType, setDiscountType] = useState("percentage");
   const [discountValue, setDiscountValue] = useState(0);
@@ -46,7 +45,7 @@ function AddOffer() {
     setTimeout(() => {
       setSuccessMessage("");
     }, 3000);
-  }, [successMessage]); // Corrected dependency
+  }, [successMessage]);
 
   const addOffer = async () => {
     try {
@@ -63,12 +62,11 @@ function AddOffer() {
           withCredentials: true,
         }
       );
-      console.log("Offer added successfully:", response.data.data);
       return response.data.data;
     } catch (error) {
       console.error("Error adding offer:", error.response.data.message);
       setErrorMessage(error.response.data.message);
-      throw new Error(error.response.data); // Added to throw error for better handling
+      throw new Error(error.response.data);
     }
   };
 
@@ -87,14 +85,8 @@ function AddOffer() {
     try {
       await addOffer();
       setSuccessMessage("Offer added successfully");
-      setDiscountType("percentage");
-      setDiscountValue(0);
-      setMinimumOrderValue(0);
-      setValidTill("");
-      setValidFrom("");
-
       setTimeout(() => {
-        navigate("/seller");
+        navigate("/seller/offers");
       }, 3000);
     } catch (error) {
       console.error("Error while handling form submit:", error);
@@ -104,11 +96,6 @@ function AddOffer() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-full p-4 my-14">
-        <img
-          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717078915/crmi2yw34sh7sldgmxo9.png"
-          alt="Loading"
-          className="w-64 h-auto"
-        />
         <div className="text-3xl text-gray-700">Loading Product Details...</div>
       </div>
     );
@@ -117,11 +104,6 @@ function AddOffer() {
   if (isError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-full p-4 my-14">
-        <img
-          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717078915/crmi2yw34sh7sldgmxo9.png"
-          alt="Loading"
-          className="w-64 h-auto"
-        />
         <div className="text-3xl text-gray-700">
           Error Loading Product Details...
         </div>
@@ -130,153 +112,116 @@ function AddOffer() {
   }
 
   return (
-    <div className="justify-center py-4 bg-gray-200">
-      <div className="text-center">
-        {successMessage && (
-          <div className="rounded-lg text-2xl text-white font-bold py-2 bg-green-500">
-            {successMessage}
-          </div>
-        )}
+    <>
+      <div className="bg-blue-200 px-4 pt-2 text-xl">
+        <Link to="/seller/offers">
+          <img
+            src="https://res.cloudinary.com/deepcloud1/image/upload/v1717357419/zb86nifhiz6ggbnhckzd.png"
+            alt="Back"
+            className="w-16 h-16 inline-block hover:scale-110 active:scale-100 transition-transform duration-100 ease-in-out"
+          />
+        </Link>
       </div>
-      <div className="flex justify-center w-2/4 mx-auto space-x-2">
-        <div className="w-1/2 py-4">
-          {data && (
-            <div className="bg-white rounded-lg shadow-md p-4 h-full">
-              <h2 className="text-lg font-bold mb-2">{data.title}</h2>
-              <p className="mb-2">Description: {data.description}</p>
-              <p className="mb-2">Brand: {data.brand.name}</p>
-              <p className="mb-2">Category: {data.category.category}</p>
-              <p className="mb-2">Price: {data.price}</p>
-              <p className="mb-2">Quantity in Stock: {data.quantityInStock}</p>
+      <div className="min-h-full flex items-center justify-center bg-blue-200 pb-8 ">
+        <div className="flex flex-wrap w-full max-w-4xl bg-gray-200 rounded-xl shadow-lg overflow-hidden my-8">
+          <div className="w-full md:w-1/2 p-5 flex flex-col justify-center items-center bg-blue-400">
+            <div className="text-white text-center">
+              <h2 className="text-3xl font-bold text-center text-blue-900 ">
+                {data.title}
+              </h2>
+              <p className="text-lg ">{data.description}</p>
+              <p className="text-lg ">Price: ₹{data.price}</p>
+              <p className="text-lg ">
+                Quantity In Stock: {data.quantityInStock}
+              </p>
               <img
                 src={data.productImage}
-                alt={data.title}
-                className="w-72 h-auto rounded-md m-4"
+                alt="Product Image"
+                className="w-[375px] h-[375px] object-cover shadow-md rounded-xl bg-gray-200 mt-4"
               />
             </div>
-          )}
-        </div>
-        <div className="w-1/2 py-4">
-          <form
-            onSubmit={handleFormSubmit}
-            className="bg-white rounded-lg shadow-md p-4 h-full"
-          >
-            <div className="text-2xl font-bold mb-4">Add Offer</div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="discountType"
-                className="block text-sm font-bold text-gray-700 mb-2"
-              >
-                Discount Type
-              </label>
-              <div className="flex items-center">
-                <label className="inline-flex items-center mr-4">
-                  <input
-                    type="radio"
-                    id="fixedDiscount"
-                    name="discountType"
-                    value="fixed"
-                    checked={discountType === "fixed"}
-                    onChange={(e) => setDiscountType(e.target.value)}
-                    className="form-radio text-indigo-600"
-                  />
-                  <span className="ml-2">Fixed</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    id="percentageDiscount"
-                    name="discountType"
-                    value="percentage"
-                    checked={discountType === "percentage"}
-                    onChange={(e) => setDiscountType(e.target.value)}
-                    className="form-radio text-indigo-600"
-                  />
-                  <span className="ml-2">Percentage</span>
-                </label>
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="discountValue"
-                className="block text-sm font-bold text-gray-700 mb-2"
-              >
-                Discount Value
-              </label>
-              <input
-                type="text"
-                id="discountValue"
-                name="discountValue"
-                value={discountValue}
-                onChange={(e) => setDiscountValue(e.target.value)}
-                className="border border-gray-300 rounded-lg p-2 w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="minimumOrderValue"
-                className="block text-sm font-bold text-gray-700 mb-2"
-              >
-                Minimum Order Value
-              </label>
-              <input
-                type="text"
-                id="minimumOrderValue"
-                name="minimumOrderValue"
-                value={minimumOrderValue}
-                onChange={(e) => setMinimumOrderValue(e.target.value)}
-                className="border border-gray-300 rounded-lg p-2 w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="validFrom"
-                className="block text-sm font-bold text-gray-700 mb-2"
-              >
-                Valid From
-              </label>
-              <input
-                type="date"
-                id="validFrom"
-                name="validFrom"
-                value={validFrom}
-                onChange={(e) => setValidFrom(e.target.value)}
-                className="border border-gray-300 rounded-lg p-2 w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="validTill"
-                className="block text-sm font-bold text-gray-700 mb-2"
-              >
-                Valid Till
-              </label>
-              <input
-                type="date"
-                id="validTill"
-                name="validTill"
-                value={validTill}
-                onChange={(e) => setValidTill(e.target.value)}
-                className="border border-gray-300 rounded-lg p-2 w-full"
-              />
-            </div>
-            {errorMessage && (
-              <div className="mb-4 p-2 rounded-lg text-red-500">
-                {errorMessage}
-              </div>
-            )}
-            <button
-              type="submit"
-              className="bg-blue-500 text-white p-2 rounded-lg w-full hover:bg-blue-600 active:bg-blue-700 active:scale-95 "
-            >
+          </div>
+          <div className="w-full md:w-1/2 p-8">
+            <h2 className="text-4xl font-bold text-center text-blue-900 mb-8">
               Add Offer
-            </button>
-          </form>
+            </h2>
+            <form
+              onSubmit={handleFormSubmit}
+              className="bg-white rounded-lg shadow-md p-8"
+            >
+              <div className="mb-4">
+                <label className="block text-lg font-medium text-gray-700">
+                  Discount Type
+                </label>
+                <select
+                  value={discountType}
+                  onChange={(e) => setDiscountType(e.target.value)}
+                  className="border border-gray-300 rounded-lg p-2 w-full"
+                >
+                  <option value="percentage">Percentage</option>
+                  <option value="fixed">Fixed</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-lg font-medium text-gray-700">
+                  Discount Value
+                </label>
+                <input
+                  type="number"
+                  value={discountValue}
+                  onChange={(e) => setDiscountValue(e.target.value)}
+                  className="border border-gray-300 rounded-lg p-2 w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-lg font-medium text-gray-700">
+                  Minimum Order Value
+                </label>
+                <input
+                  type="number"
+                  value={minimumOrderValue}
+                  onChange={(e) => setMinimumOrderValue(e.target.value)}
+                  className="border border-gray-300 rounded-lg p-2 w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-lg font-medium text-gray-700">
+                  Valid From
+                </label>
+                <input
+                  type="date"
+                  value={validFrom}
+                  onChange={(e) => setValidFrom(e.target.value)}
+                  className="border border-gray-300 rounded-lg p-2 w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-lg font-medium text-gray-700">
+                  Valid Till
+                </label>
+                <input
+                  type="date"
+                  value={validTill}
+                  onChange={(e) => setValidTill(e.target.value)}
+                  className="border border-gray-300 rounded-lg p-2 w-full"
+                />
+              </div>
+              {errorMessage && (
+                <div className="mb-4 p-2 rounded-lg text-red-500">
+                  {errorMessage}
+                </div>
+              )}
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded-lg w-full hover:bg-blue-600 active:bg-blue-700 active:scale-95 mt-4"
+              >
+                Add Offer
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

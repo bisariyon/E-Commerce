@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import refreshSeller from "../utility/refreshSeller";
+import {SellerLogo2} from "../assets/imports/importImages"
 
 function BrandRequest() {
   const { refreshSellerData } = refreshSeller();
@@ -70,77 +72,99 @@ function BrandRequest() {
 
   return (
     <>
-      <div className="text-center text-3xl font-bold text-slate-600 my-4">
-        New Brand Creation Request
+      <div className="bg-blue-200 px-4 pt-2 text-xl -mb-8">
+        <Link to="/seller">
+          <img
+            src="https://res.cloudinary.com/deepcloud1/image/upload/v1717357419/zb86nifhiz6ggbnhckzd.png"
+            alt="Back"
+            className="w-16 h-16 inline-block hover:scale-110 active:scale-100 transition-transform duration-100 ease-in-out"
+          />
+        </Link>
       </div>
-      {message && (
-        <div className="text-center text-lg text-green-600">{message}</div>
-      )}
-      {error && <div className="text-center text-lg text-red-600">{error}</div>}
-      <form
-        onSubmit={handleRegister}
-        encType="multipart/form-data"
-        className="max-w-lg mx-auto p-6 shadow-md rounded-lg bg-gray-200 my-6"
-      >
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Brand Name
-          </label>
-          <input
-            type="text"
-            placeholder="Brand Name"
-            value={brandName}
-            onChange={(e) => setBrandName(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+      <div className="min-h-screen flex items-center justify-center bg-blue-200">
+        <div className="w-full max-w-4xl bg-gray-200 rounded-xl shadow-lg overflow-hidden my-8">
+          <div className="md:flex">
+            <div className="md:w-1/2 p-5 flex flex-col justify-center items-center bg-blue-400">
+              <div className="text-white text-center">
+                <img
+                  src={SellerLogo2}
+                  alt="Product Image"
+                  className="w-[375px] h-[375px] object-cover shadow-md rounded-xl bg-gray-200 mt-4"
+                />
+              </div>
+            </div>
+            <div className="md:w-1/2 p-8">
+              <h2 className="text-4xl font-bold text-center text-blue-900 mb-8">
+                Brand Request
+              </h2>
+              <form
+                onSubmit={handleRegister}
+                className="bg-white rounded-lg shadow-md p-8"
+              >
+                <div className="mb-4">
+                  <label className="block text-lg font-medium text-gray-700">
+                    Brand Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Brand Name"
+                    value={brandName}
+                    onChange={(e) => setBrandName(e.target.value)}
+                    className="border border-gray-300 rounded-lg p-2 w-full"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-lg font-medium text-gray-700">
+                    Description
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="border border-gray-300 rounded-lg p-2 w-full"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-lg font-medium text-gray-700">
+                    Category
+                  </label>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Give comma (,) separated values
+                  </p>
+                  <input
+                    type="text"
+                    placeholder="Category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="border border-gray-300 rounded-lg p-2 w-full"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-lg font-medium text-gray-700">
+                    Logo
+                  </label>
+                  <input
+                    type="file"
+                    onChange={(e) => setLogo(e.target.files[0])}
+                    className="border border-gray-300 rounded-lg p-2 w-full"
+                  />
+                </div>
+                <div className="mb-4">
+                  {message && <div className="text-green-600">{message}</div>}
+                  {error && <div className="text-red-600">{error}</div>}
+                </div>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white p-2 rounded-lg w-full hover:bg-blue-600 active:bg-blue-700 active:scale-95"
+                >
+                  Request Brand
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Description
-          </label>
-          <input
-            type="text"
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Category
-          </label>
-          <p className="text-sm text-gray-600 mb-2">
-            Give comma (,) separated values
-          </p>
-          <input
-            type="text"
-            placeholder="Category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">Logo</label>
-          <input
-            type="file"
-            placeholder="Logo"
-            onChange={(e) => setLogo(e.target.files[0])}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 active:bg-blue-700 active:scale-95"
-        >
-          Request Brand
-        </button>
-      </form>
+      </div>
     </>
   );
 }

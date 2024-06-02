@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { emptyBasket } from "../store/BasketSlice";
+import { patchProducts } from "../store/ProductSlice";
 
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -145,7 +146,7 @@ function OrderConfirmation() {
         const response = await axios.post(
           "http://localhost:8000/v1/order-items/create",
           {
-            orderID: orderId, //
+            orderID: orderId, 
             productID: item.productId,
             sellerInfo: item.seller,
             quantity: item.quantity,
@@ -156,6 +157,7 @@ function OrderConfirmation() {
           }
         );
         console.log("Order Items", response.data.data);
+        patchProducts({ _id: item.productId, quantity: item.quantity });
         return response.data.data;
       });
     } catch (error) {
@@ -210,8 +212,8 @@ function OrderConfirmation() {
           // Logic to create Order
           createOrderBackend(jsonRes.data.transactionID);
           createOrderItemsBackend(orderIdMongoose);
-
           emptyCartBackend();
+
           dispatch(emptyBasket());
           navigate("/user/payment-success", { state: { transactionID : jsonRes.data.transactionID} });
 

@@ -15,7 +15,7 @@ function SubHeader() {
           <Link to="/#" className="nav-link hidden sm:inline hover:text-cyan-500 hover:scale-105">
             Offers & Discounts
           </Link>
-          <Link to="/#" className="nav-link hidden md:inline hover:text-cyan-500 hover:scale-105">
+          <Link to="user/profile" className="nav-link hidden md:inline hover:text-cyan-500 hover:scale-105">
             Order History
           </Link>
           <Link to="/user/register" className="nav-link hidden hover:text-cyan-500 hover:scale-105">

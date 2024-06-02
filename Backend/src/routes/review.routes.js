@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJwtToken, verifyUser } from "../middlewares/auth.middleware.js";
+import { verifyJwtToken, verifyJwtTokenSeller, verifyUser } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 import {
@@ -8,6 +8,7 @@ import {
   updateReview,
   getReviews,
   getUserReviews,
+  getSellerReviews,
 } from "../controllers/review.controller.js";
 
 const router = Router();
@@ -22,10 +23,12 @@ router
 
 router
   .route("/updateReview/:reviewId")
-  .put(verifyJwtToken, upload.array("newImages"), updateReview);
+  .put(verifyJwtToken, upload.single("images"), updateReview);
 
 router.route("/get/:productId").get(getReviews);
 
 router.route("/getUserReviews").get(verifyJwtToken, getUserReviews);
+
+router.route("/getSellerReviews").get(verifyJwtTokenSeller, getSellerReviews);
 
 export default router;

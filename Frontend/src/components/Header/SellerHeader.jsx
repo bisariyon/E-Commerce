@@ -100,12 +100,9 @@ const SellerHeader = () => {
           )}
 
           <div className="text-lg mx-3">
-            <Link to="#">
+            <Link to="orders">
               <div className="flex items-center transition duration-300 ease-in-out transform hover:scale-110">
                 <img className="w-24" src={OrdersEmpty} alt="Orders" />
-                <span className="text-white rounded-full px-2 py-1 ml-1">
-                  0
-                </span>
               </div>
             </Link>
           </div>

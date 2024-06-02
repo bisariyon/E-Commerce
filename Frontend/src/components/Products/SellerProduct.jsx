@@ -34,7 +34,12 @@ const SellerProduct = ({ product }) => {
   const handleAddOffer = () => {
     const productId = product._id;
     navigate(`/seller/add-offer/${productId}`);
-  }
+  };
+
+  const handleUpdateProduct = () => {
+    const productId = product._id;
+    navigate(`/seller/update-product/${productId}`);
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -94,18 +99,24 @@ const SellerProduct = ({ product }) => {
             ))}
           </div>
         </div>
-        <div className="my-2">
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded-md mb-2 mr-4 active:scale-95"
-            onClick={handleOpenModal}
-          >
-            Remove
-          </button>
+        <div className="my-4">
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded-md mb-2 mr-4 active:scale-95"
             onClick={handleAddOffer}
           >
             Add Offer
+          </button>
+          <button
+            className="bg-green-500 text-white px-4 py-2 rounded-md mb-2 mr-4 active:scale-95"
+            onClick={handleUpdateProduct}
+          >
+            Update
+          </button>
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded-md mb-2 mr-4 active:scale-95"
+            onClick={handleOpenModal}
+          >
+            Remove
           </button>
         </div>
       </div>

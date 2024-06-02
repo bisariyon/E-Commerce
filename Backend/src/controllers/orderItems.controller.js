@@ -3,16 +3,25 @@ import { ApiError } from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { OrderItems } from "../models/orderItems.model.js";
 import { Order } from "../models/order.model.js";
+import { Product } from "../models/product.model.js";
 import mongoose from "mongoose";
 
 const createOrderItems = asyncHandler(async (req, res, next) => {
   const user = req.user._id;
 
   const { orderID, productID, sellerInfo, quantity, amount } = req.body;
-  //   console.log(req.body);
+  console.log(req.body);
 
   if (!orderID || !productID || !sellerInfo || !quantity || !amount) {
     throw new ApiError(400, "Please provide all the required fields");
+  }
+
+  const product = await Product.findByIdAndUpdate(productID, {
+    $inc: { quantityInStock: -quantity },
+  });
+
+  if (!product) {
+    throw new ApiError(404, "Product not found");
   }
 
   const newOrderItem = await OrderItems.create({
@@ -25,6 +34,9 @@ const createOrderItems = asyncHandler(async (req, res, next) => {
   });
 
   if (!newOrderItem) {
+    await Product.findByIdAndUpdate(productID, {
+      $inc: { stock: quantity },
+    });
     throw new ApiError(500, "Order Item not created");
   }
   //   console.log(newOrderItem);
@@ -52,7 +64,7 @@ const getOrderItems = asyncHandler(async (req, res, next) => {
     user: req.user._id,
   }).populate({
     path: "productID",
-    select: "title productImage",
+    select: "title productImage price",
   });
   if (!orderItems) {
     throw new ApiError(404, "Order Items not found");
@@ -108,7 +120,7 @@ const getOrderItemsBySeller = asyncHandler(async (req, res, next) => {
     },
     {
       $lookup: {
-        from: "useraddresses", 
+        from: "useraddresses",
         localField: "order.address",
         foreignField: "_id",
         as: "address",
@@ -148,7 +160,6 @@ const getOrderItemsBySeller = asyncHandler(async (req, res, next) => {
       },
     },
   ]);
-
 
   if (!orderItems) {
     throw new ApiError(404, "Order Items not found");

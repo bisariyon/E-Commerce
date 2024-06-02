@@ -11,6 +11,7 @@ import {
   getProductById,
   deleteProduct,
   updateProduct,
+  updatePartialProduct,
   getProductByCategoryId,
   getProductByBrand,
   getProductBySeller,
@@ -25,8 +26,17 @@ router.route("/brand/:brandId").get(getProductByBrand);
 
 //Seller Routes
 router.route("/delete/:productId").delete(verifyJwtTokenSeller, deleteProduct);
-router.route("/update/:productId").put(verifyJwtTokenSeller, updateProduct);
-router.route("/seller/").get(verifyJwtTokenSeller,getProductBySeller);
+
+router
+  .route("/updatePartial/:productId")
+  .patch(
+    verifyJwtTokenSeller,
+    upload.single("productImage"),
+    updatePartialProduct
+  ); //Not used in frontend
+router.route("/update/:productId").put(verifyJwtTokenSeller, updateProduct); //Not used in frontend
+
+router.route("/seller/").get(verifyJwtTokenSeller, getProductBySeller);
 
 //Verified Seller Routes
 router

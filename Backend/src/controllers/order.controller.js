@@ -32,12 +32,58 @@ const createOrder = asyncHandler(async (req, res, next) => {
 });
 
 const getUserOrders = asyncHandler(async (req, res, next) => {
-  const user = req.user._id;
+  const { page = 1, limit = 5, sortBy = "_id", sortType = "1" } = req.query;
 
-  const orders = await Order.find({ user }).populate({
-    path: "address",
-    select: "-user -__v ",
-  });
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+    sort: { [sortBy]: parseInt(sortType) },
+  };
+
+  const aggregate = Order.aggregate([
+    {
+      $match: { user: req.user._id },
+    },
+    {
+      $lookup: {
+        from: "useraddresses",
+        localField: "address",
+        foreignField: "_id",
+        as: "address",
+      },
+    },
+    {
+      $unwind: "$address",
+    },
+    {
+      $project: {
+        _id: 1,
+        transactionID: 1,
+        status: 1,
+        total: 1,
+        user:1,
+        total:1,
+        createdAt: 1,
+        address: {
+          _id: 1,
+          addressLine1: 1,
+          addressLine2: 1,
+          city: 1,
+          state: 1,
+          country: 1,
+          pincode: 1,
+          contact: 1,
+        },
+      },
+    },
+  ]);
+
+  const orders = await Order.aggregatePaginate(aggregate, options);
+
+  // const orders = await Order.find({ user }).populate({
+  //   path: "address",
+  //   select: "-user -__v ",
+  // });
 
   if (!orders) {
     throw new ApiError(404, "No orders found");

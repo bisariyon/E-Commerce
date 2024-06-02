@@ -27,6 +27,11 @@ const reviewSchema = new Schema(
       type: String,
       required: true,
     },
+    seller: {
+      type: Schema.Types.ObjectId,
+      ref: "Seller",
+      required: true,
+    },
   },
   { timestamps: true }
 );

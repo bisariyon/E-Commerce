@@ -246,6 +246,48 @@ const updateProduct = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, updatedProduct, "Product updated successfully"));
 }); //Working but edges cases check needed i guess
 
+const updatePartialProduct = asyncHandler(async (req, res, next) => {
+  const { productId } = req.params;
+  const { title, description, price, quantityInStock } = req.body;
+
+  if (!title && !description && !price && !quantityInStock) {
+    throw new ApiError(400, "No fields to update");
+  }
+
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new ApiError(404, "Product not found");
+  }
+
+  if (title) product.title = title;
+  if (description) product.description = description;
+  if (price) product.price = price;
+  if (quantityInStock) product.quantityInStock = quantityInStock;
+
+  const image = req?.file?.path;
+  if (image) {
+    const oldImage = product.productImage;
+    const productImage = await uploadOnCloudinary(image);
+    if (!productImage) {
+      throw new ApiError(500, "Error uploading image");
+    }
+    product.productImage = productImage.url;
+
+    const parts = oldImage.split("/");
+    const publicId = parts[parts.length - 1].split(".")[0];
+    await deleteFromCloudinary(publicId);
+  }
+
+  const updatedProduct = await product.save();
+  if (!updatedProduct) {
+    throw new ApiError(500, "Error updating product");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedProduct, "Product updated successfully"));
+});
+
 //Public routes
 const getProducts = asyncHandler(async (req, res, next) => {
   const {
@@ -740,6 +782,7 @@ export {
   createProduct,
   getProducts,
   updateProduct,
+  updatePartialProduct,
   getProductById,
   deleteProduct,
   getProductByCategoryId,
