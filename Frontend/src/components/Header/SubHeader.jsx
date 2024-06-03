@@ -9,10 +9,10 @@ function SubHeader() {
           <Link to="/products" className="nav-link hover:text-cyan-500 hover:scale-105">
             All Products
           </Link>
-          <Link to="/#" className="nav-link hover:text-cyan-500 hover:scale-105">
+          <Link to="/user/categories" className="nav-link hover:text-cyan-500 hover:scale-105">
             All Categories
           </Link>
-          <Link to="/#" className="nav-link hidden sm:inline hover:text-cyan-500 hover:scale-105">
+          <Link to="/user/offers" className="nav-link hidden sm:inline hover:text-cyan-500 hover:scale-105">
             Offers & Discounts
           </Link>
           <Link to="user/profile" className="nav-link hidden md:inline hover:text-cyan-500 hover:scale-105">

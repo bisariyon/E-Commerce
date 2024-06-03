@@ -27,6 +27,7 @@ const addAddress = asyncHandler(async (req, res, next) => {
     country,
     contact,
     user: user._id,
+    active: true,
   });
 
   if (!newAddress) {
@@ -46,10 +47,12 @@ const userAddresses = asyncHandler(async (req, res, next) => {
 
   // console.log("User",user);
 
-  const addresses = await UserAddress.find({ user: user._id });
+  const addresses = await UserAddress.find({ user: user._id, active: true });
   if (!addresses) {
     throw new ApiError(404, "Addresses not found");
   }
+
+  console.log("Addresses", addresses);
 
   if (addresses.length === 0) {
     return res
@@ -73,14 +76,23 @@ const removeAddress = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Address id is required");
   }
 
-  const address = await UserAddress.findOneAndDelete({
-    $and: [{ _id: addressId }, { user: user._id }],
-  });
+  const address = await UserAddress.findOne({ user: user._id, _id: addressId });
   if (!address) {
     throw new ApiError(404, "Address not found for current user");
   }
 
-  return res.status(200).json(new ApiResponse(200, address, "Address removed"));
+  address.active = false;
+  const updatedAddress = await address.save({
+    validateBeforeSave: false,
+  });
+
+  if (!updatedAddress) {
+    throw new ApiError(500, "Address not removed");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateAddress, "Address removed"));
 });
 
 const removeMultipleAddresses = asyncHandler(async (req, res, next) => {

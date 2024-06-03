@@ -25,6 +25,8 @@ import UserDashboard from "./pages/UserDashboard.jsx";
 import ForgetPassword from "./pages/ForgetPassword.jsx";
 import NewPassword from "./pages/NewPassword.jsx";
 import VerifyUser from "./pages/VerifyUser.jsx";
+import Categories from "./pages/Categories.jsx";
+import AllOffers from "./pages/AllOffers.jsx";
 
 import OrderConfirmation from "./pages/OrderConfirmation.jsx";
 
@@ -41,6 +43,7 @@ import AddOffer from "./sellerPages/AddOffer.jsx";
 import SellerDashBoard from "./sellerPages/SellerDashBoard.jsx";
 import AllReviews from "./sellerPages/AllReviews.jsx";
 import UpdateProduct from "./sellerPages/UpdateProduct.jsx";
+import SingleProduct from "./sellerPages/SingleProduct.jsx";
 
 import PaymentSuccess from "./pages/Payments/PaymentSuccess.jsx";
 import PaymentFailure from "./pages/Payments/PaymentFailure.jsx";
@@ -62,6 +65,8 @@ const router = createBrowserRouter(
           <Route path="order-confirmation" element={<OrderConfirmation />} />
           <Route path="payment-success" element={<PaymentSuccess />} />
           <Route path="payment-failure" element={<PaymentFailure />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="offers" element={<AllOffers />} />
         </Route>
 
         <Route path="products" element={<Product />} />
@@ -81,6 +86,7 @@ const router = createBrowserRouter(
         <Route path="dashboard" element={<SellerDashBoard />} />
         <Route path="all-reviews" element={<AllReviews />} />
         <Route path="update-product/:productId" element={<UpdateProduct />} />
+        <Route path="order-item/:orderItemId" element={<SingleProduct />} />
       </Route>
 
       {/* Without Header Footer */}

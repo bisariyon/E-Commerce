@@ -12,6 +12,7 @@ import {
   updateProductOffer,
   getSellerOffers,
   getAllOffers,
+  getOffersByProducts,
 } from "../controllers/productOffers.controller.js";
 
 const router = Router();
@@ -28,7 +29,8 @@ router.route("/update/:offerId").put(verifyJwtTokenSeller, updateProductOffer);
 
 router.route("/seller").get(verifyJwtTokenSeller, getSellerOffers);
 
-//Admin routes
-router.route("/all").get(verifyJwtToken, verifyUser, getAllOffers);
+router.route("/all").get(getAllOffers);
+
+router.route("/products").post(getOffersByProducts);
 
 export default router;

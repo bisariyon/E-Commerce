@@ -189,7 +189,9 @@ const updateProductOffer = asyncHandler(async (req, res, next) => {
 });
 
 const getSellerOffers = asyncHandler(async (req, res, next) => {
-  const sellerOffers = await ProductOffers.find({ seller: req.seller._id }).populate("product");
+  const sellerOffers = await ProductOffers.find({
+    seller: req.seller._id,
+  }).populate("product");
 
   if (!sellerOffers) {
     throw new ApiError(404, "No offers found");
@@ -200,9 +202,10 @@ const getSellerOffers = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, sellerOffers, "Seller offers found"));
 });
 
-//Admin routes
 const getAllOffers = asyncHandler(async (req, res, next) => {
-  const allOffers = await ProductOffers.find();
+  const allOffers = await ProductOffers.find()
+    .populate("product")
+    .populate("seller");
 
   if (!allOffers) {
     throw new ApiError(404, "No offers found");
@@ -213,10 +216,32 @@ const getAllOffers = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, allOffers, "All offers found"));
 });
 
+const getOffersByProducts = asyncHandler(async (req, res, next) => {
+  const { productIds } = req.body;
+  const currentTime = new Date();
+  // console.log(productIds);
+
+  const offers = await ProductOffers.find({
+    product: { $in: productIds },
+    // validFrom: { $lt: currentTime },
+    validTill: { $gt: currentTime },
+  }).populate("product");
+
+  console.log(offers);
+  
+  if (!offers || offers.length === 0) {
+    throw new ApiError(404, "No offers found");
+  }
+
+
+  return res.status(200).json(new ApiResponse(200, offers, "Offers found"));
+});
+
 export {
   addProductOffer,
   deleteProductOffer,
   updateProductOffer,
   getSellerOffers,
   getAllOffers,
+  getOffersByProducts,
 };

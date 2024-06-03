@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 
 import refreshUser from "../utility/refreshUser";
 import refreshCart from "../utility/refreshCart";
+import { Link } from "react-router-dom";
 
 function Home() {
   const { refreshUserData } = refreshUser();
@@ -84,14 +85,16 @@ function Home() {
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          <div className="rounded-lg shadow hover:shadow-lg transition-shadow">
-            <Categories
-              key="all-categories"
-              categoryName="All Categories"
-              description="Click here to view all categories"
-              imageUrl={AllCategories}
-            />
-          </div>
+          <Link to="user/categories">
+            <div className="rounded-lg shadow hover:shadow-lg transition-shadow">
+              <Categories
+                key="all-categories"
+                categoryName="All Categories"
+                description="Click here to view all categories"
+                imageUrl={AllCategories}
+              />
+            </div>
+          </Link>
           {categories &&
             categories.data.docs.map((category) => (
               <div

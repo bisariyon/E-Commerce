@@ -16,10 +16,14 @@ function Addresses() {
 
   // Fetch addresses from the backend
   const fetchAddresses = async () => {
-    const response = await axios.get("http://localhost:8000/v1/addresses", {
-      withCredentials: true,
-    });
-    return response.data.data;
+    try {
+      const response = await axios.get("http://localhost:8000/v1/addresses", {
+        withCredentials: true,
+      });
+      return response.data.data;
+    } catch (error) {
+      console.error("Failed to fetch addresses", error);
+    }
   };
 
   const {
@@ -89,11 +93,15 @@ function Addresses() {
 
   // Remove address from the backend
   const removeBackendAddress = async (addressId) => {
-    const response = await axios.delete(
-      `http://localhost:8000/v1/addresses/remove/${addressId}`,
-      { withCredentials: true }
-    );
-    return response.data.data;
+    try {
+      const response = await axios.delete(
+        `http://localhost:8000/v1/addresses/remove/${addressId}`,
+        { withCredentials: true }
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error("Failed to remove address", error);
+    }
   };
 
   const { mutate: deleteAddress } = useMutation({

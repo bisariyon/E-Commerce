@@ -81,7 +81,23 @@ const getOrderItemsBySeller = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Only sellers can create products");
   }
 
-  const orderItems = await OrderItems.aggregate([
+  const {
+    page = 1,
+    limit = 10,
+    sortBy = "_id",
+    sortType = "1",
+    status,
+    before,
+    after,
+  } = req.query;
+
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+    sort: { [sortBy]: parseInt(sortType) },
+  };
+
+  const pipeline = [
     {
       $match: { sellerInfo: sellerInfo },
     },
@@ -153,13 +169,35 @@ const getOrderItemsBySeller = asyncHandler(async (req, res, next) => {
 
         "order.createdAt": 1,
 
+        createdAt: 1,
         status: 1,
         quantity: 1,
         amount: 1,
         orderID: 1,
       },
     },
-  ]);
+  ];
+
+  if (status) {
+    pipeline.push({
+      $match: { status: { $regex: status, $options: "ix" } },
+    });
+  }
+
+  if (before) {
+    pipeline.push({
+      $match: { createdAt: { $lte: new Date(before) } },
+    });
+  }
+
+  if (after) {
+    pipeline.push({
+      $match: { createdAt: { $gte: new Date(after) } },
+    });
+  }
+
+  const aggregate = OrderItems.aggregate(pipeline);
+  const orderItems = await OrderItems.aggregatePaginate(aggregate, options);
 
   if (!orderItems) {
     throw new ApiError(404, "Order Items not found");
@@ -171,11 +209,62 @@ const getOrderItemsBySeller = asyncHandler(async (req, res, next) => {
       .json(new ApiResponse(200, {}, "No Order Items found"));
   }
 
-  // console.log(orderItems);
-
   return res
     .status(200)
     .json(new ApiResponse(200, orderItems, "Order Items found"));
 });
 
-export { createOrderItems, getOrderItems, getOrderItemsBySeller };
+const getOrderItemById = asyncHandler(async (req, res, next) => {
+  const { orderItemId } = req.params;
+  console.log(orderItemId);
+
+  const orderItem = await OrderItems.findById(orderItemId)
+    .populate("user")
+    .populate("productID");
+  if (!orderItem) {
+    throw new ApiError(404, "Order Item not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, orderItem, "Order Items found"));
+});
+
+const updateStatus = asyncHandler(async (req, res, next) => {
+  const { orderItemId } = req.params;
+  const { status } = req.body;
+
+  if (!orderItemId) {
+    throw new ApiError(400, "Please provide orderItemId");
+  }
+
+  if (!status) {
+    throw new ApiError(400, "Please provide status");
+  }
+
+  const orderItem = await OrderItems.findById(orderItemId);
+  if (!orderItem) {
+    throw new ApiError(500, "Status not updated");
+  }
+
+  if (orderItem.sellerInfo.toString() !== req.seller._id.toString()){
+    // console.log(orderItem.sellerInfo, req.seller._id);
+    throw new ApiError(401, "Unauthorized to update status");
+  }
+
+  orderItem.status = status;
+  const saved = await orderItem.save();
+  if (!saved) {
+    throw new ApiError(500, "Status not updated");
+  }
+
+  return res.status(200).json(new ApiResponse(200, saved, "Status updated"));
+});
+
+export {
+  createOrderItems,
+  getOrderItems,
+  getOrderItemsBySeller,
+  getOrderItemById,
+  updateStatus,
+};

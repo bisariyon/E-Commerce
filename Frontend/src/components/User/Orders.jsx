@@ -279,6 +279,12 @@ function Orders() {
                           </span>{" "}
                           ₹{item.productID.price}
                         </p>
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-gray-900">
+                            Product status
+                          </span>{" "}
+                          {item.status}
+                        </p>
                       </div>
                     </div>
                     {currentReview === item._id ? (

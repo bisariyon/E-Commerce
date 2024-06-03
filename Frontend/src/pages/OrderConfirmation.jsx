@@ -5,7 +5,7 @@ import { patchProducts } from "../store/ProductSlice";
 
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { Logo } from "../assets/imports/importImages";
 
@@ -26,6 +26,7 @@ function OrderConfirmation() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [productIds, setProductIds] = useState([]);
   const basket = useSelector((state) => state.basket.basket);
 
   const [totalPrice, setTotalPrice] = useState(0);
@@ -35,6 +36,11 @@ function OrderConfirmation() {
   const [selectedAddress, setSelectedAddress] = useState({});
   const [addressError, setAddressError] = useState("");
 
+  const [offers, setOffers] = useState();
+  const [showOffers, setShowOffers] = useState(false);
+
+  const [selectedOffer, setSelectedOffer] = useState({});
+
   useEffect(() => {
     let total = 0;
     basket.forEach((item) => {
@@ -42,14 +48,27 @@ function OrderConfirmation() {
     });
     setTotalPrice(total);
 
-    const staticDiscount = 50;
-    setDiscount(staticDiscount);
+    let off = 0;
+    if (selectedOffer) {
+      if (selectedOffer.discountType === "fixed") {
+        off = selectedOffer.discountValue;
+        setDiscount(off);
+      }
+
+      if (selectedOffer.discountType === "percentage") {
+        off = parseInt(totalPrice * (selectedOffer.discountValue / 100));
+        setDiscount(off);
+      }
+    }
 
     const gst = parseInt(total * 0.1);
     const shipping = parseInt(total * 0.02);
 
-    setResultant(total - staticDiscount + gst + shipping);
-  }, [basket]);
+    setResultant(total - off + gst + shipping);
+
+    const ids = basket.map((item) => item.productId);
+    setProductIds(ids);
+  }, [basket, selectedOffer]);
 
   const fetchAddresses = async () => {
     const response = await axios.get("http://localhost:8000/v1/addresses", {
@@ -68,6 +87,40 @@ function OrderConfirmation() {
     queryFn: fetchAddresses,
     retry: 1,
   });
+
+  // Fetch Offers
+  const fetchAvailableOffers = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/v1/product-offers/products",
+        {
+          productIds,
+        }
+      );
+      console.log(response.data.data);
+      return response.data.data;
+    } catch (error) {
+      console.error(error.response.data.message || error.response.data);
+      throw error.response.data.message || error.response.data;
+    }
+  };
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      if (productIds.length > 0) {
+        try {
+          const res = await fetchAvailableOffers();
+          setOffers(res);
+          console.log("Offers", res);
+        } catch (error) {
+          // Handle error if necessary
+          console.error("Error fetching offers:", error);
+        }
+      }
+    };
+
+    fetchOffers();
+  }, [productIds]);
 
   //Check Availability of Items in the stock
   const checkCartForOrder = async () => {
@@ -146,7 +199,7 @@ function OrderConfirmation() {
         const response = await axios.post(
           "http://localhost:8000/v1/order-items/create",
           {
-            orderID: orderId, 
+            orderID: orderId,
             productID: item.productId,
             sellerInfo: item.seller,
             quantity: item.quantity,
@@ -215,8 +268,9 @@ function OrderConfirmation() {
           emptyCartBackend();
 
           dispatch(emptyBasket());
-          navigate("/user/payment-success", { state: { transactionID : jsonRes.data.transactionID} });
-
+          navigate("/user/payment-success", {
+            state: { transactionID: jsonRes.data.transactionID },
+          });
         } catch (error) {
           navigate("/user/payment-failure", { state: { error: response } });
         }
@@ -256,7 +310,6 @@ function OrderConfirmation() {
           }
         );
         navigate("/user/payment-failure", { state: { error: res.data } });
-
       } catch (error) {
         console.error("Error while sending payment failure data:", error);
       }
@@ -330,7 +383,21 @@ function OrderConfirmation() {
 
         {showAddress && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 hover:cursor-pointer">
+            {addressData && addressData.length === 0 && (
+              <Link to="/user/profile">
+                <div className="rounded-lg shadow-md p-4 bg-white">
+                  <h3 className="text-lg font-semibold text-black mb-2">
+                    No Address Found
+                  </h3>
+                  <p className="text-sm text-gray-700">
+                    Please add an address to proceed
+                  </p>
+                </div>
+              </Link>
+            )}
+
             {addressData &&
+              addressData.length > 0 &&
               addressData.map((address, index) => (
                 <div
                   key={address._id}
@@ -359,8 +426,41 @@ function OrderConfirmation() {
           </div>
         )}
       </div>
+      <div className="px-4 rounded-lg ">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
+          onClick={() => setShowOffers(!showOffers)}
+        >
+          {showOffers ? "Hide Offers" : "Show Offers"}
+        </button>
 
-      <div className="py-4 px-8 rounded-lg mb-8 max-w-md mx-auto mt-4 bg-gradient-to-r from-green-200 via-green-100 to-green-200 shadow-lg">
+        {showOffers && offers && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 hover:cursor-pointer">
+            {offers.map((offer, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  setSelectedOffer(offer), console.log(selectedOffer);
+                }}
+                className="rounded-lg shadow-md p-4 bg-white hover:bg-green-200 duration-100 ease-in-out transform hover:scale-95 transition-all"
+              >
+                <h3>{offer.code}</h3>
+                <p>Product: {offer.product.title}</p>
+                <p>Discount Type: {offer.discountType}</p>
+                <p>
+                  Discount Value:{" "}
+                  {offer.discountType === "fixed"
+                    ? "₹" + offer.discountValue
+                    : offer.discountValue + "%"}
+                </p>
+                <p>Minimum Order Value: {offer.minimumOrderValue}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="py-4 px-8 rounded-lg mb-8 max-w-md mx-auto mt-1 bg-gradient-to-r from-green-200 via-green-100 to-green-200 shadow-lg">
         <div className="my-1">
           <h2 className="text-lg font-semibold text-gray-800 mb-2">
             Order Summary:
@@ -418,6 +518,24 @@ function OrderConfirmation() {
           <span className="text-red-500 text-sm my-0">{addressError}</span>
         )}
 
+        {selectedOffer && (
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">
+              Selected Offer:
+            </h2>
+            <div className="text-sm text-gray-700 p-2 border border-green-300 rounded-lg bg-white shadow-inner">
+              <p>
+                {selectedOffer.discountType === "fixed"
+                  ? "₹" + selectedOffer.discountValue
+                  : selectedOffer.discountValue
+                  ? selectedOffer.discountValue + "%"
+                  : ""}
+              </p>
+              {/* <p>{selectedOffer.minimumOrderValue}</p> */}
+            </div>
+          </div>
+        )}
+
         <div className="flex flex-col items-center gap-4 mt-4">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 ease-in-out transform active:scale-105 shadow-md"
@@ -438,3 +556,5 @@ function OrderConfirmation() {
 }
 
 export default OrderConfirmation;
+
+//hellp

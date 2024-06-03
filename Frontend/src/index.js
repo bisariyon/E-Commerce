@@ -34,6 +34,8 @@ import SellerProduct from "./components/Products/SellerProduct";
 import Profile from "./components/Seller/Profile";
 import SellerLogOut from "./components/Seller/SellerLogOut";
 
+import SellerOrderDashboard from "./components/SideBar/SellerOrderDashboard";
+
 export {
   Header,
   Footer,
@@ -64,4 +66,5 @@ export {
   SellerProduct,
   Profile,
   SellerLogOut,
+  SellerOrderDashboard,
 };
