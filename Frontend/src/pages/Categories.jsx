@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+
 function Categories() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState("category");
   const [sortType, setSortType] = useState("1");
@@ -111,7 +122,7 @@ function Categories() {
                 onChange={() => handleSortBy("updatedAt")}
                 className="mr-2"
               />
-              Last Updation 
+              Last Updation
             </label>
           </div>
           <h2 className="text-2xl font-bold mb-4">Sort Type</h2>
@@ -147,7 +158,9 @@ function Categories() {
               <div
                 key={category._id}
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 transition duration-300 ease-in-out"
-                onClick={() => navigate(`/products?category=${category.category}`)}
+                onClick={() =>
+                  navigate(`/products?category=${category.category}`)
+                }
               >
                 <img
                   className="w-full h-48 object-cover"

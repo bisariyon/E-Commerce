@@ -1,8 +1,19 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+
 const ForgetPassword = () => {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
   const fullPath = window.location.href;
   const location = useLocation();
   const initialPath = fullPath.replace(location.pathname, "") + "/";
@@ -46,7 +57,10 @@ const ForgetPassword = () => {
       {error ? (
         <div className="bg-red-100 min-h-screen text-xl py-2 rounded relative w-full flex flex-col items-center justify-center">
           <p>{error}</p>
-          <button className="mt-4 px-4 py-2 bg-blue-600 text-white font-bold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" onClick={() => window.location.reload()}>
+          <button
+            className="mt-4 px-4 py-2 bg-blue-600 text-white font-bold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onClick={() => window.location.reload()}
+          >
             Go back
           </button>
         </div>

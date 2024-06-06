@@ -15,20 +15,22 @@ import "./index.css";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 
+import { AfterSignUp, NotLoggedInUser, SellerSignUp } from "./index.js";
+
 import Home from "./pages/Home.jsx";
 import LoginUser from "./pages/LoginUser.jsx";
 import RegisterUser from "./pages/RegsiterUser.jsx";
 import Product from "./pages/Product.jsx";
 import CheckOut from "./pages/CheckOut.jsx";
-import { AfterSignUp, NotLoggedInUser, SellerSignUp } from "./index.js";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import ForgetPassword from "./pages/ForgetPassword.jsx";
 import NewPassword from "./pages/NewPassword.jsx";
 import VerifyUser from "./pages/VerifyUser.jsx";
 import Categories from "./pages/Categories.jsx";
 import AllOffers from "./pages/AllOffers.jsx";
-
 import OrderConfirmation from "./pages/OrderConfirmation.jsx";
+import PaymentSuccess from "./pages/Payments/PaymentSuccess.jsx";
+import PaymentFailure from "./pages/Payments/PaymentFailure.jsx";
 
 import AppSeller from "./AppSeller.jsx";
 import Seller from "./sellerPages/Seller.jsx";
@@ -44,9 +46,20 @@ import SellerDashBoard from "./sellerPages/SellerDashBoard.jsx";
 import AllReviews from "./sellerPages/AllReviews.jsx";
 import UpdateProduct from "./sellerPages/UpdateProduct.jsx";
 import SingleProduct from "./sellerPages/SingleProduct.jsx";
+import UpdateOffer from "./sellerPages/UpdateOffer.jsx";
 
-import PaymentSuccess from "./pages/Payments/PaymentSuccess.jsx";
-import PaymentFailure from "./pages/Payments/PaymentFailure.jsx";
+import AppAdmin from "./AppAdmin.jsx";
+import Admin from "./adminPages/Admin.jsx";
+import AllOrderItems from "./adminPages/AllOrderItems.jsx";
+import AllOrders from "./adminPages/AllOrders.jsx";
+import AdminProducts from "./adminPages/AllProducts.jsx";
+import AllUsers from "./adminPages/AllUsers.jsx";
+import AllSellers from "./adminPages/AllSellers.jsx";
+import AllCategories from "./adminPages/AllCategories.jsx";
+import AddNewCategory from "./adminPages/AddNewCategory.jsx";
+import AllSubCategories from "./adminPages/AllSubCategories.jsx";
+import AllBrands from "./adminPages/AllBrands.jsx";
+import AdminReviews from "./adminPages/AllReviews.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -87,6 +100,21 @@ const router = createBrowserRouter(
         <Route path="all-reviews" element={<AllReviews />} />
         <Route path="update-product/:productId" element={<UpdateProduct />} />
         <Route path="order-item/:orderItemId" element={<SingleProduct />} />
+        <Route path="update-offer/:offerId" element={<UpdateOffer />} />
+      </Route>
+
+      <Route path="admin" element={<AppAdmin />}>
+        <Route path="" element={<Admin />} />
+        <Route path="all-orderitems" element={<AllOrderItems />} />
+        <Route path="all-orders" element={<AllOrders />} />
+        <Route path="all-products" element={<AdminProducts />} />
+        <Route path="all-users" element={<AllUsers />} />
+        <Route path="all-sellers" element={<AllSellers />} />
+        <Route path="all-categories" element={<AllCategories />} />
+        <Route path="add-category" element={<AddNewCategory />} />
+        <Route path="all-subcategories" element={<AllSubCategories />} />
+        <Route path="all-brands" element={<AllBrands />} />
+        <Route path="all-reviews" element={<AdminReviews />} />
       </Route>
 
       {/* Without Header Footer */}

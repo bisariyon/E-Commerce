@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+
 function AllOffers() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
   const fetchOffers = async () => {
     try {
       const response = await axios.get(

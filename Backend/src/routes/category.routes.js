@@ -12,6 +12,7 @@ import {
   deleteCategorybyID,
   deleteCategorybyName,
   updateCategoryImage,
+  getCategoriesAdmin,
 } from "../controllers/category.controller.js";
 
 const router = Router();
@@ -42,5 +43,7 @@ router
     upload.single("image"),
     updateCategoryImage
   );
+
+router.route("/all/admin").get(verifyJwtToken, verifyIsAdmin, getCategoriesAdmin);
 
 export default router;

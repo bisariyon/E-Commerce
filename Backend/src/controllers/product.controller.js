@@ -130,20 +130,23 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
     throw new ApiError(403, "You are not authorized to delete this product");
   }
 
-  const deletedProduct = await Product.findByIdAndDelete(productId);
-  if (!deletedProduct) {
-    throw new ApiError(500, "Error deleting product");
+  const deletedProduct = await Product.findById(productId)
+  if(!deletedProduct) {
+    throw new ApiError(404, "Product not found");
   }
 
-  const parts = deletedProduct.productImage.split("/");
-  const deletedImagePublicId = parts[parts.length - 1].split(".")[0];
-  console.log("deletedImagePublicId", deletedImagePublicId);
+  deletedProduct.active = false;
+  const updatedProduct = await deletedProduct.save();
+ 
 
-  await deleteFromCloudinary(deletedImagePublicId);
+  // const parts = deletedProduct.productImage.split("/");
+  // const deletedImagePublicId = parts[parts.length - 1].split(".")[0];
+  // console.log("deletedImagePublicId", deletedImagePublicId);
+  // await deleteFromCloudinary(deletedImagePublicId);
 
   res
     .status(200)
-    .json(new ApiResponse(200, deletedProduct, "Product deleted successfully"));
+    .json(new ApiResponse(200, updatedProduct, "Product deleted successfully"));
 });
 
 const updateProduct = asyncHandler(async (req, res, next) => {
@@ -376,7 +379,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
     {
       $group: {
         _id: "$_id",
-
+        active: { $first: "$active" },
         title: { $first: "$title" },
         description: { $first: "$description" },
         price: { $first: "$price" },
@@ -398,11 +401,12 @@ const getProducts = asyncHandler(async (req, res, next) => {
     {
       $project: {
         _id: 1,
+        active: 1,
         title: 1,
         description: 1,
         price: 1,
         quantityInStock: 1,
-        ratings: 1,
+        ratings: 1,   
         brand: {
           brandname: "$brand.name",
           brandID: "$brand._id",
@@ -420,6 +424,11 @@ const getProducts = asyncHandler(async (req, res, next) => {
         productImage: 1,
       },
     },
+    {
+      $match: {
+        active: true,
+      },
+    }
   ];
 
   if (brand) {
@@ -477,6 +486,10 @@ const getProductById = asyncHandler(async (req, res, next) => {
     .populate({
       path: "subCategories",
       select: "subCategory",
+    })
+    .populate({
+      path: "sellerInfo",
+      select: "fullName GSTnumber verified",
     });
 
   if (!product) {
@@ -754,7 +767,7 @@ const getProductBySeller = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Seller ID is required");
   }
 
-  const products = await Product.find({ sellerInfo: sellerId })
+  const products = await Product.find({ sellerInfo: sellerId, active: true})
     .populate({
       path: "brand",
       select: "name",
@@ -778,6 +791,152 @@ const getProductBySeller = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, products, "Products found for seller"));
 });
 
+//admin routes
+const getAllProductsAdmin = asyncHandler(async (req, res, next) => {
+  const {
+    page = 1,
+    limit = 10,
+    sortBy = "_id",
+    sortType = "1",
+    productId = "",
+    sellerId = "",
+    categoryId = "",
+    brandId = "",
+    subCategoryId = "",
+  } = req.query;
+
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+    sort: { [sortBy]: parseInt(sortType) },
+  };
+
+  const pipeline = [
+    {
+      $lookup: {
+        from: "brands",
+        localField: "brand",
+        foreignField: "_id",
+        as: "brand",
+      },
+    },
+    {
+      $unwind: "$brand",
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "category",
+      },
+    },
+    {
+      $unwind: "$category",
+    },
+    {
+      $lookup: {
+        from: "subcategories",
+        localField: "subCategories",
+        foreignField: "_id",
+        as: "subCategories",
+      },
+    },
+    {
+      $unwind: "$subCategories",
+    },
+    {
+      $lookup: {
+        from: "sellers",
+        localField: "sellerInfo",
+        foreignField: "_id",
+        as: "sellerInfo",
+      },
+    },
+    {
+      $unwind: "$sellerInfo",
+    },
+    {
+      $group: {
+        _id: "$_id",
+        title: { $first: "$title" },
+        ratings: { $first: "$ratings" },
+        productImage: { $first: "$productImage" },
+        description: { $first: "$description" },
+        price: { $first: "$price" },
+        quantityInStock: { $first: "$quantityInStock" },
+        ratings: { $first: "$ratings" },
+        brand: { $first: "$brand" },
+        category: { $first: "$category" },
+        sellerInfo: { $first: "$sellerInfo" },
+        productImage: { $first: "$productImage" },
+        list: {
+          $push: {
+            subCategoryName: "$subCategories.subCategory",
+            subCategoryID: "$subCategories._id",
+            subCategoryDescription: "$subCategories.description",
+          },
+        },
+        sellerId: { $first: "$sellerInfo._id" },
+        brandId: { $first: "$brand._id" },
+      },
+    },
+  ];
+
+  if (productId) {
+    pipeline.unshift({
+      $match: {
+        _id: new mongoose.Types.ObjectId(productId),
+      },
+    });
+  }
+
+  if (sellerId) {
+    pipeline.push({
+      $match: {
+        sellerId: new mongoose.Types.ObjectId(sellerId),
+      },
+    });
+  }
+
+  if (categoryId) {
+    pipeline.push({
+      $match: {
+        "category._id": new mongoose.Types.ObjectId(categoryId),
+      },
+    });
+  }
+
+  if (brandId) {
+    pipeline.push({
+      $match: {
+        brandId: new mongoose.Types.ObjectId(brandId),
+      },
+    });
+  }
+
+  if (subCategoryId) {
+    pipeline.push({
+      $match: {
+        "list.subCategoryID": new mongoose.Types.ObjectId(subCategoryId),
+      },
+    });
+  }
+
+  const aggregate = Product.aggregate(pipeline);
+  const products = await Product.aggregatePaginate(aggregate, options);
+
+  if (!products) {
+    throw new ApiError(404, "No products found");
+  }
+
+  if (products.length === 0) {
+    throw new ApiError(404, "No products found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, products, "Products found"));
+});
+
 export {
   createProduct,
   getProducts,
@@ -788,4 +947,5 @@ export {
   getProductByCategoryId,
   getProductByBrand,
   getProductBySeller,
+  getAllProductsAdmin,
 };

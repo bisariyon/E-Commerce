@@ -38,6 +38,7 @@ function OrderConfirmation() {
 
   const [offers, setOffers] = useState();
   const [showOffers, setShowOffers] = useState(false);
+  const [offerError, setOfferError] = useState("");
 
   const [selectedOffer, setSelectedOffer] = useState({});
 
@@ -50,14 +51,18 @@ function OrderConfirmation() {
 
     let off = 0;
     if (selectedOffer) {
-      if (selectedOffer.discountType === "fixed") {
-        off = selectedOffer.discountValue;
-        setDiscount(off);
-      }
+      if (selectedOffer.minimumOrderValue > total) {
+        setOfferError("Minimum Order Value not met!");
+      } else {
+        if (selectedOffer.discountType === "fixed") {
+          off = selectedOffer.discountValue;
+          setDiscount(off);
+        }
 
-      if (selectedOffer.discountType === "percentage") {
-        off = parseInt(totalPrice * (selectedOffer.discountValue / 100));
-        setDiscount(off);
+        if (selectedOffer.discountType === "percentage") {
+          off = parseInt(totalPrice * (selectedOffer.discountValue / 100));
+          setDiscount(off);
+        }
       }
     }
 
@@ -370,6 +375,7 @@ function OrderConfirmation() {
   }
 
   // console.log("Order ID", checkCartData);
+  // console.log("Selected Address", offers);
 
   return (
     <div className="-mb-8 bg-purple-300 pb-16">
@@ -434,6 +440,17 @@ function OrderConfirmation() {
           {showOffers ? "Hide Offers" : "Show Offers"}
         </button>
 
+        {showOffers && !offers && (
+          <div className="rounded-lg shadow-md p-4 bg-white w-1/5">
+            <h3 className="text-lg font-semibold text-black mb-2">
+              No Offers Found
+            </h3>
+            <p className="text-sm text-gray-700">
+              No offers available for the products in the cart
+            </p>
+          </div>
+        )}
+
         {showOffers && offers && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 hover:cursor-pointer">
             {offers.map((offer, index) => (
@@ -460,7 +477,7 @@ function OrderConfirmation() {
         )}
       </div>
 
-      <div className="py-4 px-8 rounded-lg mb-8 max-w-md mx-auto mt-1 bg-gradient-to-r from-green-200 via-green-100 to-green-200 shadow-lg">
+      <div className="py-4 my-2 px-8 rounded-lg mb-8 max-w-md mx-auto mt-1 bg-gradient-to-r from-green-200 via-green-100 to-green-200 shadow-lg">
         <div className="my-1">
           <h2 className="text-lg font-semibold text-gray-800 mb-2">
             Order Summary:
@@ -518,7 +535,15 @@ function OrderConfirmation() {
           <span className="text-red-500 text-sm my-0">{addressError}</span>
         )}
 
-        {selectedOffer && (
+        {selectedOffer && selectedOffer.minimumOrderValue > totalPrice && (
+          <>
+            <span className="text-lg text-red-400">
+              Minimum Order Value not met!
+            </span>
+          </>
+        )}
+
+        {selectedOffer && selectedOffer.minimumOrderValue <= totalPrice && (
           <div className="mt-6">
             <h2 className="text-lg font-semibold text-gray-800 mb-2">
               Selected Offer:
@@ -529,7 +554,8 @@ function OrderConfirmation() {
                   ? "₹" + selectedOffer.discountValue
                   : selectedOffer.discountValue
                   ? selectedOffer.discountValue + "%"
-                  : ""}
+                  : " "}{" "}
+                off on ₹ {totalPrice}
               </p>
               {/* <p>{selectedOffer.minimumOrderValue}</p> */}
             </div>

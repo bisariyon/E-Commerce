@@ -1,8 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+
 function NewPassword() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
   const { token } = useParams();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,7 +40,7 @@ function NewPassword() {
     } catch (error) {
       // console.log(error.response.data.message);
       setError(error.response.data.message);
-      throw error
+      throw error;
     }
   };
 

@@ -1,9 +1,12 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
 import {
+  verifyJwtToken,
   verifyJwtTokenSeller,
   verifySeller,
 } from "../middlewares/auth.middleware.js";
+
+import { verifyIsAdmin } from "../middlewares/admin.middleware.js";
 
 import {
   createProduct,
@@ -13,8 +16,9 @@ import {
   updateProduct,
   updatePartialProduct,
   getProductByCategoryId,
-  getProductByBrand,
+  getProductByBrand, 
   getProductBySeller,
+  getAllProductsAdmin,
 } from "../controllers/product.controller.js";
 
 const router = Router();
@@ -47,5 +51,8 @@ router
     upload.single("productImage"),
     createProduct
   );
+
+//Admin Routes
+router.route("/admin").get(verifyJwtToken, verifyIsAdmin, getAllProductsAdmin);
 
 export default router;

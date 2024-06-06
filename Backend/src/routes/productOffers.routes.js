@@ -12,6 +12,7 @@ import {
   updateProductOffer,
   getSellerOffers,
   getAllOffers,
+  getById,
   getOffersByProducts,
 } from "../controllers/productOffers.controller.js";
 
@@ -32,5 +33,7 @@ router.route("/seller").get(verifyJwtTokenSeller, getSellerOffers);
 router.route("/all").get(getAllOffers);
 
 router.route("/products").post(getOffersByProducts);
+
+router.route("/:offerId").get(getById);
 
 export default router;

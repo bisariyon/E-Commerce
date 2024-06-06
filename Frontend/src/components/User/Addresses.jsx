@@ -37,6 +37,8 @@ function Addresses() {
     retry: 1,
   });
 
+  console.log(addressData);
+
   // if (addressLoading) return <div>Loading...</div>;
   // if (isAddressError) return <div>Error: {addressErrors.message}</div>;
 

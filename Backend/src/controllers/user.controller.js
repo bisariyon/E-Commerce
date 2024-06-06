@@ -333,28 +333,28 @@ const selfVerify = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "User is already verified");
   }
   // try {
-    user.verified = true;
-    const verifiedUser = await user.save({ validateBeforeSave: false });
-    if (!verifiedUser) {
-      throw new ApiError(500, "Error in verifying user");
-    }
+  user.verified = true;
+  const verifiedUser = await user.save({ validateBeforeSave: false });
+  if (!verifiedUser) {
+    throw new ApiError(500, "Error in verifying user");
+  }
 
-    const cartAlreadyexist = await Cart.findOne({ user: user._id });
-    if (cartAlreadyexist) {
-      throw new ApiError(400, "Cart already exists for this user");
-    }
+  const cartAlreadyexist = await Cart.findOne({ user: user._id });
+  if (cartAlreadyexist) {
+    throw new ApiError(400, "Cart already exists for this user");
+  }
 
-    const id = new mongoose.Types.ObjectId();
-    const cart = await Cart.create({ _id: id, user: user._id });
-    if (!cart) {
-      throw new ApiError(500, "Error in creating cart");
-    }
+  const id = new mongoose.Types.ObjectId();
+  const cart = await Cart.create({ _id: id, user: user._id });
+  if (!cart) {
+    throw new ApiError(500, "Error in creating cart");
+  }
 
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(200, {}, "User verified successfully and Cart created")
-      );
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, {}, "User verified successfully and Cart created")
+    );
   // } catch (error) {
   //   user.verified = false;
   //   await user.save({ validateBeforeSave: false });
@@ -699,10 +699,43 @@ const deleteUser = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, {}, "User deleted successfully"));
 });
 
-// const getUserOrders = asyncHandler(async (req, res, next) => {});
-// const getUserReviews = asyncHandler(async (req, res, next) => {});
-// const updateAddress = asyncHandler(async (req, res, next) => {});
-// const deleteAddress = asyncHandler(async (req, res, next) => {});
+//Admin controllers
+const getAllUsers = asyncHandler(async (req, res, next) => {
+  const { page = 1, limit = 10, user = "" } = req.query;
+
+  const options = {
+    page: parseInt(page, 10),
+    limit: parseInt(limit, 10),
+  };
+
+  const pipeline = [
+    {
+      $project: {
+        password: 0,
+        refreshToken: 0,
+        __v: 0,
+      },
+    },
+  ];
+
+  if (user) {
+    pipeline.unshift({
+      $match: {
+        _id: new mongoose.Types.ObjectId(user),
+      },
+    });
+  }
+
+  const aggregate = User.aggregate(pipeline);
+  const users = await User.aggregatePaginate(aggregate, options);
+  if (!users) {
+    throw new ApiError(404, "No users found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, users, "Users retrieved successfully"));
+});
 
 export {
   registerUser,
@@ -722,4 +755,5 @@ export {
   deleteUser,
   selfVerificationLinkRequest,
   selfVerify,
+  getAllUsers,
 };

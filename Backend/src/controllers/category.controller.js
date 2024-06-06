@@ -7,21 +7,22 @@ import {
   uploadOnCloudinary,
   deleteFromCloudinary,
 } from "../utils/cloudinary.js";
+import mongoose from "mongoose";
 
 const createCategory = asyncHandler(async (req, res, next) => {
   const { category, description } = req.body;
 
   if (!category) {
-    return next(new ApiError(400, "Category is required"));
+    throw new ApiError(400, "Category is required");
   }
 
   if (!description) {
-    return next(new ApiError(400, "Description is required"));
+    throw new ApiError(400, "Description is required");
   }
 
   const findCategory = await Category.findOne({ category });
   if (findCategory) {
-    return next(new ApiError(400, "Category already exists"));
+    throw new ApiError(400, "Category already exists");
   }
 
   const imgLocalPath = req.file?.path;
@@ -40,7 +41,7 @@ const createCategory = asyncHandler(async (req, res, next) => {
     imageUrl: image.url,
   });
   if (!newCategory) {
-    return next(new ApiError(400, "Error in creating category"));
+    throw new ApiError(400, "Error in creating category");
   }
 
   return res
@@ -53,7 +54,7 @@ const getCategorybyID = asyncHandler(async (req, res, next) => {
 
   const category = await Category.findById(_id);
   if (!category) {
-    return next(new ApiError(404, "Category not found"));
+    throw new ApiError(404, "Category not found");
   }
   // console.log(category._id);
 
@@ -61,13 +62,7 @@ const getCategorybyID = asyncHandler(async (req, res, next) => {
 });
 
 const getCategories = asyncHandler(async (req, res, next) => {
-  const {
-    page = 1,
-    limit = 1000,
-    sortBy = "_id",
-    sortType = "1",
-    query,
-  } = req.query;
+  const { page = 1, limit = 1000, sortBy = "_id", sortType = "1" } = req.query;
 
   const options = {
     page: parseInt(page),
@@ -78,21 +73,21 @@ const getCategories = asyncHandler(async (req, res, next) => {
   try {
     const categories = await Category.paginate({}, options);
     if (categories.docs.length === 0) {
-      return next(new ApiError(404, "No category found"));
+      throw new ApiError(404, "No category found");
     }
 
     res.status(200).json(new ApiResponse(200, categories, "Categories found"));
   } catch (error) {
-    return next(new ApiError(500, "Error in getting categories"));
+    throw new ApiError(500, "Error in getting categories");
   }
-});
+}); //not checked for active
 
 const getCategorybyName = asyncHandler(async (req, res, next) => {
   const { categoryName } = req.params;
 
   const category = await Category.findOne({ category: categoryName });
   if (!category) {
-    return next(new ApiError(404, "Category not found"));
+    throw new ApiError(404, "Category not found");
   }
 
   return res.status(200).json(new ApiResponse(200, category, "Category found"));
@@ -103,13 +98,16 @@ const updateCategory = asyncHandler(async (req, res, next) => {
   const { categoryID } = req.params;
   let { newCategory, newDescription } = req.body;
 
+  // console.log(req.body);
+  // console.log(req.params);
+
   if (!newCategory && !newDescription) {
-    return next(new ApiError(400, "Category or description is required"));
+    throw new ApiError(400, "Category or description is required");
   }
 
   const findCategory = await Category.findById(categoryID);
   if (!findCategory) {
-    return next(new ApiError(404, "No category found to update"));
+    throw new ApiError(404, "No category found to update");
   }
 
   if (!newCategory) {
@@ -130,6 +128,11 @@ const updateCategory = asyncHandler(async (req, res, next) => {
     },
     { new: true }
   );
+  if (!updatedCategory) {
+    throw new ApiError(500, "Error in updating category");
+  }
+
+  // console.log(updatedCategory);
 
   return res
     .status(200)
@@ -140,12 +143,14 @@ const updateCategory = asyncHandler(async (req, res, next) => {
 
 const updateCategoryImage = asyncHandler(async (req, res, next) => {
   const { categoryID } = req.params;
+  console.log(categoryID);
 
   const findCategory = await Category.findById(categoryID);
   if (!findCategory) {
-    return next(new ApiError(404, "No category found to update"));
+    throw new ApiError(404, "No category found to update");
   }
 
+  console.log(req.file);
   const imgLocalPath = req.file?.path;
   if (!imgLocalPath) {
     throw new ApiError(400, "Category Image is required");
@@ -178,6 +183,8 @@ const updateCategoryImage = asyncHandler(async (req, res, next) => {
     await deleteFromCloudinary(publicId);
   }
 
+  console.log(updatedCategory);
+
   return res
     .status(200)
     .json(
@@ -194,21 +201,28 @@ const deleteCategorybyID = asyncHandler(async (req, res, next) => {
 
   const category = await Category.findById(categoryID);
   if (!category) {
-    return next(new ApiError(404, "No category found to delete"));
+    throw new ApiError(404, "No category found to delete");
   }
 
-  await SubCategory.deleteMany({
-    category: categoryID,
-  });
+  category.active = false;
+  const updatedCategory = await category.save();
+  if (!updatedCategory) {
+    throw new ApiError(500, "Error in deleting category");
+  }
 
-  const deletedCategory = await Category.findByIdAndDelete(category._id);
-  if (!deletedCategory) {
-    return next(new ApiError(404, "No category found to delete"));
+  const subCategories = await SubCategory.find({ category: category._id });
+  if (subCategories.length > 0) {
+    subCategories.forEach(async (subCategory) => {
+      subCategory.active = false;
+      await subCategory.save();
+    });
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, {}, "Category deleted successfully"));
+    .json(
+      new ApiResponse(200, updateCategory, "Category deleted successfully")
+    );
 });
 
 const deleteCategorybyName = asyncHandler(async (req, res, next) => {
@@ -216,7 +230,7 @@ const deleteCategorybyName = asyncHandler(async (req, res, next) => {
 
   const category = await Category.findOne({ category: catName });
   if (!category) {
-    return next(new ApiError(404, "No category found to delete"));
+    throw new ApiError(404, "No category found to delete");
   }
 
   await SubCategory.deleteMany({
@@ -225,12 +239,90 @@ const deleteCategorybyName = asyncHandler(async (req, res, next) => {
 
   const deletedCategory = await Category.findByIdAndDelete(category._id);
   if (!deletedCategory) {
-    return next(new ApiError(404, "No category found to delete"));
+    throw new ApiError(404, "No category found to delete");
   }
 
   return res
     .status(200)
     .json(new ApiResponse(200, {}, "Category deleted successfully"));
+});
+
+//Admin
+const getCategoriesAdmin = asyncHandler(async (req, res, next) => {
+  const {
+    page = 1,
+    limit = 50,
+    sortBy = "_id",
+    sortType = "1",
+    subCategory = "",
+    category = "",
+  } = req.query;
+
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+    sort: { [sortBy]: parseInt(sortType) },
+  };
+
+  const pipeline = [
+    {
+      $lookup: {
+        from: "subcategories",
+        localField: "_id",
+        foreignField: "category",
+        as: "subCategories",
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        category: 1,
+        categoryDescription: "$description",
+        active: 1,
+        categoryImage: "$imageUrl",
+        subCategories: {
+          $map: {
+            input: "$subCategories",
+            as: "subCategory",
+            in: {
+              subCategoryId: "$$subCategory._id",
+              subCategory: "$$subCategory.subCategory",
+              subCategoryDescription: "$$subCategory.description",
+            },
+          },
+        },
+      },
+    },
+    {
+      $match: {
+        active: true,
+      },
+    },
+  ];
+
+  if (category) {
+    pipeline.push({
+      $match: {
+        _id: new mongoose.Types.ObjectId(category),
+      },
+    });
+  }
+
+  if (subCategory) {
+    pipeline.push({
+      $match: {
+        "subCategories.subCategoryId": new mongoose.Types.ObjectId(subCategory),
+      },
+    });
+  }
+  const aggregate = Category.aggregate(pipeline);
+  const result = await Category.aggregatePaginate(aggregate, options);
+
+  if (!result) {
+    throw new ApiError(404, "No category found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, result, "Categories found"));
 });
 
 export {
@@ -241,5 +333,6 @@ export {
   updateCategory,
   deleteCategorybyID,
   deleteCategorybyName,
-  updateCategoryImage
+  updateCategoryImage,
+  getCategoriesAdmin,
 };

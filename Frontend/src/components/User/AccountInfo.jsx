@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BsPencilSquare } from "react-icons/bs";
 import { patchUser } from "../../store/UserSlice";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 
 function AccountInfo() {
@@ -302,14 +302,14 @@ function AccountInfo() {
     return (
       <div className="rounded-lg shadow-md p-6 bg-white m-2">
         <h3 className="text-md font-semibold mb-2 text-slate-500">{label}</h3>
-        <div className="flex items-center">
+        <div className="flex items-center ">
           {editingField === field ? (
             <div className="w-full">
               <input
                 type="text"
                 value={editedValue}
                 onChange={(e) => setEditedValue(e.target.value)}
-                className="rounded-md border bg-purple-200 border-gray-300 py-3 px-4 text-gray-700 "
+                className="rounded-md border bg-purple-200 border-gray-300 py-3 px-4 text-gray-700 w-full"
               />
             </div>
           ) : (
@@ -333,7 +333,7 @@ function AccountInfo() {
             <input
               type="password"
               placeholder="Enter your password"
-              className="rounded-md border bg-purple-200 border-gray-300 py-3 px-4 text-gray-700"
+              className="rounded-md border w-full bg-purple-200 border-gray-300 py-3 px-4 text-gray-700"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -374,13 +374,15 @@ function AccountInfo() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-2 gap-x-6 px-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 px-2">
           <div className="col-span-1">
             {renderField("Username", "username")}
           </div>
           <div className="col-span-1">
             {renderField("Full Name", "fullName")}
           </div>
+          <div className="col-span-1">{renderField("Email", "email")}</div>
+          <div className="col-span-1">{renderField("Phone", "phone")}</div>
 
           {!showPasswordChange ? (
             <>
@@ -397,9 +399,6 @@ function AccountInfo() {
                   </button>
                 </div>
               </div>
-
-              <div className="col-span-1">{renderField("Email", "email")}</div>
-              <div className="col-span-1">{renderField("Phone", "phone")}</div>
             </>
           ) : (
             <div className="rounded-lg shadow-md p-6 bg-white m-2 row-span-2">
@@ -489,7 +488,16 @@ function AccountInfo() {
             <h3 className="text-md font-semibold mb-2 text-slate-500">Role</h3>
             <div className="rounded-md border bg-purple-200 border-gray-300 py-2 px-4 w-full">
               <p className="text-md text-gray-700 font-semibold">
-                {user?.isAdmin ? "Admin" : "User"}
+                {user?.isAdmin ? (
+                  <Link to="/admin" className="font-bold">
+                    Admin
+                    <div className="font-mono text-xs font-extralight">
+                      Click here to move to admin panel
+                    </div>
+                  </Link>
+                ) : (
+                  "User"
+                )}
               </p>
             </div>
           </div>

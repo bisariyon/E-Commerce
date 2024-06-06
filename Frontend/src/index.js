@@ -36,6 +36,8 @@ import SellerLogOut from "./components/Seller/SellerLogOut";
 
 import SellerOrderDashboard from "./components/SideBar/SellerOrderDashboard";
 
+import AdminHeader from "./components/Header/AdminHeader"
+
 export {
   Header,
   Footer,
@@ -67,4 +69,5 @@ export {
   Profile,
   SellerLogOut,
   SellerOrderDashboard,
+  AdminHeader,
 };

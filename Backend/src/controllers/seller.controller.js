@@ -263,10 +263,12 @@ const getCurrentSeller = asyncHandler(async (req, res, next) => {
 });
 
 const getSellerNiche = asyncHandler(async (req, res, next) => {
-  const seller = await Seller.findById(req.seller._id).select("niche").populate({
-    path: "niche",
-    select: "category -_id",
-  });
+  const seller = await Seller.findById(req.seller._id)
+    .select("niche")
+    .populate({
+      path: "niche",
+      select: "category -_id",
+    });
 
   if (!seller) {
     throw new ApiError(404, "Seller not found");
@@ -731,10 +733,76 @@ const askForVerification = asyncHandler(async (req, res, next) => {
 
 //Admin routes
 const getAllSellers = asyncHandler(async (req, res, next) => {
-  const sellers = await Seller.find().select("-password -refreshToken");
-  if (!sellers) {
-    throw new ApiError(404, "No sellers found");
+  const { page = 1, limit = 10, seller = "", category = "" } = req.query;
+
+  const options = {
+    page: parseInt(page, 10),
+    limit: parseInt(limit, 10),
+  };
+
+  const pipeline = [
+    {
+      $lookup: {
+        from: "categories",
+        localField: "niche",
+        foreignField: "_id",
+        as: "niche",
+      },
+    },
+    {
+      $unwind: "$niche",
+    },
+    {
+      $group: {
+        _id: "$_id",
+        fullName: { $first: "$fullName" },
+        email: { $first: "$email" },
+        phone: { $first: "$phone" },
+        GSTnumber: { $first: "$GSTnumber" },
+        avatar: { $first: "$avatar" },
+        verified: { $first: "$verified" },
+        createdAt: { $first: "$createdAt" },
+        verified: { $first: "$verified" },
+        niche: {
+          $push: {
+            category: "$niche.category",
+            id: "$niche._id",
+            active: "$niche.active",
+          },
+        },
+      },
+    },
+    {
+      $addFields: {
+        niche: {
+          $filter: {
+            input: "$niche",
+            as: "n",
+            cond: { $eq: ["$$n.active", true] },
+          },
+        },
+      },
+    },
+  ];
+
+  if (seller) {
+    pipeline.push({
+      $match: {
+        _id: new mongoose.Types.ObjectId(seller),
+      },
+    });
   }
+
+  if (category) {
+    pipeline.push({
+      $match: {
+        "niche.id": new mongoose.Types.ObjectId(category),
+      },
+    });
+  }
+
+  const aggregate = Seller.aggregate(pipeline);
+  const sellers = await Seller.aggregatePaginate(aggregate, options);
 
   return res
     .status(200)

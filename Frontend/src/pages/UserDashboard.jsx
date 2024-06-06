@@ -27,6 +27,8 @@ const UserDashboard = () => {
   const [selectedOption, setSelectedOption] = useState("account");
 
   const user = useSelector((state) => state.user.user);
+  const isAdmin = user?.isAdmin;
+
   useEffect(() => {
     if (!user) {
       navigate("/redirect/home");
@@ -49,6 +51,8 @@ const UserDashboard = () => {
         return <Help />;
       case "logout":
         return <Logout />;
+      case "admin":
+        return isAdmin ? navigate("/admin") : <AccountInfo />;
       default:
         return <AccountInfo />;
     }
@@ -74,6 +78,7 @@ const UserDashboard = () => {
             { label: "Reviews", option: "reviews" },
             { label: "Help", option: "help" },
             { label: "Logout", option: "logout" },
+            ...(isAdmin ? [{ label: "Admin", option: "admin" }] : []),
           ].map((item) => (
             <li
               key={item.option}

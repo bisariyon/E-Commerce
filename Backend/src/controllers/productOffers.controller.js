@@ -228,13 +228,23 @@ const getOffersByProducts = asyncHandler(async (req, res, next) => {
   }).populate("product");
 
   console.log(offers);
-  
+
   if (!offers || offers.length === 0) {
     throw new ApiError(404, "No offers found");
   }
 
-
   return res.status(200).json(new ApiResponse(200, offers, "Offers found"));
+});
+
+const getById = asyncHandler(async (req, res, next) => {
+  const { offerId } = req.params;
+
+  const offer = await ProductOffers.findById(offerId).populate("product");
+  if (!offer) {
+    throw new ApiError(404, "Offer not found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, offer, "Offer found"));
 });
 
 export {
@@ -244,4 +254,5 @@ export {
   getSellerOffers,
   getAllOffers,
   getOffersByProducts,
+  getById,
 };

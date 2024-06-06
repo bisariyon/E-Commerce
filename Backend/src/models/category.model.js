@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
+import aggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const categorySchema = new Schema(
   {
@@ -19,10 +20,15 @@ const categorySchema = new Schema(
       type: String,
       required: true,
     },
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
 
 categorySchema.plugin(mongoosePaginate);
+categorySchema.plugin(aggregatePaginate);
 
 export const Category = mongoose.model("Category", categorySchema);

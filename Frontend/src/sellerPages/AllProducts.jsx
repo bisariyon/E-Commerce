@@ -89,7 +89,7 @@ function AllProducts() {
       <div className="text-3xl text-slate-700 text-center py-4">
         Your Products
       </div>
-      <div className="grid grid-cold-1 lg:grid-cols-2 gap-x-8 gap-y-8 px-8 pt-10 pb-24 bg-gray-200 m-4 rounded-md">
+      <div className="grid grid-cold-1 lg:grid-cols-1 gap-x-8 gap-y-8 px-8 pt-10 pb-24 bg-gray-200 m-4 rounded-md">
         {products.map((product) => (
           <SellerProduct key={product._id} product={product} />
         ))}

@@ -92,7 +92,7 @@ const SellerProduct = ({ product }) => {
             {product.subCategories.map((subCategory) => (
               <div
                 key={subCategory._id}
-                className="bg-gray-200 text-gray-700 p-1 rounded-md mr-2 "
+                className="bg-gray-200 text-gray-700 p-1 rounded-md mr-2 my-1"
               >
                 {subCategory.subCategory}
               </div>

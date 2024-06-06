@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import aggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const userSchema = new Schema(
   {
@@ -53,15 +54,17 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    userOrders: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Order",
-      },
-    ],
+    // userOrders: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Order",
+    //   },
+    // ],
   },
   { timestamps: true }
 );
+
+userSchema.plugin(aggregatePaginate);
 
 //hash password before saving
 userSchema.pre("save", async function (next) {

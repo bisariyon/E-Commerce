@@ -18,6 +18,7 @@ import {
   getBrandByID,
   requestNewBrand,
   getBrandByCategory,
+  getBrandNames,
 } from "../controllers/brand.controller.js";
 
 const router = Router();
@@ -66,5 +67,7 @@ router
   .delete(verifyJwtToken, verifyIsAdmin, deleteBrand); //working
 
 router.route("/getByCategory/:categoryID").get(getBrandByCategory); //working
+
+router.route("/brandList").post(getBrandNames); //working
 
 export default router;

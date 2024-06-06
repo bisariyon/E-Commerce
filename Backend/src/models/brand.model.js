@@ -22,6 +22,10 @@ const brandSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    active: {
+      type: Boolean,
+      default: true,
+    },
     categories: [
       {
         type: Schema.Types.ObjectId,

@@ -186,7 +186,9 @@ function ProductSquare({
       </div>
 
       <div className="mt-auto flex space-x-3">
-        <button className="bg-cyan-500 text-white px-2 py-2 rounded hover:bg-cyan-700 transition duration-300 ease-in-out">
+        <button className="bg-cyan-500 text-white px-2 py-2 rounded hover:bg-cyan-700 transition duration-300 ease-in-out"
+        onClick={()=>navigate(`/products/${_id}`)}>
+
           Add to Cart
         </button>
         <button

@@ -247,7 +247,7 @@ const updateStatus = asyncHandler(async (req, res, next) => {
     throw new ApiError(500, "Status not updated");
   }
 
-  if (orderItem.sellerInfo.toString() !== req.seller._id.toString()){
+  if (orderItem.sellerInfo.toString() !== req.seller._id.toString()) {
     // console.log(orderItem.sellerInfo, req.seller._id);
     throw new ApiError(401, "Unauthorized to update status");
   }
@@ -261,10 +261,192 @@ const updateStatus = asyncHandler(async (req, res, next) => {
   return res.status(200).json(new ApiResponse(200, saved, "Status updated"));
 });
 
+const getAllOrderAndDetails = asyncHandler(async (req, res, next) => {
+  let {
+    page = 1,
+    limit = 10,
+    sortBy = "_id",
+    sortType = "1",
+    user = "",
+    seller = "",
+    status = "",
+    before = "",
+    after = "",
+  } = req.query;
+
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+    sort: { [sortBy]: parseInt(sortType) },
+  };
+
+  const pipeline = [
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: "$user",
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "productID",
+        foreignField: "_id",
+        as: "product",
+      },
+    },
+    {
+      $unwind: "$product",
+    },
+    {
+      $lookup: {
+        from: "sellers",
+        localField: "sellerInfo",
+        foreignField: "_id",
+        as: "seller",
+      },
+    },
+    {
+      $unwind: "$seller",
+    },
+    {
+      $lookup: {
+        from: "orders",
+        localField: "orderID",
+        foreignField: "_id",
+        as: "order",
+      },
+    },
+    {
+      $unwind: "$order",
+    },
+    {
+      $lookup: {
+        from: "useraddresses",
+        localField: "order.address",
+        foreignField: "_id",
+        as: "address",
+      },
+    },
+    {
+      $unwind: "$address",
+    },
+    {
+      $lookup: {
+        from: "payments",
+        localField: "order.transactionID",
+        foreignField: "transactionID",
+        as: "payment",
+      },
+    },
+    {
+      $unwind: "$payment",
+    },
+    {
+      $project: {
+        user_id: "$user._id",
+        user_fullName: "$user.fullName",
+        user_username: "$user.username",
+        user_email: "$user.email",
+        user_phone: "$user.phone",
+        user_verified: "$user.verified",
+
+        product_id: "$product._id",
+        product_title: "$product.title",
+        product_productImage: "$product.productImage",
+        product_price: "$product.price",
+        product_quantityInStock: "$product.quantityInStock",
+        product_category: "$product.category",
+        product_brand: "$product.brand",
+        // product_subCategory: "$product.subCategory",
+
+        seller_id: "$seller._id",
+        seller_fullName: "$seller.fullName",
+        seller_email: "$seller.email",
+        seller_phone: "$seller.phone",
+        seller_GSTnumber: "$seller.GSTnumber",
+        seller_verified: "$seller.verified",
+
+        order_id: "$order._id",
+        order_transactionID: "$order.transactionID",
+        order_status: "$order.status",
+        order_total: "$order.total",
+
+        address_id: "$address._id",
+        address_id: "$address.addressLine1",
+        address_addressLine2: "$address.addressLine2",
+        address_city: "$address.city",
+        address_state: "$address.state",
+        address_pincode: "$address.pincode",
+        address_country: "$address.country",
+        address_contact: "$address.contact",
+
+        payment_id: "$payment._id",
+        payment_modeOfPayment: "$payment.modeOfPayment",
+        payment_createdAt: "$payment.createdAt",
+
+        amount: 1,
+        quantity: 1,
+        createdAt: 1,
+        status: 1,
+      },
+    },
+  ];
+
+  if (user) {
+    pipeline.push({
+      $match: { user_id: new mongoose.Types.ObjectId(user) },
+    });
+  }
+
+  if (seller) {
+    pipeline.push({
+      $match: { seller_id: new mongoose.Types.ObjectId(seller) },
+    });
+  }
+
+  if (status) {
+    pipeline.push({
+      $match: { status: { $regex: status, $options: "ix" } },
+    });
+  }
+
+  if (before) {
+    pipeline.push({
+      $match: { createdAt: { $lte: new Date(before) } },
+    });
+  }
+
+  if (after) {
+    pipeline.push({
+      $match: { createdAt: { $gte: new Date(after) } },
+    });
+  }
+
+  const aggregate = OrderItems.aggregate(pipeline);
+  const orders = await OrderItems.aggregatePaginate(aggregate, options);
+
+  if (!orders) {
+    throw new ApiError(404, "Orders not found");
+  }
+
+  if (orders.length === 0) {
+    return res.status(200).json(new ApiResponse(200, {}, "No Orders found"));
+  }
+
+  return res.status(200).json(new ApiResponse(200, orders, "Orders found"));
+});
+
 export {
   createOrderItems,
   getOrderItems,
   getOrderItemsBySeller,
   getOrderItemById,
   updateStatus,
+  getAllOrderAndDetails,
 };

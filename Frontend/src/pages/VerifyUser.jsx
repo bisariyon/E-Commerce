@@ -4,7 +4,18 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { patchUser } from "../store/UserSlice";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+
 function VerifyUser() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
   const { token } = useParams();
   const navigate = useNavigate();
   const [error, setError] = useState("");
@@ -27,7 +38,7 @@ function VerifyUser() {
 
         if (response.status === 200) {
           setIsVerified(true);
-          dispatch(patchUser({verified:true}));
+          dispatch(patchUser({ verified: true }));
           console.log("User Verified");
         }
       } catch (error) {

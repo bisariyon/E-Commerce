@@ -50,6 +50,10 @@ const productSchema = new Schema(
       ref: "Seller",
       required: true,
     },
+    active:{
+      type: Boolean,
+      default: true,
+    }
   },
   { timestamps: true }
 );

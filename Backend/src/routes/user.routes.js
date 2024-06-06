@@ -21,6 +21,7 @@ import {
   deleteUser,
   selfVerificationLinkRequest,
   selfVerify,
+  getAllUsers,
 } from "../controllers/user.controller.js";
 
 const router = Router();
@@ -55,5 +56,8 @@ router
   .route("/self-verification-link")
   .post(verifyJwtToken, selfVerificationLinkRequest);
 router.route("/self-verify/:token").post(selfVerify);
+
+//Admin routes
+router.route("/all").get(verifyJwtToken, verifyIsAdmin, getAllUsers);
 
 export default router;

@@ -129,7 +129,8 @@ const getAllSubCategories = asyncHandler(async (req, res, next) => {
     limit = 10,
     sortBy = "_id",
     sortType = "1",
-    query,
+    subCategory = "",
+    category = "",
   } = req.query;
 
   const options = {
@@ -138,7 +139,7 @@ const getAllSubCategories = asyncHandler(async (req, res, next) => {
     sort: { [sortBy]: parseInt(sortType) },
   };
 
-  const aggregate = SubCategory.aggregate([
+  const pipeline = [
     {
       $lookup: {
         from: "categories",
@@ -158,10 +159,32 @@ const getAllSubCategories = asyncHandler(async (req, res, next) => {
         category: "$categoryInfo.category",
         subCategoryDescription: "$description",
         subCategory: 1,
+        active: 1,
       },
     },
-  ]);
+    {
+      $match: {
+        active: true,
+      },
+    },
+  ];
 
+  if (subCategory) {
+    pipeline.push({
+      $match: {
+        subCategoryID: new mongoose.Types.ObjectId(subCategory),
+      },
+    });
+  }
+
+  if (category) {
+    pipeline.push({
+      $match: {
+        categoryId: new mongoose.Types.ObjectId(category),
+      },
+    });
+  }
+  const aggregate = SubCategory.aggregate(pipeline);
   const subCategories = await SubCategory.aggregatePaginate(aggregate, options);
   if (subCategories.length === 0) {
     return next(new ApiError(404, "No subcategory found"));
@@ -172,10 +195,9 @@ const getAllSubCategories = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, subCategories, "Sub categories found"));
 });
 
-
 const listCategoriesAndSubCategories = asyncHandler(async (req, res, next) => {
   try {
-    const categories = await Category.find({});
+    const categories = await Category.find({ active: true });
 
     if (!categories || categories.length === 0) {
       return next(new ApiError(404, "No categories found"));
@@ -185,7 +207,10 @@ const listCategoriesAndSubCategories = asyncHandler(async (req, res, next) => {
 
     for (let i = 0; i < categories.length; i++) {
       const category = categories[i];
-      const subCategories = await SubCategory.find({ category: category._id });
+      const subCategories = await SubCategory.find({
+        category: category._id,
+        active: true,
+      });
 
       // categoryArray.push({
       //   category: category.category,
@@ -285,9 +310,15 @@ const updateSubCategorybyID = asyncHandler(async (req, res, next) => {
 const deleteSubCategoryByID = asyncHandler(async (req, res, next) => {
   const { subCategoryID } = req.params;
 
-  const deleteSubCategory = await SubCategory.findByIdAndDelete(subCategoryID);
-  if (!deleteSubCategory) {
+  const subCategory = await SubCategory.findById(subCategoryID);
+  if (!subCategory) {
     return next(new ApiError(404, "Sub category not found"));
+  }
+
+  subCategory.active = false;
+  const deleteSubCategory = await subCategory.save();
+  if (!deleteSubCategory) {
+    return next(new ApiError(500, "Error in deleting sub category"));
   }
 
   res
@@ -301,6 +332,8 @@ const deleteSubCategoryByID = asyncHandler(async (req, res, next) => {
     );
 });
 
+//Admin
+
 export {
   createSubCategory,
   getSubCategoriesByCategory, //not working
@@ -309,5 +342,5 @@ export {
   getSubCategoryByName,
   updateSubCategorybyID,
   deleteSubCategoryByID,
-  listCategoriesAndSubCategories
+  listCategoriesAndSubCategories,
 };

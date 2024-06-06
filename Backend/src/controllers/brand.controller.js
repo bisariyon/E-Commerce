@@ -10,6 +10,7 @@ import {
 import _ from "mongoose-paginate-v2";
 import { sendMailNotification } from "../utils/sendMail.js";
 import { ADMIN_EMAIL, PLATFORM_EMAIL } from "../constants.js";
+import mongoose from "mongoose";
 
 //Admin
 const createBrandByAdmin = asyncHandler(async (req, res, next) => {
@@ -319,14 +320,20 @@ const updateBrandByID = asyncHandler(async (req, res, next) => {
 const deleteBrand = asyncHandler(async (req, res, next) => {
   const { brandID } = req.params;
 
-  const deletedBrand = await Brand.findByIdAndDelete(brandID);
+  const deletedBrand = await Brand.findById(brandID);
   if (!deletedBrand) {
     throw new ApiError(404, "Brand not found");
   }
 
+  deletedBrand.active = false;
+  const updatedBrand = await deletedBrand.save();
+  if (!updatedBrand) {
+    throw new ApiError(500, "Failed to delete brand");
+  }
+
   return res
     .status(200)
-    .json(new ApiResponse(200, deletedBrand, "Brand deleted successfully"));
+    .json(new ApiResponse(200, updatedBrand, "Brand deleted successfully"));
 });
 
 //Public
@@ -336,7 +343,8 @@ const listAllBrands = asyncHandler(async (req, res, next) => {
     limit = 5,
     sortBy = "_id",
     sortType = "1",
-    query,
+    brand = "",
+    category = "",
   } = req.query;
 
   const options = {
@@ -345,7 +353,7 @@ const listAllBrands = asyncHandler(async (req, res, next) => {
     sort: { [sortBy]: parseInt(sortType) },
   };
 
-  const aggregate = Brand.aggregate([
+  const pipeline = [
     {
       $lookup: {
         from: "categories",
@@ -366,12 +374,14 @@ const listAllBrands = asyncHandler(async (req, res, next) => {
         brandID: { $first: "$_id" },
         name: { $first: "$name" },
         logo: { $first: "$logo" },
+        active: { $first: "$active" },
         verified: { $first: "$verified" },
         description: { $first: "$description" },
         categories: {
           $push: {
             categoryID: "$categoryInfo._id",
             categoryName: "$categoryInfo.category",
+            categoryActive: "$categoryInfo.active",
           },
         },
         createdAt: { $first: "$createdAt" },
@@ -389,10 +399,31 @@ const listAllBrands = asyncHandler(async (req, res, next) => {
         verified: 1,
         createdAt: 1,
         updatedAt: 1,
+        active: 1,
       },
     },
-  ]);
+    {
+      $match: {
+        active: true,
+      },
+    },
+  ];
 
+  if (brand) {
+    pipeline.push({
+      $match: { brandID: new mongoose.Types.ObjectId(brand) },
+    });
+  }
+
+  if (category) {
+    pipeline.push({
+      $match: {
+        "categories.categoryID": new mongoose.Types.ObjectId(category),
+      },
+    });
+  }
+
+  const aggregate = Brand.aggregate(pipeline);
   const brandsPaginated = await Brand.aggregatePaginate(aggregate, options);
 
   if (!brandsPaginated.docs.length) {
@@ -424,7 +455,7 @@ const getBrandByID = asyncHandler(async (req, res, next) => {
 const getBrandByCategory = asyncHandler(async (req, res, next) => {
   const { categoryID } = req.params;
 
-  const brands = await Brand.find({ categories: categoryID });
+  const brands = await Brand.find({ categories: categoryID, active: true });
 
   if (!brands) {
     throw new ApiError(404, "No brands found for this category");
@@ -437,11 +468,22 @@ const getBrandByCategory = asyncHandler(async (req, res, next) => {
     description: brand.description,
     verified: brand.verified,
     categoryId: brand.categories[0],
+    active: brand.active,
   }));
 
   return res
     .status(200)
     .json(new ApiResponse(200, mappedBrands, "Brand by category"));
+});
+
+const getBrandNames = asyncHandler(async (req, res, next) => {
+  const brands = await Brand.find({ active: true }).select("name");
+
+  if (!brands) {
+    throw new ApiError(404, "No brands found");
+  }
+
+  return res.status(200).json(new ApiResponse(200, brands, "All brand names"));
 });
 
 //Verified Seller
@@ -529,4 +571,5 @@ export {
   getBrandByID,
   requestNewBrand,
   getBrandByCategory,
+  getBrandNames,
 };

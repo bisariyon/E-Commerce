@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import aggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const sellerSchema = new Schema(
   {
@@ -95,5 +96,7 @@ sellerSchema.methods.generateRefreshToken = function () {
     }
   );
 };
+
+sellerSchema.plugin(aggregatePaginate);
 
 export const Seller = mongoose.model("Seller", sellerSchema);
