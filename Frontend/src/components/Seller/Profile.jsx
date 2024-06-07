@@ -39,7 +39,7 @@ function Profile() {
   const updateProfileBackend = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/sellers/update/profile`,
+        `/v1/sellers/update/profile`,
         {
           [editingField]: editedValue,
         },
@@ -62,7 +62,7 @@ function Profile() {
   const updateEmailBackend = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/sellers/update/email`,
+        `/v1/sellers/update/email`,
         {
           email: editedValue,
           password: password,
@@ -87,7 +87,7 @@ function Profile() {
   const updatePhoneBackend = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/sellers/update/phone`,
+        `/v1/sellers/update/phone`,
         {
           phone: editedValue,
           password: password,
@@ -115,7 +115,7 @@ function Profile() {
 
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/sellers/update/avatar`,
+        `/v1/sellers/update/avatar`,
         formData,
         {
           withCredentials: true,
@@ -140,7 +140,7 @@ function Profile() {
   const sentOtpBackend = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/sellers/generate-email-otp`,
+        `/v1/sellers/generate-email-otp`,
         {
           email: seller.email,
         },
@@ -163,7 +163,7 @@ function Profile() {
   const updatePasswordBackend = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/sellers/verifyotp`,
+        `/v1/sellers/verifyotp`,
         {
           newPassword: newPassword,
           confirmPassword: confirmPassword,
@@ -188,7 +188,7 @@ function Profile() {
   const askForVerificationBackend = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/v1/sellers//ask-for-verification",
+        "/v1/sellers//ask-for-verification",
         {
           withCredentials: true,
         }
@@ -205,7 +205,7 @@ function Profile() {
   const getNicheBackend = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/v1/sellers/get-niche",
+        "/v1/sellers/get-niche",
         { withCredentials: true }
       );
 

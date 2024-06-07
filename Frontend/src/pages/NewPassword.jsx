@@ -23,7 +23,7 @@ function NewPassword() {
   const backendReq = async (data) => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/users/resetpassword/${token}`,
+        `/v1/users/resetpassword/${token}`,
         {
           newPassword: newPassword,
           confirmPassword: confirmPassword,

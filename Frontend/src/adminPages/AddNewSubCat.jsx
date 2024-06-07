@@ -41,7 +41,7 @@ function AddNewSubCat() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/sub-categories/create",
+        "/v1/sub-categories/create",
         body,
         {
           withCredentials: true,

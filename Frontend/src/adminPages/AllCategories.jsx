@@ -39,7 +39,7 @@ function AllCategories() {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/categories/all/admin?page=${page}&limit=8&subCategory=${subCategory}&category=${category}`,
+        `/v1/categories/all/admin?page=${page}&limit=8&subCategory=${subCategory}&category=${category}`,
         {
           withCredentials: true,
         }
@@ -58,7 +58,7 @@ function AllCategories() {
     const body = { newCategory, newDescription };
     try {
       const response = await axios.put(
-        `http://localhost:8000/v1/categories/update/${updatedCategory._id}`,
+        `/v1/categories/update/${updatedCategory._id}`,
         body,
         {
           withCredentials: true,
@@ -80,7 +80,7 @@ function AllCategories() {
     }
     try {
       const response = await axios.put(
-        `http://localhost:8000/v1/categories/update/image/${id}`,
+        `/v1/categories/update/image/${id}`,
         formData,
         {
           withCredentials: true,

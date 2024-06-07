@@ -25,7 +25,7 @@ function SingleProduct() {
   const fetchSingleProduct = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/products/p/${productId}`
+        `/v1/products/p/${productId}`
       );
       return response.data.data;
     } catch (error) {
@@ -37,7 +37,7 @@ function SingleProduct() {
   const fetchReviews = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/reviews/get/${productId}`
+        `/v1/reviews/get/${productId}`
       );
       return response.data.data;
     } catch (error) {
@@ -101,7 +101,7 @@ function SingleProduct() {
     try {
       const productId = productData._id;
       const response = await axios.post(
-        `http://localhost:8000/v1/cart-items/add/${productId}?quantity=1`,
+        `/v1/cart-items/add/${productId}?quantity=1`,
         {},
         { withCredentials: true }
       );

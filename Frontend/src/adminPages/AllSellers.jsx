@@ -35,7 +35,7 @@ function AllUsers() {
   const fetchSellers = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/sellers?page=${page}&limit=8&seller=${seller}&category=${category}`,
+        `/v1/sellers?page=${page}&limit=8&seller=${seller}&category=${category}`,
         {
           withCredentials: true,
         }

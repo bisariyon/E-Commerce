@@ -9,7 +9,7 @@ function Offers() {
   const fetchSellerOffers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/v1/product-offers/seller",
+        "/v1/product-offers/seller",
         {
           withCredentials: true,
         }
@@ -24,7 +24,7 @@ function Offers() {
   const removeOffer = async (offerId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/v1/product-offers/delete/${offerId}`,
+        `/v1/product-offers/delete/${offerId}`,
         {
           withCredentials: true,
         }

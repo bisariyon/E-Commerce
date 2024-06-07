@@ -48,7 +48,7 @@ function ProductSquare({
     try {
       const productId = _id;
       const response = await axios.post(
-        `http://localhost:8000/v1/cart-items/add/${productId}?quantity=1`,
+        `/v1/cart-items/add/${productId}?quantity=1`,
         {},
         { withCredentials: true }
       );
@@ -64,7 +64,7 @@ function ProductSquare({
     try {
       const productId = _id;
       const response = await axios.patch(
-        `http://localhost:8000/v1/cart-items/decrease/${productId}?quantity=1`,
+        `/v1/cart-items/decrease/${productId}?quantity=1`,
         {},
         { withCredentials: true }
       );
@@ -102,7 +102,7 @@ function ProductSquare({
     const productId = _id;
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/wishlist/add/${productId}`,
+        `/v1/wishlist/add/${productId}`,
         {},
         {
           withCredentials: true,

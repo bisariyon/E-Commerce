@@ -28,7 +28,7 @@ const LoginUser = () => {
 
   const getCartBackend = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/v1/cart-items", {
+      const response = await axios.get("/v1/cart-items", {
         withCredentials: true,
       });
       if (response.status === 200) {
@@ -65,7 +65,7 @@ const LoginUser = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:8000/v1/users/login",
+        "/v1/users/login",
         requestBody,
         { withCredentials: true }
       );

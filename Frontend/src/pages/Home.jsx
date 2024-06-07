@@ -26,7 +26,7 @@ function Home() {
 
   const fetchCategories = async () => {
     const response = await fetch(
-      `http://localhost:8000/v1/categories?page=1&limit=7`
+      `/v1/categories?page=1&limit=7`
     );
     const data = await response.json();
     return data;
@@ -34,7 +34,7 @@ function Home() {
 
   const fetchBrands = async () => {
     const response = await fetch(
-      `http://localhost:8000/v1/brands?page=1&limit=8`
+      `/v1/brands?page=1&limit=8`
     );
     const data = await response.json();
     return data;
@@ -158,7 +158,7 @@ export default Home;
 //   const fetchData = async () => {
 //     try {
 //       const response = await axios.get(
-//         `http://localhost:8000/v1/categories/filter`
+//         `/v1/categories/filter`
 //       );
 //       setProducts(response.data.data.docs);
 //     } catch (error) {

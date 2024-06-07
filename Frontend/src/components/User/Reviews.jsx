@@ -18,7 +18,7 @@ function Reviews() {
   const fetchReviews = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/reviews/getUserReviews?page=${page}&sortBy=${sortBy}&sortType=${sortType}`,
+        `/v1/reviews/getUserReviews?page=${page}&sortBy=${sortBy}&sortType=${sortType}`,
         {
           withCredentials: true,
         }
@@ -59,7 +59,7 @@ function Reviews() {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/v1/reviews/updateReview/${reviewId}`,
+        `/v1/reviews/updateReview/${reviewId}`,
         formData,
         {
           withCredentials: true,
@@ -78,7 +78,7 @@ function Reviews() {
   const deleteReview = async (reviewId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/v1/reviews/deleteReview/${reviewId}`,
+        `/v1/reviews/deleteReview/${reviewId}`,
         {
           withCredentials: true,
         }

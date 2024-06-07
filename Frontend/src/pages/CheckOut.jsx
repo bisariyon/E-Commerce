@@ -27,7 +27,7 @@ function CheckOut() {
   const emptyCartBackend = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/v1/cart-items/empty`,
+        `/v1/cart-items/empty`,
         {
           withCredentials: true,
         }

@@ -7,7 +7,7 @@ function refreshUser() {
   const refreshUserData = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8000/v1/users/current-user",
+        "/v1/users/current-user",
         {
           credentials: "include",
         }

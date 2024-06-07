@@ -29,7 +29,7 @@ function UpdateProduct() {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/v1/products/p/${productId}`,
+          `/v1/products/p/${productId}`,
           { withCredentials: true }
         );
         setProductData(response.data.data);
@@ -55,7 +55,7 @@ function UpdateProduct() {
 
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/products/updatePartial/${productId}`,
+        `/v1/products/updatePartial/${productId}`,
         formData,
         { withCredentials: true }
       );

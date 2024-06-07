@@ -7,7 +7,7 @@ function refreshCart() {
 
   const refreshCartData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/v1/cart-items", {
+      const response = await axios.get("/v1/cart-items", {
         withCredentials: true,
       });
       // console.log("Cart Data: ", response.data.data);

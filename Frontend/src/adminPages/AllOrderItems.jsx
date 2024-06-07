@@ -45,7 +45,7 @@ function AllOrderItems() {
   const fetchAllOrders = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/order-items?page=${page}&sortBy=${sortBy}&sortType=${sortType}&user=${user}&seller=${seller}&status=${status}&before=${before}&after=${after}&limit=8`,
+        `/v1/order-items?page=${page}&sortBy=${sortBy}&sortType=${sortType}&user=${user}&seller=${seller}&status=${status}&before=${before}&after=${after}&limit=8`,
         {
           withCredentials: true,
         }

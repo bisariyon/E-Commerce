@@ -36,7 +36,7 @@ function AllBrands() {
   const fetchBrands = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/brands/?page=${page}&limit=8&brand=${brand}&category=${category}&sortBy=_id&sortType=1,`,
+        `/v1/brands/?page=${page}&limit=8&brand=${brand}&category=${category}&sortBy=_id&sortType=1,`,
         {
           withCredentials: true,
         }
@@ -75,7 +75,7 @@ function AllBrands() {
     const body = { newName: brandName, newDescription: description };
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/brands/updateByID/${updatedBrand.brandID}`,
+        `/v1/brands/updateByID/${updatedBrand.brandID}`,
         body,
         {
           withCredentials: true,

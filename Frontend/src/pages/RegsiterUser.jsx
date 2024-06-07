@@ -32,7 +32,7 @@ function RegisterUser() {
   const registerUser = async (formData) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/users/register",
+        "/v1/users/register",
         formData,
         { withCredentials: true }
       );

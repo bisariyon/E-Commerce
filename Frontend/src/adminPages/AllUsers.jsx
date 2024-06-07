@@ -28,7 +28,7 @@ function AllUsers() {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/users/all?page=${page}&limit=8&user=${user}`,
+        `/v1/users/all?page=${page}&limit=8&user=${user}`,
         {
           withCredentials: true,
         }

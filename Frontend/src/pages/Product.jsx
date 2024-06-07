@@ -49,7 +49,7 @@ function Product() {
   const isVerified = user?.verified || false;
 
   const fetchProducts = async () => {
-    const url = `http://localhost:8000/v1/products?page=${page}&limit=${limit}&sortBy=${filters.sortBy}&brand=${filters.brand}&category=${filters.category}&subCategory=${filters.subCategory}&query=${tempQuery}`;
+    const url = `/v1/products?page=${page}&limit=${limit}&sortBy=${filters.sortBy}&brand=${filters.brand}&category=${filters.category}&subCategory=${filters.subCategory}&query=${tempQuery}`;
     const response = await axios.get(url);
     dispatch(setProducts(response.data.data.docs));
     return response.data;

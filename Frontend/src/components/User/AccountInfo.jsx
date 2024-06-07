@@ -33,7 +33,7 @@ function AccountInfo() {
   const updateProfileBackend = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/users/update/profile`,
+        `/v1/users/update/profile`,
         {
           [editingField]: editedValue,
         },
@@ -56,7 +56,7 @@ function AccountInfo() {
   const updateEmailBackend = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/users/update/email`,
+        `/v1/users/update/email`,
         {
           email: editedValue,
           password: password,
@@ -81,7 +81,7 @@ function AccountInfo() {
   const updatePhoneBackend = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/users/update/phone`,
+        `/v1/users/update/phone`,
         {
           phone: editedValue,
           password: password,
@@ -109,7 +109,7 @@ function AccountInfo() {
 
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/users/update/avatar`,
+        `/v1/users/update/avatar`,
         formData,
         {
           withCredentials: true,
@@ -134,7 +134,7 @@ function AccountInfo() {
   const sentOtpBackend = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/users/generate-email-otp`,
+        `/v1/users/generate-email-otp`,
         {
           email: user.email,
         },
@@ -157,7 +157,7 @@ function AccountInfo() {
   const updatePasswordBackend = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/users/verifyotp`,
+        `/v1/users/verifyotp`,
         {
           newPassword: newPassword,
           confirmPassword: confirmPassword,
@@ -273,7 +273,7 @@ function AccountInfo() {
     const redirectURL = initialPath + "user/verify";
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/users/self-verification-link",
+        "/v1/users/self-verification-link",
         {
           redirectURL,
         },

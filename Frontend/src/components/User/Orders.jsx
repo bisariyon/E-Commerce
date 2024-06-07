@@ -24,7 +24,7 @@ function Orders() {
   const fetchUserOrders = async ({ queryKey }) => {
     const [, page, sortBy, sortType] = queryKey;
     const response = await axios.get(
-      `http://localhost:8000/v1/orders?page=${page}&sortBy=${sortBy}&sortType=${sortType}&limit=6`,
+      `/v1/orders?page=${page}&sortBy=${sortBy}&sortType=${sortType}&limit=6`,
       {
         withCredentials: true,
       }
@@ -35,7 +35,7 @@ function Orders() {
   const fetchOrderDetails = async (orderID) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/order-items/${orderID}`,
+        `/v1/order-items/${orderID}`,
         {
           withCredentials: true,
         }
@@ -101,7 +101,7 @@ function Orders() {
       }
 
       const response = await axios.post(
-        `http://localhost:8000/v1/reviews/addReview/${productID}`,
+        `/v1/reviews/addReview/${productID}`,
         formData,
         {
           withCredentials: true,

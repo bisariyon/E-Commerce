@@ -11,7 +11,7 @@ function AllReviews() {
   const fetchSellerReviews = async (page) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/reviews/getSellerReviews?limit=${limit}&page=${page}&sortBy=${sortBy}&sortType=${sortType}`,
+        `/v1/reviews/getSellerReviews?limit=${limit}&page=${page}&sortBy=${sortBy}&sortType=${sortType}`,
         { withCredentials: true }
       );
       return response.data.data;

@@ -15,7 +15,7 @@ function RegisterSeller() {
   }, []);
 
   const fetchCategories = async () => {
-    const response = await axios.get("http://localhost:8000/v1/categories");
+    const response = await axios.get("/v1/categories");
     return response.data.data;
   };
 
@@ -66,7 +66,7 @@ function RegisterSeller() {
   const registerUser = async (formData) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/sellers/register",
+        "/v1/sellers/register",
         formData,
         { withCredentials: true }
       );

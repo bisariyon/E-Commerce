@@ -24,7 +24,7 @@ function Categories() {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/categories?page=${page}&limit=6&sortBy=${sortBy}&sortType=${sortType}`,
+        `/v1/categories?page=${page}&limit=6&sortBy=${sortBy}&sortType=${sortType}`,
         {
           withCredentials: true,
         }

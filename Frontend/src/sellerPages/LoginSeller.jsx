@@ -37,7 +37,7 @@ const LoginUser = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:8000/v1/sellers/login",
+        "/v1/sellers/login",
         requestBody,
         { withCredentials: true }
       );

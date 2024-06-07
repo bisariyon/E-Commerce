@@ -27,7 +27,7 @@ const ForgetPassword = () => {
   const sendPasswordLink = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/users/change-password-reset-link",
+        "/v1/users/change-password-reset-link",
         {
           email: email,
           redirectURL: initialPath + "user/new-password",

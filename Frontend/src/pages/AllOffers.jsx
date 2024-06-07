@@ -17,7 +17,7 @@ function AllOffers() {
   const fetchOffers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/v1/product-offers/all"
+        "/v1/product-offers/all"
       );
       console.log(response.data.data);
       return response.data.data;

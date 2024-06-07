@@ -12,7 +12,7 @@ const SellerProduct = ({ product }) => {
     const productId = product._id;
     try {
       const response = await axios.delete(
-        `http://localhost:8000/v1/products/delete/${productId}`,
+        `/v1/products/delete/${productId}`,
         { withCredentials: true }
       );
 

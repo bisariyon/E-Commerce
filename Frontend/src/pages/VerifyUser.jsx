@@ -29,7 +29,7 @@ function VerifyUser() {
     (async () => {
       try {
         const response = await axios.post(
-          `http://localhost:8000/v1/users/self-verify/${token}`,
+          `/v1/users/self-verify/${token}`,
           {},
           {
             withCredentials: true,

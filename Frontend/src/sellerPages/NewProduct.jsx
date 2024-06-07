@@ -34,7 +34,7 @@ function NewProduct() {
   const fetchNicheDetails = async (_id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/categories/${_id}`,
+        `/v1/categories/${_id}`,
         { withCredentials: true }
       );
       return response.data.data;
@@ -64,7 +64,7 @@ function NewProduct() {
   const fetchSubCategoryDetails = async (categoryId, nicheId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/sub-categories/get/${categoryId}`,
+        `/v1/sub-categories/get/${categoryId}`,
         { withCredentials: true }
       );
 
@@ -102,7 +102,7 @@ function NewProduct() {
   const fetchBrandDetails = async (categoryID) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/brands/getByCategory/${categoryID}`,
+        `/v1/brands/getByCategory/${categoryID}`,
         { withCredentials: true }
       );
       return response.data.data;
@@ -145,7 +145,7 @@ function NewProduct() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/products/create",
+        "/v1/products/create",
         formData,
         { withCredentials: true }
       );

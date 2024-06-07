@@ -46,7 +46,7 @@ function AllProducts() {
   const fetchAllProducts = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/products/admin?page=${page}&productId=${productId}&categoryId=${categoryId}&subCategoryId=${subCategoryId}&brandId=${brandId}&sellerId=${sellerId}&limit=5`,
+        `/v1/products/admin?page=${page}&productId=${productId}&categoryId=${categoryId}&subCategoryId=${subCategoryId}&brandId=${brandId}&sellerId=${sellerId}&limit=5`,
         {
           withCredentials: true,
         }
@@ -81,7 +81,7 @@ function AllProducts() {
   const getSubCategories = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/sub-categories/list`,
+        `/v1/sub-categories/list`,
         {
           withCredentials: true,
         }
@@ -109,7 +109,7 @@ function AllProducts() {
   const getBrands = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/brands/brandList`,
+        `/v1/brands/brandList`,
         {
           withCredentials: true,
         }

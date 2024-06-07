@@ -17,7 +17,7 @@ function AllProducts() {
   const fetchSellerProducts = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/v1/products/seller",
+        "/v1/products/seller",
         {
           withCredentials: true,
         }

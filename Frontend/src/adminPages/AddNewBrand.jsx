@@ -30,7 +30,7 @@ function AddNewBrand() {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/sub-categories/list`,
+        `/v1/sub-categories/list`,
         {
           withCredentials: true,
         }
@@ -62,7 +62,7 @@ function AddNewBrand() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/brands/create",
+        "/v1/brands/create",
         formData,
         {
           withCredentials: true,

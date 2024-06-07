@@ -11,7 +11,7 @@ const Wishlist = () => {
   // Fetch wishlist
   const fetchWishlist = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/v1/wishlist", {
+      const response = await axios.get("/v1/wishlist", {
         withCredentials: true,
       });
       return response.data.data;
@@ -35,7 +35,7 @@ const Wishlist = () => {
   const removeWishFromBackend = async (productId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/v1/wishlist/remove/${productId}`,
+        `/v1/wishlist/remove/${productId}`,
         {
           withCredentials: true,
         }
@@ -61,7 +61,7 @@ const Wishlist = () => {
   const emptyWishlistFromBackend = async () => {
     try {
       const response = await axios.delete(
-        "http://localhost:8000/v1/wishlist/empty",
+        "/v1/wishlist/empty",
         {
           withCredentials: true,
         }

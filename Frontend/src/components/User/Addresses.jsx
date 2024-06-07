@@ -17,7 +17,7 @@ function Addresses() {
   // Fetch addresses from the backend
   const fetchAddresses = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/v1/addresses", {
+      const response = await axios.get("/v1/addresses", {
         withCredentials: true,
       });
       return response.data.data;
@@ -58,7 +58,7 @@ function Addresses() {
     };
 
     const response = await axios.patch(
-      `http://localhost:8000/v1/addresses/update/${addressId}`,
+      `/v1/addresses/update/${addressId}`,
       body,
       { withCredentials: true }
     );
@@ -97,7 +97,7 @@ function Addresses() {
   const removeBackendAddress = async (addressId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/v1/addresses/remove/${addressId}`,
+        `/v1/addresses/remove/${addressId}`,
         { withCredentials: true }
       );
       return response.data.data;
@@ -139,7 +139,7 @@ function Addresses() {
   const addingNewAddressBackend = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/addresses/add",
+        "/v1/addresses/add",
         newAddress,
         { withCredentials: true }
       );
@@ -502,7 +502,7 @@ export default Addresses;
 //   const fetchAddresses = async () => {
 //     try {
 //       const response = await axios.get(
-//         "http://localhost:8000/v1/addresses",
+//         "/v1/addresses",
 //         { withCredentials: true } // Placed with the request config
 //       );
 //       // console.log(response.data.data);

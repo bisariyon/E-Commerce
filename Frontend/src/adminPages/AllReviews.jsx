@@ -52,7 +52,7 @@ function AllOrderItems() {
   const fetchAllReviews = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/reviews/getAdminReviews?page=${page}&sortBy=${sortBy}&sortType=${sortType}&user=${user}&seller=${seller}&status=${status}&before=${before}&after=${after}&limit=8&product=${product}&review=${review}`,
+        `/v1/reviews/getAdminReviews?page=${page}&sortBy=${sortBy}&sortType=${sortType}&user=${user}&seller=${seller}&status=${status}&before=${before}&after=${after}&limit=8&product=${product}&review=${review}`,
         {
           withCredentials: true,
         }

@@ -28,7 +28,7 @@ function SellerVerification() {
   const SellerVerificationBackend = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/sellers/verify/${seller._id}?verify=${verify}`,
+        `/v1/sellers/verify/${seller._id}?verify=${verify}`,
         {},
         {
           withCredentials: true,

@@ -76,7 +76,7 @@ function OrderConfirmation() {
   }, [basket, selectedOffer]);
 
   const fetchAddresses = async () => {
-    const response = await axios.get("http://localhost:8000/v1/addresses", {
+    const response = await axios.get("/v1/addresses", {
       withCredentials: true,
     });
     return response.data.data;
@@ -97,7 +97,7 @@ function OrderConfirmation() {
   const fetchAvailableOffers = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/product-offers/products",
+        "/v1/product-offers/products",
         {
           productIds,
         }
@@ -131,7 +131,7 @@ function OrderConfirmation() {
   const checkCartForOrder = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/v1/cart-items/check",
+        "/v1/cart-items/check",
         { withCredentials: true }
       );
       return response.data.data;
@@ -166,7 +166,7 @@ function OrderConfirmation() {
   const emptyCartBackend = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/v1/cart-items/empty`,
+        `/v1/cart-items/empty`,
         {
           withCredentials: true,
         }
@@ -182,7 +182,7 @@ function OrderConfirmation() {
   const createOrderBackend = async (transactionID) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/orders/create",
+        "/v1/orders/create",
         {
           orderId: checkCartData.orderId,
           address: selectedAddress._id,
@@ -202,7 +202,7 @@ function OrderConfirmation() {
     try {
       basket.forEach(async (item) => {
         const response = await axios.post(
-          "http://localhost:8000/v1/order-items/create",
+          "/v1/order-items/create",
           {
             orderID: orderId,
             productID: item.productId,
@@ -225,7 +225,7 @@ function OrderConfirmation() {
 
   const checkoutHandler = async (key, orderIdMongoose) => {
     const response = await axios.post(
-      "http://localhost:8000/v1/payments/createOrder",
+      "/v1/payments/createOrder",
       {
         amount: resultant,
         orderId: orderIdMongoose,
@@ -255,7 +255,7 @@ function OrderConfirmation() {
 
         try {
           const validateRes = await axios.post(
-            "http://localhost:8000/v1/payments/verifyPayment",
+            "/v1/payments/verifyPayment",
             body,
             {
               headers: {
@@ -303,7 +303,7 @@ function OrderConfirmation() {
 
       try {
         const res = await axios.post(
-          "http://localhost:8000/v1/payments/paymentfailure",
+          "/v1/payments/paymentfailure",
           {
             response: error.error,
           },
@@ -331,7 +331,7 @@ function OrderConfirmation() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/payments/getKeys",
+        "/v1/payments/getKeys",
         {},
         { withCredentials: true }
       );

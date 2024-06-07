@@ -21,7 +21,7 @@ function CartProduct({
   const addToCartBackend = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/cart-items/add/${productId}?quantity=1`,
+        `/v1/cart-items/add/${productId}?quantity=1`,
         {},
         { withCredentials: true }
       );
@@ -36,7 +36,7 @@ function CartProduct({
   const decreaseCartBackend = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/v1/cart-items/decrease/${productId}?quantity=1`,
+        `/v1/cart-items/decrease/${productId}?quantity=1`,
         {},
         { withCredentials: true }
       );
@@ -52,7 +52,7 @@ function CartProduct({
     console.log("Removing from cart:", productId);
     try {
       const response = await axios.delete(
-        `http://localhost:8000/v1/cart-items/remove/${productId}`,
+        `/v1/cart-items/remove/${productId}`,
         {
           withCredentials: true,
         }

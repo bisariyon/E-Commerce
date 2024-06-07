@@ -16,7 +16,7 @@ function SingleProduct() {
   const updateStatus = async (status) => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/v1/order-items/status/${orderItemId}`,
+        `/v1/order-items/status/${orderItemId}`,
         { status },
         {
           withCredentials: true,

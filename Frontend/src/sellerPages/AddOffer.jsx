@@ -12,7 +12,7 @@ function AddOffer() {
     const id = productId;
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/products/p/${id}`,
+        `/v1/products/p/${id}`,
         { withCredentials: true }
       );
       return response.data.data;
@@ -50,7 +50,7 @@ function AddOffer() {
   const addOffer = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/product-offers/create/${productId}`,
+        `/v1/product-offers/create/${productId}`,
         {
           discountType,
           discountValue,

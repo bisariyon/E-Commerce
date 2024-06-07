@@ -29,7 +29,7 @@ function BrandRequest() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/brands/request-brand",
+        "/v1/brands/request-brand",
         formData,
         {
           withCredentials: true,

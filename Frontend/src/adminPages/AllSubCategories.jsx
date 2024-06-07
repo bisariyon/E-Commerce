@@ -38,7 +38,7 @@ function AllSubCategories() {
   const fetchSubCategories = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/sub-categories/get/?page=${page}&limit=8&subCategory=${subCategory}&category=${category}`,
+        `/v1/sub-categories/get/?page=${page}&limit=8&subCategory=${subCategory}&category=${category}`,
         {
           withCredentials: true,
         }
@@ -60,7 +60,7 @@ function AllSubCategories() {
     const body = { newSubCategory, description };
     try {
       const response = await axios.put(
-        `http://localhost:8000/v1/sub-categories/update/${updatedSubCategory.subCategoryID}`,
+        `/v1/sub-categories/update/${updatedSubCategory.subCategoryID}`,
         body,
         {
           withCredentials: true,

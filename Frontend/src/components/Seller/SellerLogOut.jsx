@@ -14,7 +14,7 @@ function SellerLogOut() {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/sellers/logout",
+        "/v1/sellers/logout",
         {},
         { withCredentials: true }
       );

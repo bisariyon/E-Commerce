@@ -36,7 +36,7 @@ function AddNewCategory() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/v1/categories/create",
+        "/v1/categories/create",
         formData,
         {
           withCredentials: true,

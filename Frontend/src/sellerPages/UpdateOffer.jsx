@@ -19,7 +19,7 @@ function UpdateOffer() {
   const fetchOffer = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/v1/product-offers/${offerId}`,
+        `/v1/product-offers/${offerId}`,
         {
           withCredentials: true,
         }
@@ -64,7 +64,7 @@ function UpdateOffer() {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:8000/v1/product-offers/update/${offerId}`,
+        `/v1/product-offers/update/${offerId}`,
         updateFormData,
         {
           withCredentials: true,

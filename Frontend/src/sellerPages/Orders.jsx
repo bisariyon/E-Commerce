@@ -24,7 +24,7 @@ function Orders() {
   const getOrders = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/v1/order-items/seller?limit=6&page=${page}&sortBy=${sortBy}&sortType=${sortType}&status=${status}&before=${before}&after=${after}`,
+        `/v1/order-items/seller?limit=6&page=${page}&sortBy=${sortBy}&sortType=${sortType}&status=${status}&before=${before}&after=${after}`,
         {},
         {
           withCredentials: true,
