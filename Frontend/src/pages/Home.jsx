@@ -75,7 +75,7 @@ function Home() {
       <Carousal />
 
       {/* Categories Section */}
-      <div className="mt-12 bg-white p-8 rounded-lg shadow-md mx-4">
+      <div className="mt-6 bg-white p-8 rounded-lg shadow-md mx-4">
         <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             Some of our Categories

@@ -130,14 +130,13 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
     throw new ApiError(403, "You are not authorized to delete this product");
   }
 
-  const deletedProduct = await Product.findById(productId)
-  if(!deletedProduct) {
+  const deletedProduct = await Product.findById(productId);
+  if (!deletedProduct) {
     throw new ApiError(404, "Product not found");
   }
 
   deletedProduct.active = false;
   const updatedProduct = await deletedProduct.save();
- 
 
   // const parts = deletedProduct.productImage.split("/");
   // const deletedImagePublicId = parts[parts.length - 1].split(".")[0];
@@ -315,18 +314,6 @@ const getProducts = asyncHandler(async (req, res, next) => {
   const pipeline = [
     {
       $match: {
-        $or: [
-          {
-            description: { $regex: query || "", $options: "ix" },
-          },
-          {
-            title: { $regex: query || "", $options: "ix" },
-          },
-        ],
-      },
-    },
-    {
-      $match: {
         quantityInStock: { $gte: parseInt(minQuantity) || 0 },
       },
     },
@@ -404,7 +391,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
         description: 1,
         price: 1,
         quantityInStock: 1,
-        ratings: 1,   
+        ratings: 1,
         brand: {
           brandname: "$brand.name",
           brandID: "$brand._id",
@@ -426,8 +413,38 @@ const getProducts = asyncHandler(async (req, res, next) => {
       $match: {
         active: true,
       },
-    }
+    },
   ];
+
+  if (query) {
+    pipeline.push({
+      $match: {
+        $or: [
+          {
+            description: { $regex: query || "", $options: "ix" },
+          },
+          {
+            title: { $regex: query || "", $options: "ix" },
+          },
+          {
+            "brand.brandname": { $regex: query || "", $options: "ix" },
+          },
+          {
+            "category.categoryName": { $regex: query || "", $options: "ix" },
+          },
+          {
+            "subCategories.subCategoryName": {
+              $regex: query || "",
+              $options: "ix",
+            },
+          },
+          {
+            "sellerInfo.sellerName": { $regex: query || "", $options: "ix" },
+          },
+        ],
+      },
+    });
+  }
 
   if (brand) {
     pipeline.push({
@@ -440,7 +457,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
   if (category) {
     pipeline.push({
       $match: {
-        "category.categoryName": { $regex: category || "", $options: "i" },
+        "category.categoryName": { $regex: category || "", $options: "ix" },
       },
     });
   }
@@ -450,7 +467,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
       $match: {
         "subCategory.subCategoryName": {
           $regex: subCategory || "",
-          $options: "i",
+          $options: "ix",
         },
       },
     });
@@ -765,7 +782,7 @@ const getProductBySeller = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Seller ID is required");
   }
 
-  const products = await Product.find({ sellerInfo: sellerId, active: true})
+  const products = await Product.find({ sellerInfo: sellerId, active: true })
     .populate({
       path: "brand",
       select: "name",

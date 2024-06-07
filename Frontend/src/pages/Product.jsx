@@ -67,6 +67,12 @@ function Product() {
   });
 
   useEffect(() => {
+    if(products && products.data.totalPages < page){
+      setPage(1)
+    }
+  },[products])
+
+  useEffect(() => {
     if (cat) {
       setFilters((prevFilters) => ({ ...prevFilters, category: cat }));
     }
