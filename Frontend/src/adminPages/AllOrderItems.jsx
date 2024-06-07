@@ -577,7 +577,7 @@ function AllOrderItems() {
                         )
                       }
                     >
-                      View Category
+                      View Seller
                     </button>
                   </div>
                 </div>

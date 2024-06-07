@@ -118,11 +118,8 @@ The BISARIYON E-COM application has three kinds of user
   </tr>
   <tr>
     <td><img width="958" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717783348/iohulvbnx8zy7jmhya8d.png"></td>
-    <td><img width="954" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717783348/jphd9ldwoqxswwhedhk6.png"></td>
-  </tr>
-  <tr>
     <td><img width="958" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717783348/nc1g3bsdkentsbnl0ysl.png"></td>
-  </tr>
+   </tr>
 </table>
 
 # Product Page, Ctegories, Offers ⚙️
@@ -163,5 +160,114 @@ The BISARIYON E-COM application has three kinds of user
   <tr>
     <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/x1tt8kdfxuh8gohtnaby.png"></td>
     <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/utsurubjclesfhdwslap.png"></td>
+  </tr>
+</table>
+
+# Seller Pages
+
+<img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717788576/vxsd3fv6i7zwewdean0x.png">
+<table>
+  <tr>
+    <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717788576/cab3qqgjviqfvsmz6iyd.png"></td>
+    <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/vxsd3fv6i7zwewdean0x.png"></td>
+  </tr>
+  <tr>
+    <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717788576/vxuuojyyxfsb68ovjiur.png"></td>
+    <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/tggbo4wi26wqrfqhwueb.png"></td>
+  </tr>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/zxd0wnqj9su6dzaxxxwd.png"></td>
+    <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717788576/cdg6ixmhppy5yl1zjiiq.png"></td>
+  </tr>
+  <tr>
+    <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/vpwsfaklzzhptfj1zmbr.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/x764rot6kbx3tzwgbuig.png"></td>
+  </tr>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/dusjcdebbf3k454ocxtm.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ylcr5ib5ucz6a1ujrvhm.png"></td>
+  </tr>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/zrmeyazbm0eoits7w3q2.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/evu9p1lhckmnzve909oc.png"></td>
+  </tr>
+</table>
+
+# Admin
+
+<img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717789377/xvnkyni8iukxspjqy7ny.png">
+
+<table>
+  <tr>
+    <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/cs0fqyzy1jwshcj2jjhu.png"></td>
+    <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/jsccnud72mbwl5blm0p6.png"></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ivty153gxpjbxytjdjbt.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ef8xycpumxi3vnzlc5xk.png"></td>
+  </tr>
+  <tr>
+  <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/hsqxj7tm2uae71ygspxn.png"></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/rlcqrt2kblbtrxu9j8b3.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ua41zx4pcmwijnktpblc.png"></td>
+  </tr>
+  <tr>
+  <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/s3c6nrsx2qdm26armnbn.png"></td>
+  <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/iurankxjt3x7wypxmkqv.png"></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/shoxpu4szk5gf2uuyp8a.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ble0qi1izfokhi32xznc.png"></td>
+  </tr>
+  <tr>
+  <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/if4pbljbqnv2wjiwbaqb.png"></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/d3c5oubcrtb4pf5bbawv.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/qtmremgqnznvo4tgbapm.png"></td>
+  </tr>
+  <tr>
+  <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/fdqjnq5g5gyrq0wdcq9c.png"></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/an9h8n3wva9ax4rxjdid.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ybajdziqvgf1lfqwunld.png"></td>
+  </tr>
+  <tr>
+  <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/bqqufflh1ipgyqjd2exh.png"></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/bm5frsmhk52n2tqfrzqo.png"></td>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/yfvyh38bzergsomeocu4.png"></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/xkgbpnx6pfi8bhbjkypc.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ncdx6qvjnrzdjmnlmcqy.png"></td>
+  </tr>
+  <tr>
+  <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ag49guvyq2jvmlxtle52.png"></td>
   </tr>
 </table>
