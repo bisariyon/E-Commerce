@@ -1,9 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "axios";import { useSelector } from "react-redux";
+
+
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
 
 function AllSubCategories() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
+  const userRedux = useSelector((state) => state.user.user);
+  const isAdmin = userRedux?.isAdmin;
+  
+
   const navigate = useNavigate();
   const location = useLocation();
   const tempsubCategory = new URLSearchParams(location.search).get(
@@ -93,6 +109,21 @@ function AllSubCategories() {
       navigate(`/admin/all-subcategories?subCategoryId=${res.data._id}`);
     }
   };
+
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-gray-100 pt-4 p-8">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717435538/sonr99spyfca75ignfhc.png"
+          alt="Wrong Domain"
+          className="max-w-full h-auto"
+        />
+        <h1 className="text-4xl font-bold mb-4">
+          You have entered the wrong domain
+        </h1>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Cancel } from "../../assets/imports/importImages";
 
 function SearchBar() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const query = queryParams.get("query") || "";
+    setSearch(query);
+  }, [location.search]);
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
@@ -16,9 +23,7 @@ function SearchBar() {
   const handleSearchSubmit = () => {
     if (search.trim() !== "") {
       navigate(`/products?query=${search}`);
-    }
-
-    if (search === "") {
+    } else {
       navigate(`/products`);
     }
   };
@@ -29,23 +34,18 @@ function SearchBar() {
     }
   };
 
-  const location = useLocation();
-  const currentPath = location.pathname;
-
   const handleClearClick = () => {
     setSearch("");
-    if (currentPath === "/products") {
-      navigate(`/products`);
-    }
+    navigate(`/products`);
   };
 
   return (
     <div className="flex-1 hidden sm:flex items-center rounded-full bg-white bg-opacity-10 mr-2">
-      <button className="h-10 w-10 ml-3" onClick={handleSearchSubmit}>
+      <button className="h-10 w-10 ml-3 av" onClick={handleSearchSubmit}>
         <img
           src="https://res.cloudinary.com/deepcloud1/image/upload/v1716378719/k2nuienbsmq25bwihp5r.png"
           alt="Search Icon"
-          className="transition duration-300 ease-in-out transform hover:scale-110"
+          className="transition transform hover:scale-110 active:scale-95"
         />
       </button>
       <input

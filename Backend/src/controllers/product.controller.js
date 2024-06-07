@@ -304,6 +304,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
     category,
     subCategory,
   } = req.query;
+  console.log("query", query);
 
   const options = {
     page: parseInt(page),
@@ -320,9 +321,6 @@ const getProducts = asyncHandler(async (req, res, next) => {
           },
           {
             title: { $regex: query || "", $options: "ix" },
-          },
-          {
-            "brand.brandname": { $regex: query || "", $options: "ix" },
           },
         ],
       },

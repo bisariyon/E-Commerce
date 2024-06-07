@@ -3,7 +3,22 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+import { useSelector } from "react-redux";
+
 function AllProducts() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
+  const userRedux = useSelector((state) => state.user.user);
+  const isAdmin = userRedux?.isAdmin;
+
   const navigate = useNavigate();
   const location = useLocation();
   const tempProductId = new URLSearchParams(location.search).get("product");
@@ -13,6 +28,7 @@ function AllProducts() {
     "subCategoryId"
   );
   const tempBrand = new URLSearchParams(location.search).get("brandId");
+  const review = new URLSearchParams(location.search).get("review");
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showSelectedProduct, setShowSelectedProduct] = useState(false);
@@ -57,6 +73,7 @@ function AllProducts() {
       subCategoryId,
       brandId,
       sellerId,
+      review,
     ],
     queryFn: fetchAllProducts,
   });
@@ -116,38 +133,6 @@ function AllProducts() {
     queryFn: getBrands,
   });
 
-  if (productLoading || subCategoryLoading || brandLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-full p-4 my-24">
-        <img
-          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717078915/crmi2yw34sh7sldgmxo9.png"
-          alt="Loading"
-          className="w-64 h-auto"
-        />
-        <div className="text-3xl text-gray-700">Loading all ...</div>
-      </div>
-    );
-  }
-
-  if (isProductError || isSubCategoryError || isBrandError) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-full p-4 my-24">
-        <img
-          src="https://res.cloudinary.com/deepcloud1/image/upload/v1716663893/u0ai3d9zbwijrlqmslyt.png"
-          alt="Error"
-          className="w-64 h-auto"
-        />
-        <div className="text-3xl text-red-700">
-          {isProductError
-            ? productError
-            : isSubCategoryError
-            ? subCategoryError
-            : brandError}
-        </div>
-      </div>
-    );
-  }
-
   //handlers
 
   const handleFilterChange = (setter) => (event) => {
@@ -182,6 +167,53 @@ function AllProducts() {
   };
 
   console.log(ProductData);
+
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-gray-100 pt-4 p-8">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717435538/sonr99spyfca75ignfhc.png"
+          alt="Wrong Domain"
+          className="max-w-full h-auto"
+        />
+        <h1 className="text-4xl font-bold mb-4">
+          You have entered the wrong domain
+        </h1>
+      </div>
+    );
+  }
+
+  if (productLoading || subCategoryLoading || brandLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-full p-4 my-24">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717078915/crmi2yw34sh7sldgmxo9.png"
+          alt="Loading"
+          className="w-64 h-auto"
+        />
+        <div className="text-3xl text-gray-700">Loading all ...</div>
+      </div>
+    );
+  }
+
+  if (isProductError || isSubCategoryError || isBrandError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-full p-4 my-24">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1716663893/u0ai3d9zbwijrlqmslyt.png"
+          alt="Error"
+          className="w-64 h-auto"
+        />
+        <div className="text-3xl text-red-700">
+          {isProductError
+            ? productError
+            : isSubCategoryError
+            ? subCategoryError
+            : brandError}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -371,20 +403,30 @@ function AllProducts() {
                         {selectedProduct.quantityInStock}
                       </p>
                       <p className="text-gray-700 text-sm">
-                        <span className="font-medium">Ratings:</span>
+                        <span className="font-medium">Ratings:</span>{" "}
                         {selectedProduct.ratings || " Not Rated Yet"}
                       </p>
                     </div>
-                    <img
-                      src={selectedProduct.productImage}
-                      alt="Category Image"
-                      className="mx-auto mt-4 rounded-md w-1/2 h-auto "
-                    />
+                    <div className="flex items-center mt-4 ml-4">
+                      <img
+                        src={selectedProduct.productImage}
+                        alt="Category Image"
+                        className="rounded-md w-1/2 h-auto"
+                      />
+                      <div className="flex-grow flex justify-center">
+                        <button
+                          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
+                          onClick={() =>
+                            navigate(
+                              `/admin/all-reviews?product=${selectedProduct._id}`
+                            )
+                          }
+                        >
+                          View Review
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  {/* <div className="bg-red-100 p-4 rounded-lg shadow-lg border-t-4 border-red-500">
-                  <h3 className="text-lg font-semibold text-red-700 mb-2">
-                      Product Image
-                    </h3> */}
 
                   {/* </div> */}
                   <div className="bg-green-100 p-4 rounded-lg shadow-lg border-t-4 border-green-500">
@@ -406,6 +448,18 @@ function AllProducts() {
                       alt="Category Image"
                       className="mx-auto mt-4 rounded-md w-3/4 "
                     />
+                    <div className="flex justify-start items-center mt-4 gap-4 pl-2">
+                      <button
+                        className={`bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 active:scale-95`}
+                        onClick={() =>
+                          navigate(
+                            `/admin/all-categories?category=${selectedProduct.category._id}`
+                          )
+                        }
+                      >
+                        View Category
+                      </button>
+                    </div>
                   </div>
 
                   <div className="bg-yellow-100 p-4 rounded-lg shadow-lg border-t-4 border-yellow-500">
@@ -427,6 +481,18 @@ function AllProducts() {
                       alt="Category Image"
                       className="mx-auto mt-4 rounded-md w-3/4 "
                     />
+                    <div className="flex justify-start items-center mt-4 gap-4 pl-2">
+                      <button
+                        className={`bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 active:scale-95`}
+                        onClick={() =>
+                          navigate(
+                            `/admin/all-brands?brand=${selectedProduct.brand._id}`
+                          )
+                        }
+                      >
+                        View Brand
+                      </button>
+                    </div>
                   </div>
 
                   <div className="bg-purple-100 p-4 rounded-lg shadow-lg border-t-4 border-purple-500">

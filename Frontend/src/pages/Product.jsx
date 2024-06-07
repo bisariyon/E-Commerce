@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../store/ProductSlice";
-import { useParams, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import refreshCart from "../utility/refreshCart";
 import refreshUser from "../utility/refreshUser";
@@ -18,12 +18,13 @@ function Product() {
     refreshCartData();
   }, []);
 
+  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const cat = queryParams.get("category");
 
-  let query = queryParams.get("query");
-  if (query === null) query = "";
+  let tempQuery = queryParams.get("query");
+  if (tempQuery === null) tempQuery = "";
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(8);
@@ -37,13 +38,18 @@ function Product() {
     category: cat || "",
     subCategory: "",
   });
+  // const [query, setQuery] = useState(tempQuery || "");
+
+  useEffect(() => {
+    scrollTo(0, 0);
+  },[page])
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const isVerified = user?.verified || false;
 
   const fetchProducts = async () => {
-    const url = `http://localhost:8000/v1/products?page=${page}&limit=${limit}&sortBy=${filters.sortBy}&brand=${filters.brand}&category=${filters.category}&subCategory=${filters.subCategory}&query=${query}`;
+    const url = `http://localhost:8000/v1/products?page=${page}&limit=${limit}&sortBy=${filters.sortBy}&brand=${filters.brand}&category=${filters.category}&subCategory=${filters.subCategory}&query=${tempQuery}`;
     const response = await axios.get(url);
     dispatch(setProducts(response.data.data.docs));
     return response.data;
@@ -55,9 +61,9 @@ function Product() {
     isError: productsError,
     error: productsErrorMessage,
   } = useQuery({
-    queryKey: ["products", { page, filters, query }],
+    queryKey: ["products", page, filters, tempQuery ],
     queryFn: fetchProducts,
-    staleTime: 1000 * 60 * 1,
+    staleTime: 100,
   });
 
   useEffect(() => {
@@ -68,6 +74,7 @@ function Product() {
 
   const applyFilters = () => {
     setFilters({ sortBy, brand, category, subCategory });
+    setPage(1);
   };
 
   const clearFilters = () => {
@@ -80,6 +87,14 @@ function Product() {
       brand: "",
       category: "",
       subCategory: "",
+    });
+    setPage(1);
+    // setQuery("");
+    queryParams.delete("query");
+    queryParams.delete("category");
+    navigate({
+      pathname: location.pathname,
+      search: queryParams.toString(),
     });
   };
 
@@ -170,13 +185,13 @@ function Product() {
             />
           </div>
           <button
-            className="bg-blue-500 text-lg text-white px-4 py-2 rounded hover:bg-blue-800 transition duration-300 ease-in-out"
+            className="bg-blue-500 text-lg text-white px-4 py-2 rounded hover:bg-blue-800 transition duration-300 ease-in-out active:scale-95"
             onClick={applyFilters}
           >
             Apply Filters
           </button>
           <button
-            className="bg-red-500 text-lg text-white px-4 py-2 rounded hover:bg-red-800 transition duration-300 ease-in-out mt-2"
+            className="bg-red-500 text-lg text-white px-4 py-2 rounded hover:bg-red-800 transition duration-300 ease-in-out mt-2 active:scale-95"
             onClick={clearFilters}
           >
             Clear Filters
@@ -222,7 +237,7 @@ function Product() {
               Previous
             </button>
             <span className="text-lg font-semibold bg-gray-100 px-4 py-2 rounded">
-              Page {page}
+              Page {page} of {products?.data?.totalPages}
             </span>
             <button
               className={`bg-blue-500 text-white text-lg px-4 py-2 rounded transition duration-300 ease-in-out ${

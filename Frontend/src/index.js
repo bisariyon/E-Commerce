@@ -36,7 +36,8 @@ import SellerLogOut from "./components/Seller/SellerLogOut";
 
 import SellerOrderDashboard from "./components/SideBar/SellerOrderDashboard";
 
-import AdminHeader from "./components/Header/AdminHeader"
+import AdminHeader from "./components/Header/AdminHeader";
+import AdminSubHeader from "./components/Header/AdminSubHeader";
 
 export {
   Header,
@@ -70,4 +71,6 @@ export {
   SellerLogOut,
   SellerOrderDashboard,
   AdminHeader,
+  AdminSubHeader,
 };
+

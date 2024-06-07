@@ -16,24 +16,20 @@ import mongoose from "mongoose";
 const createBrandByAdmin = asyncHandler(async (req, res, next) => {
   let { name, description, categoryIDs } = req.body;
 
-  // Check if name and description are provided
   if (!name || !description) {
     throw new ApiError(400, "Both name and description are required");
   }
-
-  // Trim inputs
   name = name.trim();
   description = description.trim();
 
-  // Check if categoryIDs are provided
   if (!categoryIDs) {
     throw new ApiError(400, "Categories are required");
   }
 
-  // Split categoryIDs string and trim each category ID
-  categoryIDs = categoryIDs.split(",").map((category) => category.trim());
+  if (typeof categoryIDs === "string") {
+    categoryIDs = categoryIDs.split(",");
+  }
 
-  // Check if each category exists
   for (const categoryID of categoryIDs) {
     const category = await Category.findById(categoryID);
     if (!category) {
@@ -41,26 +37,22 @@ const createBrandByAdmin = asyncHandler(async (req, res, next) => {
     }
   }
 
-  // Check if brand with the same name already exists
   const brand = await Brand.findOne({ name });
   if (brand) {
     throw new ApiError(400, "Brand already exists");
   }
 
-  // Check if logo is uploaded
   const logoLocalePath = req.file.path;
   if (!logoLocalePath) {
     throw new ApiError(400, "Logo is required");
   }
 
-  // Upload logo to Cloudinary
   const logo = await uploadOnCloudinary(logoLocalePath, "brand");
   if (!logo) {
     throw new ApiError(500, "Failed to upload logo");
   }
 
   try {
-    // Create the brand
     const newBrand = await Brand.create({
       name,
       description,
@@ -69,7 +61,6 @@ const createBrandByAdmin = asyncHandler(async (req, res, next) => {
       verified: true,
     });
 
-    // Populate categories field for the created brand
     const createdBrand = await Brand.findById(newBrand._id).populate({
       path: "categories",
       select: "category",
@@ -79,7 +70,6 @@ const createBrandByAdmin = asyncHandler(async (req, res, next) => {
       .status(201)
       .json(new ApiResponse(201, createdBrand, "Brand created successfully"));
   } catch (error) {
-    // If an error occurs, delete uploaded logo from Cloudinary
     if (logo && logo.public_id) {
       await deleteFromCloudinary(logo.public_id);
     }

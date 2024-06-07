@@ -85,7 +85,7 @@ function ProductSquare({
   };
 
   const increase = async () => {
-    if (quantity < quantityInStock) {
+    if (quantityInStock>0) {
       setQuantity((prevQuantity) => prevQuantity + 1);
       console.log("Adding to cart", productData);
       dispatch(increaseQuantityOrAddToBasket(productData));
@@ -186,10 +186,11 @@ function ProductSquare({
       </div>
 
       <div className="mt-auto flex space-x-3">
-        <button className="bg-cyan-500 text-white px-2 py-2 rounded hover:bg-cyan-700 transition duration-300 ease-in-out"
-        onClick={()=>navigate(`/products/${_id}`)}>
-
-          Add to Cart
+        <button
+          className="bg-cyan-500 text-white px-2 py-2 rounded hover:bg-cyan-700 transition duration-300 ease-in-out"
+          onClick={() => navigate(`/products/${_id}`)}
+        >
+          View Product
         </button>
         <button
           className="bg-blue-600 text-white text-sm lg:text-md p-2 ml-4 lg:ml-6 rounded hover:bg-blue-700 active:scale-95"
@@ -197,12 +198,6 @@ function ProductSquare({
         >
           Wishlist
         </button>
-        {/* <button
-          onClick={() => navigate("/user/order-confirmation")}
-          className="bg-blue-900 text-white px-2 py-2 rounded hover:bg-gray-700 transition duration-300 ease-in-out"
-        >
-          Buy Now
-        </button> */}
       </div>
     </div>
   );

@@ -3,8 +3,23 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { BsPencilSquare } from "react-icons/bs";
+import { useSelector } from "react-redux";
+
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
 
 function AllBrands() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
+  const user = useSelector((state) => state.user.user);
+  const isAdmin = user?.isAdmin;
+
   const navigate = useNavigate();
   const location = useLocation();
   const temBrand = new URLSearchParams(location.search).get("brand");
@@ -93,6 +108,21 @@ function AllBrands() {
     }
   };
 
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-gray-100 pt-4 p-8">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717435538/sonr99spyfca75ignfhc.png"
+          alt="Wrong Domain"
+          className="max-w-full h-auto"
+        />
+        <h1 className="text-4xl font-bold mb-4">
+          You have entered the wrong domain
+        </h1>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-full p-4 my-24">
@@ -162,6 +192,12 @@ function AllBrands() {
             {tempcategory || temBrand ? "Searched Brand" : "All Brands"}
           </h2>
           {error && <div className="text-red-500">{error}</div>}
+          <button
+            onClick={() => navigate("/admin/add-brand")}
+            className="text-xxl font-semibold bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 active:scale-95"
+          >
+            Add New Brand
+          </button>
         </div>
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mb-6">

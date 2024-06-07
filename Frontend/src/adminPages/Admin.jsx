@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import refreshCart from "../utility/refreshCart";
 import refreshUser from "../utility/refreshUser";
-import { useNavigate } from "react-router-dom";
 
 function Admin() {
   const { refreshUserData } = refreshUser();
@@ -149,16 +149,16 @@ function Admin() {
           </div>
           <div className="bg-orange-200 p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-black mb-2">
-              Content Management
+              Product Reviews
             </h2>
             <p className="text-gray-800 mb-4">
-              Edit or remove content from the site.
+              View all product reviews.
             </p>
             <button
-              onClick={() => navigate("#")}
+              onClick={() => navigate("all-reviews")}
               className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
             >
-              Content
+              Reviews
             </button>
           </div>
 

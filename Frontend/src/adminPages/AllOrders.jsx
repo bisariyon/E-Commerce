@@ -3,7 +3,22 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+import { useSelector } from "react-redux";
+
 function AllOrders() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
+  const userRedux = useSelector((state) => state.user.user);
+  const isAdmin = userRedux?.isAdmin;
+
   const navigate = useNavigate();
   const location = useLocation();
   const tempUser = new URLSearchParams(location.search).get("user");
@@ -60,9 +75,6 @@ function AllOrders() {
     queryFn: fetchAllOrders,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error}</div>;
-
   const handleFilterChange = (setter) => (event) => {
     setter(event.target.value);
   };
@@ -108,7 +120,50 @@ function AllOrders() {
     navigate(`/admin/all-products?product=${item.product.product_id}`);
   };
 
-  console.log(orders);
+  // console.log(orders);
+
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-gray-100 pt-4 p-8">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717435538/sonr99spyfca75ignfhc.png"
+          alt="Wrong Domain"
+          className="max-w-full h-auto"
+        />
+        <h1 className="text-4xl font-bold mb-4">
+          You have entered the wrong domain
+        </h1>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-full p-4 my-24">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717078915/crmi2yw34sh7sldgmxo9.png"
+          alt="Loading"
+          className="w-64 h-auto"
+        />
+        <div className="text-3xl text-gray-700">Loading all Orders..</div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-full p-4 my-24">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1716663893/u0ai3d9zbwijrlqmslyt.png"
+          alt="Error"
+          className="w-64 h-auto"
+        />
+        <div className="text-3xl text-red-700">
+          {error || "An error occurred. Please try again later."}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex">
@@ -364,12 +419,13 @@ function AllOrders() {
                     <button
                       className={`bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 active:scale-95`}
                       onClick={() =>
-                        navigate(`/admin/all-users?user=${selectedOrder.user._id}`)
+                        navigate(
+                          `/admin/all-users?user=${selectedOrder.user._id}`
+                        )
                       }
                     >
                       View User
                     </button>
-                   
                   </div>
                 </div>
               </div>
@@ -424,12 +480,12 @@ function AllOrders() {
                 >
                   <div className="mr-6">
                     <p className="text-gray-700">
-                      <span className="font-medium"></span> {item.product.product_title}
+                      <span className="font-medium"></span>{" "}
+                      {item.product.product_title}
                     </p>
                     <p className="text-gray-700">
                       <span className="font-medium">Price:</span> ₹{" "}
                       {item.product.product_price}
-
                     </p>
                     <p className="text-gray-700">
                       <span className="font-medium">Quantity:</span>{" "}

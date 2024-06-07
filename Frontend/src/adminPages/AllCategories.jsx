@@ -2,9 +2,24 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import { BsPencilSquare } from "react-icons/bs";
 
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+
 function AllCategories() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
+  const user = useSelector((state) => state.user.user);
+  const isAdmin = user?.isAdmin;
+
   const navigate = useNavigate();
   const location = useLocation();
   const tempsubCategory = new URLSearchParams(location.search).get(
@@ -132,6 +147,21 @@ function AllCategories() {
       setEditingCategoryId(null);
     }
   };
+
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-gray-100 pt-4 p-8">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717435538/sonr99spyfca75ignfhc.png"
+          alt="Wrong Domain"
+          className="max-w-full h-auto"
+        />
+        <h1 className="text-4xl font-bold mb-4">
+          You have entered the wrong domain
+        </h1>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -325,7 +355,9 @@ function AllCategories() {
                                   key={subCat.subCategoryId}
                                   className={`bg-white text-sm px-4 py-2 rounded-md cursor-pointer hover:bg-gray-200 active:scale-95`}
                                   onClick={() =>
-                                    navigate(`/admin/all-subcategories?subCategoryId=${subCat.subCategoryId}`)
+                                    navigate(
+                                      `/admin/all-subcategories?subCategoryId=${subCat.subCategoryId}`
+                                    )
                                   }
                                 >
                                   {subCat.subCategory}
@@ -363,7 +395,17 @@ function AllCategories() {
                             )
                           }
                         >
-                          View SubCategories
+                          View SubCat
+                        </button>
+                        <button
+                          className={`bg-${color}-500 text-white py-2 px-4 rounded-lg hover:bg-${color}-600 active:scale-95 hover:scale-105`}
+                          onClick={() =>
+                            navigate(
+                              `/admin/add-subcategory?category=${category._id}&name=${category.category}`
+                            )
+                          }
+                        >
+                          Add SubCat
                         </button>
                       </div>
                     </>

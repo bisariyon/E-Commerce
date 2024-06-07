@@ -2,8 +2,22 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
+import { useSelector } from "react-redux";
 
 function AllOrderItems() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
+  const userRedux = useSelector((state) => state.user.user);
+  const isAdmin = userRedux?.isAdmin;
+
   const navigate = useNavigate();
   const location = useLocation();
   const tempSeller = new URLSearchParams(location.search).get("seller");
@@ -63,7 +77,48 @@ function AllOrderItems() {
     queryFn: fetchAllOrders,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-gray-100 pt-4 p-8">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717435538/sonr99spyfca75ignfhc.png"
+          alt="Wrong Domain"
+          className="max-w-full h-auto"
+        />
+        <h1 className="text-4xl font-bold mb-4">
+          You have entered the wrong domain
+        </h1>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-full p-4 my-24">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717078915/crmi2yw34sh7sldgmxo9.png"
+          alt="Loading"
+          className="w-64 h-auto"
+        />
+        <div className="text-3xl text-gray-700">Loading all OrderItems..</div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-full p-4 my-24">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1716663893/u0ai3d9zbwijrlqmslyt.png"
+          alt="Error"
+          className="w-64 h-auto"
+        />
+        <div className="text-3xl text-red-700">
+          {error || "An error occurred. Please try again later."}
+        </div>
+      </div>
+    );
+  }
   if (isError) return <div>Error: {error}</div>;
 
   const handleFilterChange = (setter) => (event) => {
@@ -383,6 +438,18 @@ function AllOrderItems() {
                     <span className="font-medium">Verified:</span>{" "}
                     {selectedOrder.user_verified ? "True" : "False"}
                   </p>
+                  <div className="flex justify-start items-center mt-4 gap-4">
+                    <button
+                      className={`bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 active:scale-95`}
+                      onClick={() =>
+                        navigate(
+                          `/admin/all-users?user=${selectedOrder.user_id}`
+                        )
+                      }
+                    >
+                      View User
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -461,6 +528,18 @@ function AllOrderItems() {
                     className="w-24 h-24 object-cover rounded-md mb-8"
                   />
                 </div>
+                <div className="flex justify-start items-center mt-4 gap-4 pl-4">
+                  <button
+                    className={`bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 active:scale-95`}
+                    onClick={() =>
+                      navigate(
+                        `/admin/all-products?product=${selectedOrder.product_id}`
+                      )
+                    }
+                  >
+                    View Product
+                  </button>
+                </div>
               </div>
 
               {/* Seller Details Card */}
@@ -489,6 +568,18 @@ function AllOrderItems() {
                     <span className="font-medium">Verified:</span>{" "}
                     {selectedOrder.seller_verified ? "True" : "False"}
                   </p>
+                  <div className="flex justify-start items-center mt-4 gap-4 ">
+                    <button
+                      className={`bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 active:scale-95`}
+                      onClick={() =>
+                        navigate(
+                          `/admin/all-sellers?seller=${selectedOrder.seller_id}`
+                        )
+                      }
+                    >
+                      View Category
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

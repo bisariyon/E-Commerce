@@ -31,6 +31,7 @@ import AllOffers from "./pages/AllOffers.jsx";
 import OrderConfirmation from "./pages/OrderConfirmation.jsx";
 import PaymentSuccess from "./pages/Payments/PaymentSuccess.jsx";
 import PaymentFailure from "./pages/Payments/PaymentFailure.jsx";
+import SingleProductUser from "./pages/SingleProduct.jsx";
 
 import AppSeller from "./AppSeller.jsx";
 import Seller from "./sellerPages/Seller.jsx";
@@ -60,6 +61,9 @@ import AddNewCategory from "./adminPages/AddNewCategory.jsx";
 import AllSubCategories from "./adminPages/AllSubCategories.jsx";
 import AllBrands from "./adminPages/AllBrands.jsx";
 import AdminReviews from "./adminPages/AllReviews.jsx";
+import AddNewSubCat from "./adminPages/AddNewSubCat.jsx";
+import AddNewBrand from "./adminPages/AddNewBrand.jsx";
+import SellerVerification from "./adminPages/SellerVerification.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -83,6 +87,7 @@ const router = createBrowserRouter(
         </Route>
 
         <Route path="products" element={<Product />} />
+        <Route path="products/:productId" element={<SingleProductUser />} />
         <Route path="checkout" element={<CheckOut />} />
       </Route>
 
@@ -115,6 +120,9 @@ const router = createBrowserRouter(
         <Route path="all-subcategories" element={<AllSubCategories />} />
         <Route path="all-brands" element={<AllBrands />} />
         <Route path="all-reviews" element={<AdminReviews />} />
+        <Route path="add-subcategory" element={<AddNewSubCat />} />
+        <Route path="add-brand" element={<AddNewBrand />} />
+        <Route path="seller-verification/:seller" element={<SellerVerification />} />
       </Route>
 
       {/* Without Header Footer */}

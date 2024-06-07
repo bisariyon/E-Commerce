@@ -2,14 +2,24 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
 
 function AllUsers() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
   const navigate = useNavigate();
   const location = useLocation();
   const tempuser = new URLSearchParams(location.search).get("user");
 
   const [page, setPage] = useState(1);
   const [user, setUser] = useState(tempuser || "");
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
 
   useEffect(() => {
     scrollTo(0, 0);
@@ -23,7 +33,6 @@ function AllUsers() {
           withCredentials: true,
         }
       );
-      console.log(response.data.data);
       return response.data.data;
     } catch (error) {
       console.error(error.response.data.message || error.response.data);
@@ -32,9 +41,27 @@ function AllUsers() {
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["users", page],
+    queryKey: ["users", page, user],
     queryFn: fetchUsers,
   });
+
+  const userRedux = useSelector((state) => state.user.user);
+  const isAdmin = userRedux?.isAdmin;
+
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-gray-100 pt-4 p-8">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717435538/sonr99spyfca75ignfhc.png"
+          alt="Wrong Domain"
+          className="max-w-full h-auto"
+        />
+        <h1 className="text-4xl font-bold mb-4">
+          You have entered the wrong domain
+        </h1>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -91,18 +118,18 @@ function AllUsers() {
       {user && tempuser && (
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 active:scale-95 mx-6 mt-4"
-          onClick={() => handle()}
+          onClick={handle}
         >
           View All Users
         </button>
       )}
 
-      <div className="bg-gray-100 border border-gray-300 p-6 rounded-lg shadow-md m-6 ">
+      <div className="bg-gray-100 border border-gray-300 p-6 rounded-lg shadow-md m-6">
         <h2 className="text-2xl font-semibold mb-4 border-b pb-2">
           {tempuser ? "Searched User" : "All Users"}
         </h2>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mb-6 ">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mb-6">
           {data &&
             data.docs.map((user, index) => {
               const color = colors[index % colors.length];
@@ -111,11 +138,11 @@ function AllUsers() {
                   key={user._id}
                   className={`bg-${color}-100 p-4 rounded-lg shadow-lg border-t-4 border-${color}-500`}
                 >
-                  <div className="pl-2 ">
+                  <div className="pl-2">
                     <img
                       src={user.avatar}
                       alt="User Image"
-                      className="mx-4 mr-auto mb-2 rounded-full w-40 h-40 "
+                      className="mx-4 mr-auto mb-2 rounded-full w-40 h-40"
                     />
                     <p className="text-gray-700">
                       <span className="font-medium">User ID:</span> {user._id}
@@ -161,6 +188,9 @@ function AllUsers() {
                       View Orders
                     </button>
                     <button
+                      onClick={() =>
+                        navigate(`/admin/all-reviews?user=${user._id}`)
+                      }
                       className={`bg-${color}-500 text-white py-2 px-4 rounded-lg hover:bg-${color}-600 active:scale-95`}
                     >
                       View Reviews
@@ -172,13 +202,13 @@ function AllUsers() {
         </div>
         <div className="flex justify-center mt-8">
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-30 active:scale-95 "
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-30 active:scale-95"
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
           >
             Previous
           </button>
-          <div className="bg-gray-200 py-3 px-4  rounded-md mx-4">
+          <div className="bg-gray-200 py-3 px-4 rounded-md mx-4">
             Page {page} of {data.totalPages}
           </div>
           <button

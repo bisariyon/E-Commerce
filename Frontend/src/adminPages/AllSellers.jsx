@@ -2,8 +2,23 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import refreshCart from "../utility/refreshCart";
+import refreshUser from "../utility/refreshUser";
 
 function AllUsers() {
+  const { refreshUserData } = refreshUser();
+  const { refreshCartData } = refreshCart();
+
+  useEffect(() => {
+    refreshUserData();
+    refreshCartData();
+  }, []);
+
+  const userRedux = useSelector((state) => state.user.user);
+  const isAdmin = userRedux?.isAdmin;
+
   const navigate = useNavigate();
   const location = useLocation();
   const tempseller = new URLSearchParams(location.search).get("seller");
@@ -33,10 +48,59 @@ function AllUsers() {
     }
   };
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["sellers", page, seller, category],
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["sellers", page, seller, category,tempseller],
     queryFn: fetchSellers,
   });
+
+  useEffect(() => {
+    refetch();
+  },[tempseller,tempcategory])
+
+  const colors = [
+    "blue",
+    "green",
+    "red",
+    "purple",
+    "red",
+    "purple",
+    "blue",
+    "green",
+  ];
+
+  const handle = () => {
+    setSeller("");
+    setCategory("");
+
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.delete("category");
+    searchParams.delete("seller");
+    navigate({
+      pathname: location.pathname,
+      search: searchParams.toString(),
+    });
+  };
+  const handleVerify = async (seller) => {
+    // console.log(seller);
+    navigate(`/admin/seller-verification/${seller._id}`, {
+      state: { seller: seller },
+    });
+  };
+
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full bg-gray-100 pt-4 p-8">
+        <img
+          src="https://res.cloudinary.com/deepcloud1/image/upload/v1717435538/sonr99spyfca75ignfhc.png"
+          alt="Wrong Domain"
+          className="max-w-full h-auto"
+        />
+        <h1 className="text-4xl font-bold mb-4">
+          You have entered the wrong domain
+        </h1>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -66,30 +130,6 @@ function AllUsers() {
     );
   }
 
-  const colors = [
-    "blue",
-    "green",
-    "red",
-    "purple",
-    "red",
-    "purple",
-    "blue",
-    "green",
-  ];
-
-  const handle = () => {
-    setSeller("");
-    setCategory("");
-
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.delete("category");
-    searchParams.delete("seller");
-    navigate({
-      pathname: location.pathname,
-      search: searchParams.toString(),
-    });
-  };
-
   return (
     <>
       {((seller && tempseller) || (category && tempcategory)) && (
@@ -114,7 +154,13 @@ function AllUsers() {
                   key={seller._id}
                   className={`bg-${color}-100 p-4 rounded-lg shadow-lg border-t-4 border-${color}-500`}
                 >
-                  <div className="pl-2 ">
+                  <div className="pl-2 relative">
+                    <button
+                      className={`bg-${color}-500 text-white py-2 px-4 rounded-lg hover:bg-${color}-600 active:scale-95 absolute top-0 right-0 mr-2 z-10`}
+                      onClick={() => handleVerify(seller)}
+                    >
+                      {seller.verified ? "Unverify" : "Verify"}
+                    </button>
                     <img
                       src={
                         seller.avatar ||

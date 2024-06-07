@@ -12,4 +12,3 @@ function AppSeller() {
 }
 
 export default AppSeller;
-

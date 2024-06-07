@@ -8,6 +8,7 @@ import {
 import { Review } from "../models/review.model.js";
 import { Product } from "../models/product.model.js";
 import { OrderItems } from "../models/orderItems.model.js";
+import mongoose from "mongoose";
 
 const addReview = asyncHandler(async (req, res, next) => {
   const { productId } = req.params;
@@ -342,6 +343,152 @@ const getSellerReviews = asyncHandler(async (req, res, next) => {
   );
 });
 
+const getReviewAdmin = asyncHandler(async (req, res, next) => {
+  const {
+    page = 1,
+    limit = 9,
+    sortBy = "_id",
+    sortType = "1",
+    review = "",
+    user = "",
+    product = "",
+    seller = "",
+    before = "",
+    after = "",
+  } = req.query;
+
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+    sort: { [sortBy]: parseInt(sortType) },
+  };
+
+  const pipeline = [
+    {
+      $lookup: {
+        from: "products",
+        localField: "product",
+        foreignField: "_id",
+        as: "product",
+      },
+    },
+    {
+      $unwind: "$product",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: "$user",
+    },
+    {
+      $lookup: {
+        from: "sellers",
+        localField: "seller",
+        foreignField: "_id",
+        as: "seller",
+      },
+    },
+    {
+      $unwind: "$seller",
+    },
+    {
+      $project: {
+        _id: 1,
+        comment: 1,
+        rating: 1,
+        images: 1,
+        createdAt: 1,
+        product: {
+          _id: 1,
+          title: 1,
+          productImage: 1,
+          description: 1,
+          price: 1,
+          quantityInStock: 1,
+        },
+        user: {
+          _id: 1,
+          fullName: 1,
+          username: 1,
+          email: 1,
+          phone: 1,
+        },
+        seller: {
+          _id: 1,
+          fullName: 1,
+          email: 1,
+          phone: 1,
+        },
+      },
+    },
+  ];
+
+  if (user) {
+    pipeline.push({
+      $match: {
+        "user._id": new mongoose.Types.ObjectId(user),
+      },
+    });
+  }
+
+  if (product) {
+    pipeline.push({
+      $match: {
+        "product._id": new mongoose.Types.ObjectId(product),
+      },
+    });
+  }
+
+  if (seller) {
+    pipeline.push({
+      $match: {
+        "seller._id": new mongoose.Types.ObjectId(seller),
+      },
+    });
+  }
+
+  if (before) {
+    pipeline.push({
+      $match: {
+        createdAt: { $lte: new Date(before) },
+      },
+    });
+  }
+
+  if (after) {
+    pipeline.push({
+      $match: {
+        createdAt: { $gte: new Date(after) },
+      },
+    });
+  }
+
+  if(review) {
+    pipeline.push({
+      $match: {
+        _id: new mongoose.Types.ObjectId(review),
+      }
+    })
+  }
+
+  const aggregate = Review.aggregate(pipeline);
+  const reviews = await Review.aggregatePaginate(aggregate, options);
+
+  if (!reviews) {
+    throw new ApiError(404, "No reviews found");
+  }
+
+  return res.json(
+    new ApiResponse(200, reviews, "Reviews retrieved successfully")
+  );
+});
+
 export {
   addReview,
   deleteReview,
@@ -349,4 +496,5 @@ export {
   getReviews,
   getUserReviews,
   getSellerReviews,
+  getReviewAdmin,
 };
