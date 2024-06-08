@@ -152,11 +152,19 @@ The BISARIYON E-COM application has three kinds of user
 # 🧾 Payment
 
 <img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785601/mhkz8o97vrp7q5plqbix.png">
+
+### Checkout
+
 <table>
   <tr>
     <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ybq8gid7rx7ld4wxqqax.png"></td>
     <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/fv460aln3pzdbq0orime.png"></td>
   </tr>
+</table>
+
+### Payment Succes/Failure
+
+<table>
   <tr>
     <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/x1tt8kdfxuh8gohtnaby.png"></td>
     <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/utsurubjclesfhdwslap.png"></td>
@@ -169,26 +177,50 @@ The BISARIYON E-COM application has three kinds of user
 <table>
   <tr>
     <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717788576/cab3qqgjviqfvsmz6iyd.png"></td>
-    <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/vxsd3fv6i7zwewdean0x.png"></td>
+    <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/vxuuojyyxfsb68ovjiur.png"></td>
   </tr>
+</table>
+
+### Seller related product pages
+
+<table>
   <tr>
-    <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717788576/vxuuojyyxfsb68ovjiur.png"></td>
     <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/tggbo4wi26wqrfqhwueb.png"></td>
   </tr>
+</table>
+<table>
   <tr>
     <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/zxd0wnqj9su6dzaxxxwd.png"></td>
     <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717788576/cdg6ixmhppy5yl1zjiiq.png"></td>
   </tr>
+</table>
+
+### Seller Offer pages
+
+<table>
   <tr>
     <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/vpwsfaklzzhptfj1zmbr.png"></td>
     <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/x764rot6kbx3tzwgbuig.png"></td>
   </tr>
   <tr>
     <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/dusjcdebbf3k454ocxtm.png"></td>
-    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ylcr5ib5ucz6a1ujrvhm.png"></td>
   </tr>
+</table>
+
+### Seller Reviews and Brand Request
+
+<table>
   <tr>
-    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/zrmeyazbm0eoits7w3q2.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ylcr5ib5ucz6a1ujrvhm.png"></td>
+    <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/zrmeyazbm0eoits7w3q2.png"></td>
+  </tr>
+</table>
+
+### Seller Orders
+
+<table>
+  <tr>
+    <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/afprukjzcsx8zapceczj.png"></td>
     <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/evu9p1lhckmnzve909oc.png"></td>
   </tr>
 </table>
@@ -197,12 +229,16 @@ The BISARIYON E-COM application has three kinds of user
 
 <img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717789377/xvnkyni8iukxspjqy7ny.png">
 
+### Users
+
 <table>
   <tr>
     <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/cs0fqyzy1jwshcj2jjhu.png"></td>
     <td><img width="956" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/jsccnud72mbwl5blm0p6.png"></td>
   </tr>
 </table>
+
+### Sellers
 
 <table>
   <tr>
@@ -213,6 +249,8 @@ The BISARIYON E-COM application has three kinds of user
   <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/hsqxj7tm2uae71ygspxn.png"></td>
   </tr>
 </table>
+
+### Categories
 
 <table>
   <tr>
@@ -225,6 +263,8 @@ The BISARIYON E-COM application has three kinds of user
   </tr>
 </table>
 
+### SubCatgeories
+
 <table>
   <tr>
     <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/shoxpu4szk5gf2uuyp8a.png"></td>
@@ -235,6 +275,8 @@ The BISARIYON E-COM application has three kinds of user
   </tr>
 </table>
 
+### Brands
+
 <table>
   <tr>
     <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/d3c5oubcrtb4pf5bbawv.png"></td>
@@ -244,6 +286,8 @@ The BISARIYON E-COM application has three kinds of user
   <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/fdqjnq5g5gyrq0wdcq9c.png"></td>
   </tr>
 </table>
+
+### Products page
 
 <table>
   <tr>
@@ -262,6 +306,8 @@ The BISARIYON E-COM application has three kinds of user
   </tr>
 </table>
 
+### Orders
+
 <table>
   <tr>
     <td><img width="959" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/xkgbpnx6pfi8bhbjkypc.png"></td>
@@ -271,3 +317,123 @@ The BISARIYON E-COM application has three kinds of user
   <td><img width="955" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/ag49guvyq2jvmlxtle52.png"></td>
   </tr>
 </table>
+
+## Project description 📝
+
+🌟 Introducing BISARIYON E-COM: The Legend's multivendor e-commerce appliciation 🌟
+
+🚀 Dear LinkedIn Network, I am thrilled to announce the completion of my latest project, BISARIYON E-COM 🌟 This dynamic platform brings together buyers and sellers, offering a seamless online shopping experience with a plethora of innovative features.
+
+### 💡 Key Technologies <br>
+
+#### Front-End
+
+React : user interface <Br/>
+
+React Router : client-side routing <Br/>
+
+Tanstack React Query : Managing server-state with Tanstack React Query, providing powerful data synchronization, caching, and background data fetching to ensure an efficient and optimized data flow within the application. <Br />
+
+Redux : Employing Redux for state management, ensuring centralized data handling and seamless interactions between components.<Br/>
+
+Tailwind CSS : Leveraging the power of Tailwind CSS for streamlined and responsive UI design, enabling rapid development and customization. <Br/>
+
+Material-UI : Integrating Material-UI components to enhance the visual appeal and usability of the website. <Br/>
+
+#### Back-End
+
+Node.js : Utilizing Node.js as the server-side runtime environment to build scalable and efficient backend services. <Br/>
+
+Express.js : Harnessing the power of Express.js, a fast and minimalist web application framework, to handle routing and middleware. <Br/>
+
+JWT (JSON Web Tokens): Implementing JWT-based authentication for secure and stateless user sessions. <Br/>
+
+MongoDB : Leveraging MongoDB, a NoSQL database, for efficient data storage and retrieval, enabling seamless scalability. <Br/>
+
+npm : Employing node as the package manager to manage project dependencies efficiently. <Br/>
+
+Image Upload with Multer: Integrating Multer middleware to handle image uploads, ensuring seamless storage and retrieval of product images. <Br/>
+
+Email Communication with Nodemailer: Implementing Nodemailer to facilitate email communication, including email verification and notifications. <Br/>
+
+Cloudinary : Utilizing Cloudinary for managing and optimizing media assets, ensuring efficient storage, retrieval, and delivery of images and videos with powerful cloud-based capabilities.
+
+💡 Key Features:<Br/>
+1️⃣ User Authentication Pages 🚪
+
+User Signup: Enable users to create accounts, the option to upload a profile image. <Br/>
+
+User Login: Secure login functionality to protect user accounts.
+
+Reset Password : Offering password reset functionality, allowing users to recover their accounts in case they forget their passwords, enhancing overall user experience and security.
+
+2️⃣ Home Page 🏠
+
+Categories and Top Brands: Organizing products into categories and featuring top brands to enhance user navigation and make it easier to discover products.
+
+Search Bar: Integrating a fully functional search bar, allowing users to directly access any product quickly and efficiently, improving the overall user experience.
+
+3️⃣ Filters for Sorting Products 🗂️
+
+Sort by Category: Enable users to filter products by different categories, such as clothes, shoes, gifts, and more.
+
+Sort by Brand: Allow users to filter and sort products based on different brands.
+
+Sort by Price: Provide the option to sort products by price, helping users find items within their budget.
+
+Sort by Ratings: Enable users to sort products by customer ratings, making it easier to find highly-rated items.
+
+4️⃣ User Search Bar 🔍
+
+Search Functionality: Implement a robust search feature, allowing users to search for specific products or click on user profiles to view their offerings.
+(Can be accessed directly from any page)
+
+5️⃣ Wishlist and Cart Management ❤️🛒
+
+Wishlist: Enable users to add products to their wishlist, saving them for future reference. <Br/>
+
+Add to Cart: Provide a seamless shopping experience by allowing users to add products to their cart for purchase. <Br/>
+
+Checkout and Payment: Implement a secure payment system, supporting betbanking, card and wallet options. <Br/>
+
+Apply Offers and discount: Allow users to apply coupon codes for discounts during the checkout process. <Br/>
+
+
+
+6️⃣ User Dashbaoard 👤
+
+Profile: Allow users to edit their profile details, including profile photos, names, email addresses, and phone numbers, as well as change their password.
+
+Order History: Provide users with an overview of all their previous orders, allowing them to track deliveries and request refunds if necessary.
+
+Reviews and Wishlist: Enable users to write reviews for products they have purchased and maintain a wishlist of items they are interested in.
+
+Address Management: Allow users to store multiple addresses for efficient checkout, making the purchasing process more convenient.
+
+7️⃣ Seller Dashboard 👨🏻‍🔧
+
+Products : Allow sellers to add, edit, and delete products, including managing product details, images, pricing, and inventory.
+
+Orders : Enable sellers to view and manage orders, track the status of shipments, and handle order processing and fulfillment.
+
+Reviews : Provide sellers with access to customer reviews of their products, allowing them to improve their offerings.
+
+Offers : Enable sellers to create and manage promotional offers, discounts, and special deals to attract more customers and increase sales.
+
+8️⃣ Admin Dashboard 👑
+
+Admin Authentication: Implement secure login functionality for admins. preventing any unauthorised and unauthenticated access <Br/>
+
+Overview and Analytics: Provide admins with an overview of total earnings, all sellers, all orders, and the latest orders. <Br/>
+
+Seller and User Management: Enable admins to manage sellers and users, including the ability to delete accounts if necessary. <Br/>
+
+Product Management: Allow admins to view all products facilitating efficient management. <Br/>
+
+Withdrawal Management: Provide admins with the ability to verify seller withdrawal requests, update balances, and send email notifications. <Br/>
+
+🚀 With the power of these cutting-edge technologies, the BISARIYON E-COM delivers a robust and feature-rich multi-vendor website. It ensures a seamless user experience, efficient data management, real-time communication, and secure transactions. Join me in revolutionizing the e-commerce experience by connecting buyers and sellers in a dynamic and user-friendly environment.
+
+Feel free to reach out to me for more information or to explore collaboration opportunities.
+
+#MERNMarketplace #Ecommerce #React #NodeJS #ExpressJS #MongoDB #SocketIO #TailwindCSS #MaterialUI #Innovation #OnlineShopping #RevolutionizingRetail
