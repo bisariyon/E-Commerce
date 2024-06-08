@@ -32,6 +32,7 @@ import cartProductsRouter from "./routes/cartProducts.routes.js";
 import orderRouter from "./routes/order.routes.js";
 import paymentRouter from "./routes/payment.routes.js";
 import orderItemsRouter from "./routes/orderItems.routes.js";
+import requests from "./routes/requests.routes.js";
 
 //routes declaration
 app.use("/v1/healthcheck", healthcheckRouter);
@@ -49,5 +50,6 @@ app.use("/v1/cart-items", cartProductsRouter);
 app.use("/v1/orders", orderRouter);
 app.use("/v1/payments", paymentRouter);
 app.use("/v1/order-items", orderItemsRouter);
+app.use("/v1/requests", requests);
 
 export { app };

@@ -234,6 +234,8 @@ const updateStatus = asyncHandler(async (req, res, next) => {
   const { orderItemId } = req.params;
   const { status } = req.body;
 
+  // console.log("Status",orderItemId, status);
+
   if (!orderItemId) {
     throw new ApiError(400, "Please provide orderItemId");
   }
@@ -245,11 +247,6 @@ const updateStatus = asyncHandler(async (req, res, next) => {
   const orderItem = await OrderItems.findById(orderItemId);
   if (!orderItem) {
     throw new ApiError(500, "Status not updated");
-  }
-
-  if (orderItem.sellerInfo.toString() !== req.seller._id.toString()) {
-    // console.log(orderItem.sellerInfo, req.seller._id);
-    throw new ApiError(401, "Unauthorized to update status");
   }
 
   orderItem.status = status;

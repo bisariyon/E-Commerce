@@ -70,6 +70,8 @@ The BISARIYON E-COM application has three kinds of user
   - View past orders
     - View order-items details, status for delivery
     - Review ordered items
+    - Cancel order items
+    - Ask for return
   - View and delete products from wishlist
   - View, Update and Delete Reviews
   - Logout
@@ -130,7 +132,7 @@ The BISARIYON E-COM application has three kinds of user
     <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717783349/oe7inndjylh0dnmyirln.png"></td>
   </tr>
   <tr>
-    <td><img width="958" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717783348/iohulvbnx8zy7jmhya8d.png"></td>
+    <td><img width="958" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717849660/plvha9xfakrb2xoxp2wb.png"></td>
     <td><img width="958" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717783348/nc1g3bsdkentsbnl0ysl.png"></td>
    </tr>
 </table>
@@ -240,7 +242,17 @@ The BISARIYON E-COM application has three kinds of user
 
 # Admin
 
-<img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717789377/xvnkyni8iukxspjqy7ny.png">
+<img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717789377/paw3j6dko594bocyvx7p.png">
+
+### Requests
+
+<table>
+  <tr>
+    <td><img width="960" alt="image" src="https://res.cloudinary.com/deepcloud1/image/upload/v1717785527/zjuvh8pnxap6aafxfxlg.png"></td>
+  </tr>
+</table>
+
+
 
 ### Users
 

@@ -42,6 +42,18 @@ function Admin() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           <div className="bg-orange-200 p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-black mb-2">
+              Refund/Cancelation Requests
+            </h2>
+            <p className="text-gray-800 mb-4">Requests for refund and cancellation of oder items</p>
+            <button
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:scale-95"
+              onClick={() => navigate("requests")}
+            >
+              Requests
+            </button>
+          </div>
+          <div className="bg-orange-200 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-black mb-2">
               User Management
             </h2>
             <p className="text-gray-800 mb-4">user accounts and permissions.</p>

@@ -64,6 +64,7 @@ import AdminReviews from "./adminPages/AllReviews.jsx";
 import AddNewSubCat from "./adminPages/AddNewSubCat.jsx";
 import AddNewBrand from "./adminPages/AddNewBrand.jsx";
 import SellerVerification from "./adminPages/SellerVerification.jsx";
+import Requests from "./adminPages/Requests.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -123,6 +124,7 @@ const router = createBrowserRouter(
         <Route path="add-subcategory" element={<AddNewSubCat />} />
         <Route path="add-brand" element={<AddNewBrand />} />
         <Route path="seller-verification/:seller" element={<SellerVerification />} />
+        <Route path="requests" element={<Requests />} />
       </Route>
 
       {/* Without Header Footer */}

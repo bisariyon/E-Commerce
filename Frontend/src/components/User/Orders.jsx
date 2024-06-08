@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 
 function Orders() {
   const [orderDetails, setOrderDetails] = useState([]);
@@ -34,12 +34,9 @@ function Orders() {
 
   const fetchOrderDetails = async (orderID) => {
     try {
-      const response = await axios.get(
-        `/v1/order-items/${orderID}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`/v1/order-items/${orderID}`, {
+        withCredentials: true,
+      });
       console.log("Order details:", response.data.data);
       return response.data.data;
     } catch (error) {
@@ -51,6 +48,7 @@ function Orders() {
     data: ordersData,
     isLoading: fetchLoading,
     error: fetchError,
+    refetch: refetchOrders,
   } = useQuery({
     queryKey: ["userOrders", page, sortBy, sortType],
     queryFn: fetchUserOrders,
@@ -65,6 +63,76 @@ function Orders() {
         .catch((error) => console.error(error));
     }
   }, [selectedOrder]);
+
+  const createRequestBackend = async (obj) => {
+    console.log(
+      "Creating request 1:",
+      obj.orderItems,
+      obj.transactionID,
+      obj.type
+    );
+    const { orderItems, transactionID, type } = obj;
+    try {
+      const response = await axios.post(
+        "/v1/requests/create",
+        {
+          orderItems,
+          transactionID,
+          type,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Request created:", response.data.data);
+      setMessages("Request created successfully!");
+      // Clear the message after 3-4 seconds
+      setTimeout(() => {
+        setMessages("");
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      setError(error.response.data.message);
+
+      // Clear the error after 3-4 seconds
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
+  };
+
+  const updateStatus = async (obj) => {
+    console.log("Updating status:", obj.orderItemId, obj.status);
+    const { orderItemId, status } = obj;
+    try {
+      const response = await axios.put(
+        `/v1/order-items/status/${orderItemId}`,
+        { status },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Status new", response.data.data);
+      return response.data;
+    } catch (error) {
+      // console.error(error.response.data.message || error.response.data);
+      setError(error.response.data.message || error.response.data);
+      throw error.response;
+    }
+  };
+
+  const { mutate: mutateRequest } = useMutation({
+    mutationFn: createRequestBackend,
+  });
+
+  const { mutate: mutateUpdtae } = useMutation({
+    mutationFn: updateStatus,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries(`["userOrders", ${page}, ${sortBy}, ${sortType}]`);
+      refetchOrders();
+    },
+  });
 
   const handleOrderClick = (order) => {
     setSelectedOrder(order);
@@ -152,6 +220,15 @@ function Orders() {
 
   const { docs: orders, totalPages } = ordersData;
 
+  const handleCancel = async (itemID, transactionID) => {
+    mutateRequest({ orderItems: itemID, transactionID, type: "cancel" });
+    mutateUpdtae({ orderItemId: itemID, status: "requested" });
+  };
+  const handleReturn = async (itemID, transactionID) => {
+    mutateRequest({ orderItems: itemID, transactionID, type: "return" });
+    mutateUpdtae({ orderItemId: itemID, status: "requested" });
+  };
+
   if (orders && orders.length === 0) {
     return (
       <div className="mx-auto p-4">
@@ -168,6 +245,8 @@ function Orders() {
   }
 
   // console.log("Orders:", orderDetails);
+  const date = new Date();
+
   return (
     <div className="mx-auto p-4">
       {messages && (
@@ -355,10 +434,51 @@ function Orders() {
                       <div className="mt-4">
                         <button
                           onClick={() => handleAddReviewClick(item._id)}
-                          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                          className="px-4 py-2 mx-2 bg-blue-600 text-white rounded hover:bg-blue-700 active:scale-95"
                         >
                           Add Review
                         </button>
+
+                        {(item.status === "pending" || item.status==="shipped") && (
+                          <button
+                            onClick={() =>
+                              handleCancel(
+                                item._id,
+                                selectedOrder.transactionID
+                              )
+                            }
+                            className="px-4 py-2 mx-2 bg-blue-600 text-white rounded hover:bg-blue-700 active:scale-95"
+                          >
+                            Cancel
+                          </button>
+                        )}
+                        {item.status === "requested" && (
+                          <span className="text-green-500">
+                            Request under process
+                          </span>
+                        )}
+
+                        {item.status === "delivered" &&
+                          Math.abs(date - new Date(item.createdAt)) <=
+                            7 * 24 * 60 * 60 * 1000 && (
+                            <button
+                              onClick={() =>
+                                handleReturn(
+                                  item._id,
+                                  selectedOrder.transactionID
+                                )
+                              }
+                              className="px-4 py-2 mx-2 bg-blue-600 text-white rounded hover:bg-blue-700 active:scale-95"
+                            >
+                              Return
+                            </button>
+                          )}
+                        {messages &&
+                          messages === "Request created successfully!" && (
+                            <div className="text-green-500">
+                              Request created successfully!
+                            </div>
+                          )}
                       </div>
                     )}
                   </div>

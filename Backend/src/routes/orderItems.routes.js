@@ -23,7 +23,7 @@ router.route("/:orderID").get(verifyJwtToken, getOrderItems);
 
 router.route("/seller").post(verifyJwtTokenSeller, getOrderItemsBySeller);
 router.route("/status/:orderItemId").get(getOrderItemById);
-router.route("/status/:orderItemId").put(verifyJwtTokenSeller, updateStatus);
+router.route("/status/:orderItemId").put(updateStatus);
 
 //Admin
 router.route("/").get(verifyJwtToken, verifyIsAdmin, getAllOrderAndDetails);
