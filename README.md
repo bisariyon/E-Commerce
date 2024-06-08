@@ -91,6 +91,19 @@ The BISARIYON E-COM application has three kinds of user
   - Check out for payment 💳
     - we have 3 payment systems using RazorPay (netbanking, wallet, card, UPI)
   - Apply Offers on products 👉💥
+- Seller Authentication
+  - Login Seller
+  - Seller Registration
+  - Reset Password
+- Seller Pages
+  - View, add and manage seller Products
+  - view orders, and also update order status 
+  - Add product offers
+- Admin Dashboard
+  - Secured access to admin side
+  - Access to all sellers , users
+  - Add, Update or remove categories, subcategories, brands
+  - View all orders and update status
 
 ## Sneak Peek of Home Page 🙈 :
 
@@ -432,8 +445,8 @@ Product Management: Allow admins to view all products facilitating efficient man
 
 Withdrawal Management: Provide admins with the ability to verify seller withdrawal requests, update balances, and send email notifications. <Br/>
 
-🚀 With the power of these cutting-edge technologies, the BISARIYON E-COM delivers a robust and feature-rich multi-vendor website. It ensures a seamless user experience, efficient data management, real-time communication, and secure transactions. Join me in revolutionizing the e-commerce experience by connecting buyers and sellers in a dynamic and user-friendly environment.
+🚀 With the power of these cutting-edge technologies, the BISARIYON E-COM delivers a robust and feature-rich multi-vendor website. It ensures a seamless user experience, efficient data management, and secure transactions. 
 
 Feel free to reach out to me for more information or to explore collaboration opportunities.
 
-#MERNMarketplace #Ecommerce #React #NodeJS #ExpressJS #MongoDB #SocketIO #TailwindCSS #MaterialUI #Innovation #OnlineShopping #RevolutionizingRetail
+#BISARIYONe-com #Ecommerce #React #NodeJS #ExpressJS #MongoDB #TailwindCSS #MaterialUI #Innovation #OnlineShopping #RevolutionizingRetail
