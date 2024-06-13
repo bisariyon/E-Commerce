@@ -25,17 +25,13 @@ function Home() {
   }, []);
 
   const fetchCategories = async () => {
-    const response = await fetch(
-      `/v1/categories?page=1&limit=7`
-    );
+    const response = await fetch(`/v1/categories?page=1&limit=7`);
     const data = await response.json();
     return data;
   };
 
   const fetchBrands = async () => {
-    const response = await fetch(
-      `/v1/brands?page=1&limit=8`
-    );
+    const response = await fetch(`/v1/brands?page=1&limit=8`);
     const data = await response.json();
     return data;
   };
@@ -112,7 +108,7 @@ function Home() {
       </div>
 
       {/* Brands Section */}
-      <div className="mt-8 bg-white p-6 rounded-lg shadow-md mb-36  mx-6">
+      <div className="mt-8 bg-white py-6 px-auto rounded-lg shadow-md mb-36 mx-6">
         <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             Our Global Brands
@@ -121,7 +117,7 @@ function Home() {
             Discover the global brands we partner with
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-40 pb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 sm:px-20 md:px-32 lg:px-40 pb-12">
           {brands &&
             brands.data.docs.map((brand) => (
               <div
